@@ -1,0 +1,24 @@
+#!/bin/bash
+
+gwHome="$(cd "$(dirname "$0")/.." && pwd -P)"
+api_gateway_service_path=/etc/init.d/api-gateway
+
+ubuntu=0
+update-rc.d 2>/dev/null 1>&2
+if [ $? -eq 1 ]; then
+    ubuntu=1
+fi
+
+if [ -e $api_gateway_service_path ]
+then
+        echo "api-gateway already registered ($api_gateway_service_path found)"
+else
+        cp $gwHome/bin/api-gateway-service $api_gateway_service_path
+        if [ $ubuntu -eq 1 ]; then
+            echo "Installing service using update-rc.d..."
+            update-rc.d api-gateway defaults 88 # Ubuntu
+        else
+            echo "Installing service using chkconfig..."
+            chkconfig --level 345 api-gateway on # CentOS
+        fi
+fi

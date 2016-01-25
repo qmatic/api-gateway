@@ -1,0 +1,49 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides: api-gateway
+# Required-Start: networking
+# Required-Stop:
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 6
+# chkconfig: 345 89 05
+# Description: QP API Gateway
+### END INIT INFO
+
+
+# Set gwUser to the id of the user account that will run the gateway application.
+gwUser="@GATEWAY-USER@"
+# Set gwHome to the directory where your gateway folder resides.
+gwHome="@GATEWAY-INSTALL-DIR@"
+
+
+if [[ -z $gwUser ]] || [[ $gwUser == "@GATEWAY-USER@" ]]; then
+	echo "gwUser variable is not set. Please edit this script and set gwUser to the name of the user that will run the gateway application."
+	exit 1
+fi
+
+if [[ -z $gwHome ]] || [[ $gwHome == "@GATEWAY-INSTALL-DIR@" ]]; then
+	echo "gwHome variable is not set. Please edit this script and set gwHome to the path where the gateway application resides."
+	exit 1
+fi
+
+[[ $gwHome =~ /$ ]] || gwHome="${gwHome}/"
+gwBin="${gwHome}bin"
+gwLogs="${gwHome}logs"
+gw=$gwBin/api-gateway
+gwStop=$gwBin/api-gateway-stop.sh
+
+stdErrLog=$gwLogs/stderr_api_gateway_service.log
+
+case $1 in
+start)
+	su - $gwUser -c "nohup $gw 2>$stdErrLog 1>/dev/null &"
+	;;
+stop)
+	su - $gwUser -c "nohup $gwStop 2>$stdErrLog 1>/dev/null &"
+	;;
+*)
+	echo "Usage: $0 { start | stop }"
+	;;
+esac
+exit 0
+

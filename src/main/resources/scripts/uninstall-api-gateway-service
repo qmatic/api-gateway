@@ -1,0 +1,24 @@
+#!/bin/bash
+
+api_gateway_service_path=/etc/init.d/api-gateway
+
+ubuntu=0
+update-rc.d 2>/dev/null 1>&2
+if [ $? -eq 1 ]; then
+    ubuntu=1
+fi
+
+if [ -e $api_gateway_service_path ]
+then
+        if [ $ubuntu -eq 1 ]; then
+            echo "Uninstalling service using update-rc.d"
+            update-rc.d -f api-gateway remove # Ubuntu
+        else
+            echo "Uninstalling service using chkconfig"
+            chkconfig --del api-gateway  # CentOS
+        fi
+        rm $api_gateway_service_path
+else
+        echo "Did not find api-gateway installed as service"
+fi
+

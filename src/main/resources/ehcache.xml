@@ -1,0 +1,17 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd" name="gateway">
+
+    <!-- Disabling statistics in production increases performance -->
+    <cache name="request" maxEntriesLocalHeap="1000" timeToLiveSeconds="600" statistics="true" />
+
+    <cache name="serviceCache" maxEntriesLocalHeap="200" timeToLiveSeconds="600" statistics="true" />
+
+    <cache name="branches" maxEntriesLocalHeap="1000" timeToLiveSeconds="900" statistics="true" />
+
+    <cache name="serviceBranches" maxEntriesLocalHeap="1000" timeToLiveSeconds="900" statistics="true" />
+
+    <cache name="visitInQueueCache" maxEntriesLocalHeap="200" timeToLiveSeconds="5" statistics="true" />
+
+    <cache name="eventInQueueCache" maxEntriesLocalHeap="200" timeToLiveSeconds="10" statistics="true" />
+
+</ehcache>

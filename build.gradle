@@ -1,0 +1,144 @@
+buildscript {
+    ext {
+        springBootVersion = '1.3.0.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'application'
+
+mainClassName = "com.qmatic.apigw.Application"
+
+task apiTokenGeneratorStartScripts(type: CreateStartScripts) {
+    description "Create start scripts for ApiTokenGenerator"
+    classpath = startScripts.classpath
+    outputDir = startScripts.outputDir
+    mainClassName = 'com.qmatic.apigw.ApiTokenGenerator'
+    applicationName = 'api-token-generator'
+}
+
+task passwordEncoderStartScripts(type: CreateStartScripts) {
+    description "Create start scripts for PasswordEncoder"
+    classpath = startScripts.classpath
+    outputDir = startScripts.outputDir
+    mainClassName = 'com.qmatic.apigw.PasswordEncoder'
+    applicationName = 'password-encoder'
+}
+
+distributions {
+    main {
+        contents {
+            into('bin') {
+                from apiTokenGeneratorStartScripts
+                    fileMode = 0755
+                from passwordEncoderStartScripts
+                    fileMode = 0755
+                from('src/main/resources/scripts')
+                from(file(project(':appservers:jboss-eap').projectDir.path + '/scripts')) {
+                    include 'prunsrv.exe', 'curl.exe', 'curl.ermine'
+                }
+            }
+            into('conf') {
+                from('src/main/resources') {
+                    exclude 'scripts'
+                    exclude 'logs'
+                    include '**/application.yml'
+                    include '**/ehcache.xml'
+                    include '**/logbackAPIGateway.xml'
+                }
+            }
+            // We need an empty logs folder as it needs to exist for logging
+            into('logs') {
+                from('src/main/resources/logs')
+            }
+        }
+    }
+}
+
+startScripts {
+    def configureWindowsClassPath = { line ->
+        line.replaceAll(~/^set CLASSPATH.*$/) { newLine ->
+            'set CLASSPATH=%APP_HOME%\\conf;%APP_HOME%\\lib\\*'
+        }
+    }
+
+    defaultJvmOpts = ['DEFAULT_JVM_OPTS_REPLACE']
+
+    // workaround for https://issues.gradle.org/browse/GRADLE-3084
+    doLast {
+        unixScript.text = unixScript.text.replace('CLASSPATH=', 'CLASSPATH=$APP_HOME/conf:')
+        unixScript.text = unixScript.text.replace('eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS', 'eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS\nexport APP_HOME');
+        unixScript.text = unixScript.text.replace('\\$', '$')
+        windowsScript.text = windowsScript.text.replace('%%', '%')
+        windowsScript.text = windowsScript
+                .readLines()
+                .collect(configureWindowsClassPath)
+                .join('\r\n')
+
+        def defaultJvmOptsLinux = '-Dlogging.config=$APP_HOME/conf/logbackAPIGateway.xml'
+        def defaultJvmOptsWindows = '-Dlogging.config=%~dp0\\..\\conf\\logbackAPIGateway.xml'
+
+        unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS_REPLACE', defaultJvmOptsLinux)
+        windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS_REPLACE', defaultJvmOptsWindows)
+
+    }
+}
+
+jar {
+    archiveName = 'qp-api-gw.jar'
+    exclude 'scripts', 'logbackAPIGateway.xml', 'application.yml', 'ehcache.xml'
+}
+
+def windowsScripts = ['**/*.bat', '**/*.exe']
+def linuxScripts = ['**/*.sh', '**/api-gateway', '**/api-gateway-service', '**/api-token-generator', '**/password-encoder']
+
+distZip {
+    // To make sure that the use of apiTokenGeneratorStartScripts doesn't add duplicates to the zip file
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    archiveName = "qp-api-gateway.zip"
+}
+
+distTar.enabled = false
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
+// Uncomment for debugging gateway
+//applicationDefaultJvmArgs = [
+//       "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005" ]
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-undertow")
+    compile("org.springframework.boot:spring-boot-starter-cache")
+    compile("org.springframework.boot:spring-boot-configuration-processor")
+    compile("org.springframework.cloud:spring-cloud-starter-zuul:1.0.4.RELEASE")
+    //Cache metrics : spring-boot-starter-web, spring-boot-starter-actuator
+
+    compile("org.projectlombok:lombok:1.16.6")
+
+    compile(project(':common:logging')) { transitive = false }
+    compile(project(':common:geo')) { transitive = false }
+
+    //TODO use library.ehcache
+    compile ("net.sf.ehcache:ehcache-core:2.6.3")
+    compile("org.projectlombok:lombok:1.16.6")
+
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+compileJava.dependsOn(processResources)
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}

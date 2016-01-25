@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
+
+    <!-- Daily rollover appender that also appends timestamp and rolls over on startup -->
+    <appender name="startupDailyRolloverAppender" class="com.qmatic.qp.logging.QPRollingFileAppender">
+        <file>${APP_HOME}/logs/api_gateway.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${APP_HOME}/logs/api_gateway-%d{yyyy-MM-dd}_%d{HHmmss}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="com.qmatic.qp.logging.StartupTimeAndSizeBasedTriggeringPolicy">
+                <maxFileSize>10MB</maxFileSize>
+                <maxBackupIndex>10</maxBackupIndex>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- In order to DEBUG change this filter level, along with required components below -->
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <logger name="com.qmatic" level="INFO"/>
+    <logger name="org.springframework.web" level="INFO"/>
+
+    <root level="INFO">
+        <appender-ref ref="startupDailyRolloverAppender" />
+    </root>
+</configuration>
