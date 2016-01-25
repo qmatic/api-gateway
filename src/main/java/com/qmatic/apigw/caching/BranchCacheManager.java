@@ -2,7 +2,7 @@ package com.qmatic.apigw.caching;
 
 import com.qmatic.apigw.properties.OrchestraProperties;
 import com.qmatic.apigw.rest.CentralRestClient;
-import com.qmatic.qp.common.geo.Branch;
+import com.qmatic.common.geo.Branch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

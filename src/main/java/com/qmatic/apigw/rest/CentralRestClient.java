@@ -2,7 +2,7 @@ package com.qmatic.apigw.rest;
 
 import com.qmatic.apigw.GatewayConstants;
 import com.qmatic.apigw.properties.OrchestraProperties;
-import com.qmatic.qp.common.geo.Branch;
+import com.qmatic.common.geo.Branch;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

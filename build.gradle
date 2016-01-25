@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
@@ -42,9 +46,7 @@ distributions {
                 from passwordEncoderStartScripts
                     fileMode = 0755
                 from('src/main/resources/scripts')
-                from(file(project(':appservers:jboss-eap').projectDir.path + '/scripts')) {
-                    include 'prunsrv.exe', 'curl.exe', 'curl.ermine'
-                }
+                from('src/main/resources/bin')
             }
             into('conf') {
                 from('src/main/resources') {
@@ -127,12 +129,11 @@ dependencies {
 
     compile("org.projectlombok:lombok:1.16.6")
 
-    compile(project(':common:logging')) { transitive = false }
-    compile(project(':common:geo')) { transitive = false }
-
     //TODO use library.ehcache
-    compile ("net.sf.ehcache:ehcache-core:2.6.3")
+    compile("net.sf.ehcache:ehcache-core:2.6.3")
     compile("org.projectlombok:lombok:1.16.6")
+
+    testCompile("org.testng:testng:6.9.6")
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }
