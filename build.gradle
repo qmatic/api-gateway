@@ -140,6 +140,12 @@ dependencies {
 
 compileJava.dependsOn(processResources)
 
+task geo(type: Jar) {
+    archiveName = 'qp-geo.jar'
+    from sourceSets.main.java.srcDirs //'src/main/java/com/qmatic/common' //
+    exclude '**/apigw/**'
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
