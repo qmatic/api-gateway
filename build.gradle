@@ -141,8 +141,8 @@ dependencies {
 compileJava.dependsOn(processResources)
 
 task geo(type: Jar) {
-    archiveName = 'qp-geo.jar'
-    from sourceSets.main.java.srcDirs //'src/main/java/com/qmatic/common' //
+    archiveName = 'qp-common-geo.jar'
+    from sourceSets.main.java.srcDirs
     exclude '**/apigw/**'
 }
 
