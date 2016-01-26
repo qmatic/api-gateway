@@ -3,21 +3,74 @@ buildscript {
         springBootVersion = '1.3.0.RELEASE'
     }
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '4.0.0')
     }
 }
 
 repositories {
-    mavenCentral()
+    jcenter()
+    maven {
+        url "http://artifactory.qmatic.com/artifactory/api-gateway/snapshots"
+    }
 }
 
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'application'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.artifactory'
+
+version = "${currentVersion}"
+
+def passwordProperty= project.hasProperty('password') ? password : "dummy"
+
+artifactory {
+    contextUrl = "http://artifactory.qmatic.com/artifactory"
+    publish {
+        repository {
+            repoKey = "api-gateway"
+            username = "${artifactory_username}"
+            password = passwordProperty
+            maven = true
+        }
+        defaults {
+            publications('apigw','geojar')
+        }
+    }
+}
+
+publishing { 
+    publications {
+        apigw(MavenPublication) {
+            artifact buildDir.path + "/distributions/" + "${qpApiGateway}" + ".zip"
+            artifactId "${qpApiGateway}"
+            version project.version
+        }
+        geojar(MavenPublication) {
+            artifact qpCommonGeoJar
+            artifactId "${qpCommonGeo}"
+            version project.version
+        }
+    }
+}
+
+task qpCommonGeoJar(type: Jar) {
+    baseName = "${qpCommonGeo}"
+    from('src/main/java')
+    exclude '**/apigw/**'
+    exclude 'org/**'
+    exclude 'lib/**'
+}
+
+artifacts {
+    archives qpCommonGeoJar
+    archives file(buildDir.path + "/distributions/" + "${qpApiGateway}" + ".zip")
+}
 
 mainClassName = "com.qmatic.apigw.Application"
 
@@ -52,6 +105,7 @@ distributions {
                 from('src/main/resources') {
                     exclude 'scripts'
                     exclude 'logs'
+                    exclude 'bin'
                     include '**/application.yml'
                     include '**/ehcache.xml'
                     include '**/logbackAPIGateway.xml'
@@ -94,10 +148,6 @@ startScripts {
     }
 }
 
-jar {
-    archiveName = 'qp-api-gw.jar'
-    exclude 'scripts', 'logbackAPIGateway.xml', 'application.yml', 'ehcache.xml'
-}
 
 def windowsScripts = ['**/*.bat', '**/*.exe']
 def linuxScripts = ['**/*.sh', '**/api-gateway', '**/api-gateway-service', '**/api-token-generator', '**/password-encoder']
@@ -115,9 +165,11 @@ configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
 }
 
+/*
 // Uncomment for debugging gateway
-//applicationDefaultJvmArgs = [
-//       "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005" ]
+applicationDefaultJvmArgs = [
+       "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005" ]
+*/
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
@@ -139,12 +191,6 @@ dependencies {
 }
 
 compileJava.dependsOn(processResources)
-
-task geo(type: Jar) {
-    archiveName = 'qp-common-geo.jar'
-    from sourceSets.main.java.srcDirs
-    exclude '**/apigw/**'
-}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
