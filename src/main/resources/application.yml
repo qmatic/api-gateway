@@ -1,4 +1,4 @@
-# define management endpoint for instance: http://127.0.0.1:9091/api-gateway/health
+# define management endpoint, for instance: http://127.0.0.1:9091/api-gateway/health
 # NOTE: set port to -1 for disabling all management endpoints
 management:
     address: 127.0.0.1
@@ -20,15 +20,15 @@ endpoints:
     env:
         enabled: false
 
-# define server port for gateway
 server:
+  # define server port for gateway
   port: 9090
 #  ssl:
 #    key-store: classpath:keystore.jks
 #    key-store-password: secret
 #    key-password: password
 
-# define logging and log level in gateway
+# define orchestra parameters
 orchestra:
   # define URL for orchestra central installation
   central:
@@ -47,25 +47,23 @@ orchestra:
       user: mobile
       passwd: dWxhbg==
 
-geoService:
-  branches_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches?longitude=0&latitude=0&radius=2147483647
-  service_branches_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/services/{serviceId}/branches?longitude=0&latitude=0&radius=2147483647
-
 cache:
   # by default the cache metrics connector is only accessable from local machine
   allowCacheMetricsFromAllHosts: false
-
   # if true, all requests not matching the rules in cacheRoutes will get cached in the default cache
   useDefaultCache: true
   # name of cache in ehcache configuration
   defaultCacheName: request
+  # define if unique cache is used for URL query parameters.
   defaultCacheUniquePerQueryParameter: false
 
   cacheRoutes:
     services:
       # name of cache in ehcache configuration
       cacheName: serviceCache
+      # REST path pattern matching
       match: /services
+      # defines which zuul routes to apply caching to
       routes: mobile_service_v1, mobile_service_v2
       # configure if the cache should store a unique value per query parameter string (default false)
       uniquePerQueryParameter : false
@@ -145,3 +143,8 @@ zuul:
     my_visit_last_queue_event:
       path: /MobileTicket/MyVisit/LastEvent/**
       url: ${orchestra.central.url}/qsystem/rest/servicepoint
+
+# These URLs are used internally for fetching branches and branches for services but these should normally not be changed.
+geoService:
+  branches_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches?longitude=0&latitude=0&radius=2147483647
+  service_branches_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/services/{serviceId}/branches?longitude=0&latitude=0&radius=2147483647

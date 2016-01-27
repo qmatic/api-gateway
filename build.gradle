@@ -14,7 +14,7 @@ buildscript {
 repositories {
     jcenter()
     maven {
-        url "http://artifactory.qmatic.com/artifactory/api-gateway/snapshots"
+        url "http://artifactory.qmatic.com/artifactory/api-gateway"
     }
 }
 
