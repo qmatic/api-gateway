@@ -7,13 +7,13 @@ It can also be seen as the front door for all requests from devices and web site
 
 ##Features
 
-[x] Request Caching
+###Request Caching
 Decreases the load on Orchestra Central.
 
-[x] API Authorisation Token
+###API Authorisation Token
 Provides identifictaion, separation of applications and security.
 
-[x] Geo caching
+###Geo caching
 Locates closest services and branches from any position.
 
 ##Building
@@ -23,7 +23,7 @@ The API Gateway project is built as a Spring Boot Application (https://spring.io
 * Build project using gradle or gradle wrapper, for example: `gradle clean build`
 
 ##Using
- The API Gateway can be either be installed from the the `./build/distributions/qp-api-gateway.zip`, or started by running `gradle bootRun`
+ The API Gateway can be either be installed from the the `./build/distributions/qp-api-gateway.zip` or started by running `gradle bootRun`
 
 ##Example
  The new API MobileTicket, which is optimized for the mobile ticket scenario as listed below:
