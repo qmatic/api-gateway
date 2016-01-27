@@ -1,2 +1,5 @@
 /.gradle/
 /build/
+api-gateway.iml
+api-gateway.ipr
+api-gateway.iws

@@ -80,6 +80,11 @@ task apiTokenGeneratorStartScripts(type: CreateStartScripts) {
     outputDir = startScripts.outputDir
     mainClassName = 'com.qmatic.apigw.ApiTokenGenerator'
     applicationName = 'api-token-generator'
+
+    // workaround for https://issues.gradle.org/browse/GRADLE-3084
+    doLast {
+        doLastWithScripts(windowsScript, unixScript)
+    }
 }
 
 task passwordEncoderStartScripts(type: CreateStartScripts) {
@@ -88,6 +93,11 @@ task passwordEncoderStartScripts(type: CreateStartScripts) {
     outputDir = startScripts.outputDir
     mainClassName = 'com.qmatic.apigw.PasswordEncoder'
     applicationName = 'password-encoder'
+
+    // workaround for https://issues.gradle.org/browse/GRADLE-3084
+    doLast {
+        doLastWithScripts(windowsScript, unixScript)
+    }
 }
 
 distributions {
@@ -120,32 +130,39 @@ distributions {
 }
 
 startScripts {
-    def configureWindowsClassPath = { line ->
-        line.replaceAll(~/^set CLASSPATH.*$/) { newLine ->
-            'set CLASSPATH=%APP_HOME%\\conf;%APP_HOME%\\lib\\*'
-        }
-    }
 
     defaultJvmOpts = ['DEFAULT_JVM_OPTS_REPLACE']
 
-    // workaround for https://issues.gradle.org/browse/GRADLE-3084
     doLast {
-        unixScript.text = unixScript.text.replace('CLASSPATH=', 'CLASSPATH=$APP_HOME/conf:')
-        unixScript.text = unixScript.text.replace('eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS', 'eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS\nexport APP_HOME');
-        unixScript.text = unixScript.text.replace('\\$', '$')
-        windowsScript.text = windowsScript.text.replace('%%', '%')
-        windowsScript.text = windowsScript
-                .readLines()
-                .collect(configureWindowsClassPath)
-                .join('\r\n')
+        doLastWithScripts(windowsScript, unixScript)
 
         def defaultJvmOptsLinux = '-Dlogging.config=$APP_HOME/conf/logbackAPIGateway.xml'
         def defaultJvmOptsWindows = '-Dlogging.config=%~dp0\\..\\conf\\logbackAPIGateway.xml'
 
         unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS_REPLACE', defaultJvmOptsLinux)
         windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS_REPLACE', defaultJvmOptsWindows)
-
     }
+}
+
+// workaround for https://issues.gradle.org/browse/GRADLE-3084
+def doLastWithScripts(windowsScript, unixScript) {
+
+    // Fixes Windows classpath issue when classpath becomes too long
+    def configureWindowsClassPath = { line ->
+        line.replaceAll(~/^set CLASSPATH.*$/) { newLine ->
+            'set CLASSPATH=%APP_HOME%\\conf;%APP_HOME%\\lib\\*'
+        }
+    }
+
+    unixScript.text = unixScript.text.replace('CLASSPATH=', 'CLASSPATH=$APP_HOME/conf:')
+    unixScript.text = unixScript.text.replace('eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS', 'eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS\nexport APP_HOME');
+    unixScript.text = unixScript.text.replace('\\$', '$')
+    windowsScript.text = windowsScript.text.replace('%%', '%')
+    windowsScript.text = windowsScript
+            .readLines()
+            .collect(configureWindowsClassPath)
+            .join('\r\n')
+
 }
 
 
