@@ -48,11 +48,13 @@ publishing {
     publications {
         apigw(MavenPublication) {
             artifact buildDir.path + "/distributions/" + "${qpApiGateway}" + ".zip"
+            groupId "com.qmatic"
             artifactId "${qpApiGateway}"
             version project.version
         }
         geojar(MavenPublication) {
             artifact qpCommonGeoJar
+            groupId "com.qmatic"
             artifactId "${qpCommonGeo}"
             version project.version
         }
@@ -61,10 +63,10 @@ publishing {
 
 task qpCommonGeoJar(type: Jar) {
     baseName = "${qpCommonGeo}"
-    from('src/main/java')
+    from sourceSets.main.output
+    include 'com/qmatic/**'
     exclude '**/apigw/**'
-    exclude 'org/**'
-    exclude 'lib/**'
+    exclude 'libs/**'
 }
 
 artifacts {
@@ -202,6 +204,8 @@ dependencies {
     compile("net.sf.ehcache:ehcache-core:2.6.3")
     compile("org.projectlombok:lombok:1.16.6")
 
+    compile files('libs/qp-common-logging-3.1.0.jar')
+
     testCompile("org.testng:testng:6.9.6")
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
@@ -210,5 +214,5 @@ dependencies {
 compileJava.dependsOn(processResources)
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.4'
+    gradleVersion = '2.10'
 }

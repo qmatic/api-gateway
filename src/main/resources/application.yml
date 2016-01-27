@@ -124,8 +124,10 @@ zuul:
       path: /MobileTicket/branches/**
       url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
 
+    # Note:
+    # get nearest branches - /geo/services/[serviceId]/nearestbranches
+
     # get branches for service - /MobileTicket/services/[serviceId]/branches/
-    # get nearest branches - /MobileTicket/services/[serviceId]/nearestbranches
     # issue ticket - /MobileTicket/services/[serviceId]/branches/[branchId]/ticket/issue
     custom_mobile_services:
       path: /MobileTicket/services/**
