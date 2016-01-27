@@ -5,27 +5,27 @@ The API Gateway is an open source middle-ware enabling end users, apps and webpa
 
 It can also be seen as the front door for all requests from devices and web sites to the Orchestra central server. Removing the need to expose the Central Orchestra server to Internet.
 
-##Features
+###Features
 
-###Request Caching
+#####Request Caching
 Decreases the load on Orchestra Central.
 
-###API Authorisation Token
+#####API Authorisation Token
 Provides identifictaion, separation of applications and security.
 
-###Geo caching
+#####Geo Cache
 Locates closest services and branches from any position.
 
-##Building
-The API Gateway project is built as a Spring Boot Application (https://spring.io/guides/gs/spring-boot), using netflix zuul edge service framework (https://github.com/Netflix/zuul).
+###Building
+The API Gateway project is built as a Spring Boot Application (https://spring.io/guides/gs/spring-boot), using Netflix zuul edge service framework (https://github.com/Netflix/zuul).
  
 * Clone this repo `git clone https://www.github.com/qmatic/api-gateway.git`
 * Build project using gradle or gradle wrapper, for example: `gradle clean build`
 
-##Using
+###Using
  The API Gateway can be either be installed from the the `./build/distributions/qp-api-gateway.zip` or started by running `gradle bootRun`
 
-##Example
+###Example
  The new API MobileTicket, which is optimized for the mobile ticket scenario as listed below:
 
 ```
