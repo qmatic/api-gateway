@@ -4,9 +4,9 @@ SET ROOT=%~dp0
 CALL :RESOLVE "%ROOT%\..\" API_GW_HOME
 
 rem Find latest java
-SET GW_HOME_JDK_DIR=%API_GW_HOME%jdk
-for /f "tokens=*" %%i in ('dir /b /a:D /o:-n "%GW_HOME_JDK_DIR%\jdk*"') DO (
-    set JAVA_HOME=%GW_HOME_JDK_DIR%\%%i
+SET GW_HOME_JAVA_DIR=%API_GW_HOME%jre1.8.0_66
+for /f "tokens=*" %%i in ('dir /b /a:D /o:-n "%GW_HOME_JAVA_DIR%\jdk*"') DO (
+    set JAVA_HOME=%GW_HOME_JAVA_DIR%\%%i
     GOTO JAVA_FOUND
 )
 GOTO JAVA_NOT_FOUND

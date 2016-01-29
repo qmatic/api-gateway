@@ -22,7 +22,7 @@ fn_waitForAPIGatewayToStop
 # Standard install use the java from its install dir
 if [ "Linux" == `uname` ]
 then
-    export JAVA_HOME=$GW_HOME/jdk/jdk1.8.0_65
+    export JAVA_HOME=$GW_HOME/jre1.8.0_72
     export PATH=$JAVA_HOME/bin:$PATH
 
     JPS=$JAVA_HOME/bin/jps
