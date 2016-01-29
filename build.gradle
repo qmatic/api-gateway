@@ -39,19 +39,34 @@ artifactory {
             maven = true
         }
         defaults {
-            publications('apigw','geojar')
+            publications('windist','linuxdist','geojar')
         }
     }
 }
 
 publishing { 
     publications {
+        windist(MavenPublication) {
+            artifact buildDir.path + "/distributions/QP_APIGateway_win64-"+version+".zip"
+            groupId "com.qmatic"
+            artifactId "QP_APIGateway_win64"
+            version project.version
+        }
+        linuxdist(MavenPublication) {
+            artifact buildDir.path + "/distributions/QP_APIGateway_linux64-"+version+".zip"
+            groupId "com.qmatic"
+            artifactId "QP_APIGateway_linux64"
+            version project.version
+        }
+
+/*
         apigw(MavenPublication) {
             artifact buildDir.path + "/distributions/" + "${qpApiGateway}" + ".zip"
             groupId "com.qmatic"
             artifactId "${qpApiGateway}"
             version project.version
         }
+*/
         geojar(MavenPublication) {
             artifact qpCommonGeoJar
             groupId "com.qmatic"
