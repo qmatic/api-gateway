@@ -176,7 +176,7 @@ def doLastWithScripts(windowsScript, unixScript) {
     unixScript.text = unixScript.text.replace('eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS', 'eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS\nexport APP_HOME');
     unixScript.text = unixScript.text.replace('\\$', '$')
     windowsScript.text = windowsScript.text.replace('%%', '%')
-    windowsScript.text = windowsScript.text.replace('set APP_HOME=%DIRNAME%..','set APP_HOME=%DIRNAME%..\nset JRE_HOME=%APP_HOME%/jre1.8.0_72')
+    windowsScript.text = windowsScript.text.replace('set APP_HOME=%DIRNAME%..','set APP_HOME=%DIRNAME%..\nset JAVA_HOME=%APP_HOME%/jre1.8.0_72')
     windowsScript.text = windowsScript
             .readLines()
             .collect(configureWindowsClassPath)
