@@ -1,4 +1,5 @@
 # define management endpoint, for instance: http://127.0.0.1:9091/api-gateway/health
+# the management endpoint is ONLY available locally
 # NOTE: set port to -1 for disabling all management endpoints
 management:
     address: 127.0.0.1
@@ -8,6 +9,7 @@ management:
 # define if which management endpoints should be available
 endpoints:
     # [POST] shutdown the gateway
+    # NOTE: needs to be enabled, used by service script.
     shutdown:
         enabled: true
     # [POST] restart the gateway
