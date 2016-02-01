@@ -9,7 +9,7 @@ management:
 endpoints:
     # [POST] shutdown the gateway
     shutdown:
-        enabled: false
+        enabled: true
     # [POST] restart the gateway
     restart:
         enabled: false

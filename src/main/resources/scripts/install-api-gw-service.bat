@@ -8,7 +8,7 @@ set BIN_DIR=%API_GW_HOME%\bin
 set SERVICE_TITLE=Qmatic API Gateway
 set SERVICE_NAME=QP_API_GW
 
-%BIN_DIR%\prunsrv //IS//%SERVICE_NAME% --DisplayName="%SERVICE_TITLE%" --Install=%BIN_DIR%\prunsrv.exe --LogPath=%LOG_DIR%  --Startup=auto --StartMode=exe --StopMode=exe --StartImage=%BIN_DIR%\start-api-gateway.bat --StopImage=%BIN_DIR%\stop-api-gateway.bat
+%BIN_DIR%\prunsrv //IS//%SERVICE_NAME% --DisplayName="%SERVICE_TITLE%" --Install=%BIN_DIR%\prunsrv.exe --LogPath=%LOG_DIR%  --Startup=auto --StartMode=exe --StopMode=exe --StartImage=%BIN_DIR%\api-gateway.bat --StopImage=%BIN_DIR%\stop-api-gateway.bat
 
 IF %ERRORLEVEL% EQU 0 (
   GOTO SUCCESS
