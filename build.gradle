@@ -1,7 +1,6 @@
 buildscript {
     ext {
         springBootVersion = '1.3.0.RELEASE'
-        version = '1.2.34.6'
     }
     repositories {
         jcenter()
@@ -19,16 +18,91 @@ repositories {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'spring-boot'
 apply plugin: 'application'
-apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'distribution'
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'spring-boot'
 
 version = "${currentVersion}"
 
 def passwordProperty= project.hasProperty('password') ? password : "dummy"
+
+mainClassName = "com.qmatic.apigw.Application"
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+
+}
+
+dependencies {
+    compile ("org.springframework.boot:spring-boot-starter-web")
+    compile ("org.springframework.boot:spring-boot-starter-undertow")
+    compile ("org.springframework.boot:spring-boot-starter-cache")
+    compile ("org.springframework.boot:spring-boot-configuration-processor")
+    compile ("org.springframework.cloud:spring-cloud-starter-zuul:1.0.4.RELEASE")
+    //Cache metrics : spring-boot-starter-web, spring-boot-starter-actuator
+
+    compile ("org.projectlombok:lombok:1.16.6")
+
+    //TODO use library.ehcache
+    compile ("net.sf.ehcache:ehcache-core:2.6.3")
+    compile ("org.projectlombok:lombok:1.16.6")
+
+    compile files('libs/qp-common-logging-3.1.0.jar')
+
+    testCompile ("org.testng:testng:6.9.6")
+
+    testCompile ("org.springframework.boot:spring-boot-starter-test")
+}
+
+compileJava.dependsOn(processResources)
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.10'
+}
+
+jar {
+    manifest {
+        attributes 'Build-Version': version
+    }
+}
+
+task qpApiGatewayJar(type: Jar) {
+    from sourceSets.main.output.classesDir
+    classifier = 'sources'
+    exclude '**/*.json'
+    manifest {
+        attributes 'Build-Version': version
+    }
+    archiveName = "${qpApiGateway}" + '-' + version + '.jar'
+}
+
+task qpCommonGeoJar(type: Jar) {
+    from sourceSets.main.output.classesDir
+    classifier = 'sources'
+    exclude '**/apigw/**'
+    exclude '*.json'
+    manifest {
+        attributes 'Build-Version': version
+    }
+    archiveName = "${qpCommonGeo}" + '-' + version + '.jar'
+}
+
+artifacts {
+    archives qpApiGatewayJar
+    archives qpCommonGeoJar
+    archives file(buildDir.path + "/distributions/" + "${qpApiGateway}" + ".zip")
+}
+
+
+/* configuration for debugging the gateway */
+   //applicationDefaultJvmArgs = [ "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005" ]
+
+
+/* configuration for publishing artifacts to Qmatic artifactory */
 
 artifactory {
     contextUrl = "http://artifactory.qmatic.com/artifactory"
@@ -77,23 +151,8 @@ publishing {
     }
 }
 
-task qpCommonGeoJar(type: Jar) {
-    baseName = "${qpCommonGeo}"
-    from sourceSets.main.output
-    include 'com/qmatic/**'
-    exclude '**/apigw/**'
-    exclude 'libs/**'
-    manifest {
-        attributes 'Build-Version': version
-    }
-}
 
-artifacts {
-    archives qpCommonGeoJar
-    archives file(buildDir.path + "/distributions/" + "${qpApiGateway}" + ".zip")
-}
-
-mainClassName = "com.qmatic.apigw.Application"
+/* configuration for generating start script and generating token / password */
 
 task apiTokenGeneratorStartScripts(type: CreateStartScripts) {
     description "Create start scripts for ApiTokenGenerator"
@@ -188,7 +247,6 @@ def doLastWithScripts(windowsScript, unixScript) {
 
 }
 
-
 def windowsScripts = ['**/*.bat', '**/*.exe']
 def linuxScripts = ['**/*.sh', '**/api-gateway', '**/api-gateway-service', '**/api-token-generator', '**/password-encoder']
 
@@ -201,50 +259,7 @@ distZip {
 
 distTar.enabled = false
 
-configurations {
-    compile.exclude module: "spring-boot-starter-tomcat"
-}
-
-/*
-// Uncomment for debugging gateway
-applicationDefaultJvmArgs = [
-       "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005" ]
-*/
-
-dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile("org.springframework.boot:spring-boot-starter-undertow")
-    compile("org.springframework.boot:spring-boot-starter-cache")
-    compile("org.springframework.boot:spring-boot-configuration-processor")
-    compile("org.springframework.cloud:spring-cloud-starter-zuul:1.0.4.RELEASE")
-    //Cache metrics : spring-boot-starter-web, spring-boot-starter-actuator
-
-    compile("org.projectlombok:lombok:1.16.6")
-
-    //TODO use library.ehcache
-    compile("net.sf.ehcache:ehcache-core:2.6.3")
-    compile("org.projectlombok:lombok:1.16.6")
-
-    compile files('libs/qp-common-logging-3.1.0.jar')
-
-    testCompile("org.testng:testng:6.9.6")
-
-    testCompile("org.springframework.boot:spring-boot-starter-test")
-}
-
-compileJava.dependsOn(processResources)
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.10'
-}
-
-jar {
-    manifest {
-        attributes 'Build-Version': version
-    }
-}
-
-apply plugin: 'distribution'
+/* Create os specific package zip files which included jre */
 
 def dependencyDir = file(projectDir.path + '/deps')
 def unzippedDir = file(buildDir.path + '/unzipped')
