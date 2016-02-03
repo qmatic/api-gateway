@@ -68,35 +68,24 @@ jar {
     manifest {
         attributes 'Build-Version': version
     }
-}
-
-task qpApiGatewayJar(type: Jar) {
-    from sourceSets.main.output.classesDir
-    classifier = 'sources'
-    exclude '**/*.json'
-    manifest {
-        attributes 'Build-Version': version
-    }
-    archiveName = "${qpApiGateway}" + '-' + version + '.jar'
+    baseName = "${qpApiGateway}"
 }
 
 task qpCommonGeoJar(type: Jar) {
     from sourceSets.main.output.classesDir
-    classifier = 'sources'
     exclude '**/apigw/**'
-    exclude '*.json'
+    exclude '**/*.json'
     manifest {
         attributes 'Build-Version': version
     }
-    archiveName = "${qpCommonGeo}" + '-' + version + '.jar'
+    baseName = "${qpCommonGeo}"
+    bootRepackage.enabled = false
 }
 
 artifacts {
-    archives qpApiGatewayJar
     archives qpCommonGeoJar
-    archives file(buildDir.path + "/distributions/" + "${qpApiGateway}" + ".zip")
+    archives file(buildDir.path + "/distributions/" + "${qpApiGateway}" + "-" + version + ".zip")
 }
-
 
 /* configuration for debugging the gateway */
    //applicationDefaultJvmArgs = [ "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005" ]
@@ -133,15 +122,6 @@ publishing {
             artifactId "QP_APIGateway_linux64"
             version project.version
         }
-
-/*
-        apigw(MavenPublication) {
-            artifact buildDir.path + "/distributions/" + "${qpApiGateway}" + ".zip"
-            groupId "com.qmatic"
-            artifactId "${qpApiGateway}"
-            version project.version
-        }
-*/
         geojar(MavenPublication) {
             artifact qpCommonGeoJar
             groupId "com.qmatic"
@@ -253,8 +233,7 @@ def linuxScripts = ['**/*.sh', '**/api-gateway', '**/api-gateway-service', '**/a
 distZip {
     // To make sure that the use of apiTokenGeneratorStartScripts doesn't add duplicates to the zip file
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    archiveName = "qp-api-gateway.zip"
+    baseName = "${qpApiGateway}"
 }
 
 distTar.enabled = false
@@ -265,7 +244,7 @@ def dependencyDir = file(projectDir.path + '/deps')
 def unzippedDir = file(buildDir.path + '/unzipped')
 
 task copyGatewayDistributable(type: Copy) {
-    from zipTree(buildDir.path + '/distributions/' + "${qpApiGateway}" + ".zip")
+    from zipTree(buildDir.path + '/distributions/' + "${qpApiGateway}"  + "-" + version + ".zip")
     into unzippedDir
 }
 
@@ -280,7 +259,7 @@ task copyWin64Java(type: Copy, dependsOn : copyGatewayDistributable) {
 }
 
 task buildDistGatewayWindows(type: Zip) {
-    from fileTree(unzippedDir.path + "/${qpApiGateway}") {
+    from fileTree(unzippedDir.path + "/${qpApiGateway}"  + "-" + version) {
         exclude 'bin/curl.ermine'
         exclude 'bin/*.sh'
         exclude 'bin/api-gateway-service'
@@ -300,7 +279,7 @@ buildDistGatewayWindows.dependsOn(copyWin64Java)
 
 
 task buildDistGatewayLinux(type: Zip) {
-    from fileTree(unzippedDir.path + "/${qpApiGateway}") {
+    from fileTree(unzippedDir.path + "/${qpApiGateway}"  + "-" + version) {
         exclude 'bin/*.bat'
         exclude 'bin/*.exe'
         into '/'
@@ -315,6 +294,7 @@ buildDistGatewayLinux.dependsOn(copyLinux64Java)
 task buildDistGatewayPackage << {
 }
 
+buildDistGatewayPackage.dependsOn(qpCommonGeoJar)
 buildDistGatewayPackage.dependsOn(buildDistGatewayLinux)
 buildDistGatewayPackage.dependsOn(buildDistGatewayWindows)
 
