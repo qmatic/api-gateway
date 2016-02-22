@@ -20,10 +20,10 @@ Locates closest services and branches from any position.
 The API Gateway project is built as a Spring Boot Application (https://spring.io/guides/gs/spring-boot), using Netflix zuul edge service framework (https://github.com/Netflix/zuul).
  
 * Clone this repo `git clone https://www.github.com/qmatic/api-gateway.git`
-* Build project using gradle or gradle wrapper, for example: `gradle clean build`
+* Build project using gradle or gradle wrapper, for example: `gradlew clean build`
 
 ###Using
- The API Gateway can be either be installed from the the `./build/distributions/qp-api-gateway.zip` or started by running `gradle bootRun`
+ The API Gateway can be either be installed from the the `./build/distributions/qp-api-gateway.zip` or started by running `gradlew bootRun`
 
 ###Example
  The new API MobileTicket, which is optimized for the mobile ticket scenario as listed below:
