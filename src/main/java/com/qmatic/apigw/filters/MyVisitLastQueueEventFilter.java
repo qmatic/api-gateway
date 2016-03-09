@@ -35,23 +35,22 @@ public class MyVisitLastQueueEventFilter extends ZuulFilter {
 		log.debug("Running filter " +  getClass().getSimpleName());
 		RequestContext ctx = RequestContext.getCurrentContext();
 		//String visitId = ctx.getRequestQueryParams().get("visitId").get(0);
-		String result = getLastEvent(ctx.getResponseBody());
-		ctx.setResponseBody("{\"lastEvent\":" + result + "}");
+		String httpResponseBody = ctx.getResponseBody();
+		if (httpResponseBody != null && !httpResponseBody.isEmpty()) {
+			try {
+				ctx.setResponseBody(getLastEvent(httpResponseBody));
+			} catch (Exception e) {
+				log.warn("HTTP Response parsing error : " + e.getMessage());
+			}
+		}
 		return null;
 	}
 
-	protected String getLastEvent(String responseBody) {
-		try {
-			JSONObject obj = new JSONObject("{\"events\":" + responseBody + "}");
-			JSONArray result = obj.getJSONArray("events");
-
-			JSONObject jsonObject = result.getJSONObject(result.length() - 1);
-			return jsonObject.toString();
-
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			return "";
-		}
+	protected String getLastEvent(String responseBody) throws Exception {
+		JSONObject obj = new JSONObject("{\"events\":" + responseBody + "}");
+		JSONArray result = obj.getJSONArray("events");
+		JSONObject jsonObject = result.getJSONObject(result.length() - 1);
+		return "{\"lastEvent\":" + jsonObject.toString() + "}";
 	}
 
 }

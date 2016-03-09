@@ -35,30 +35,38 @@ public class MyVisitQueuePositionFilter extends ZuulFilter {
 		log.debug("Running filter " +  getClass().getSimpleName());
 		RequestContext ctx = RequestContext.getCurrentContext();
 		String visitId = ctx.getRequestQueryParams().get("visitId").get(0);
-		String result = getPosition(visitId, ctx.getResponseBody());
-		ctx.setResponseBody("{\"visit\":" + result + "}");
-		ctx.set("cacheResponse", true);
+		String httpResponseBody = ctx.getResponseBody();
+		if (httpResponseBody != null && !httpResponseBody.isEmpty()) {
+			try {
+				ctx.setResponseBody(getPosition(visitId, httpResponseBody));
+				ctx.set("cacheResponse", true);
+			} catch (Exception e) {
+				log.warn("HTTP Response parsing error : " + e.getMessage());
+				ctx.setResponseBody("{}");
+			}
+		}
 		return null;
 	}
 
-	protected String getPosition(String visitId, String responseBody) {
+	protected String getPosition(String visitId, String responseBody) throws Exception {
+		boolean visitIdFound = false;
 		int pos = 0;
-		try {
-			JSONObject obj = new JSONObject("{\"result\":" + responseBody + "}");
-			JSONArray list= obj.getJSONArray("result");
-			for (int i = 0; i < list.length(); i++) {
-				int vId = list.getJSONObject(i).getInt("visitId");
-				if (vId <= Integer.parseInt(visitId)) {
-					pos += 1;
-				}
+		JSONObject obj = new JSONObject("{\"result\":" + responseBody + "}");
+		JSONArray list= obj.getJSONArray("result");
+		for (int i = 0; i < list.length(); i++) {
+			int vId = list.getJSONObject(i).getInt("visitId");
+			if (vId <= Integer.parseInt(visitId)) {
+				pos += 1;
 			}
-			JSONObject lastObj = list.getJSONObject(pos-1);
-			lastObj.put("position", pos);
-			return lastObj.toString();
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			return null;
+			if (vId == Integer.parseInt(visitId)) {
+				visitIdFound = true;
+			}
 		}
+		if (!visitIdFound) {
+			throw new Exception("visitId=" + visitId + " not found");
+		}
+		JSONObject lastObj = list.getJSONObject(pos-1);
+		lastObj.put("position", pos);
+		return "{\"visit\":" + lastObj.toString() + "}";
 	}
-
 }
