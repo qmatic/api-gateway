@@ -11,9 +11,13 @@ buildscript {
     }
 }
 
-plugins {
-    id 'net.researchgate.release' version '2.3.4'
+repositories {
+    jcenter()
+    maven {
+        url "http://artifactory.qmatic.com/artifactory/api-gateway"
+    }
 }
+
 apply plugin: 'application'
 apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'distribution'
@@ -21,13 +25,6 @@ apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'spring-boot'
-
-repositories {
-    jcenter()
-    maven {
-        url "http://artifactory.qmatic.com/artifactory/api-gateway"
-    }
-}
 
 version = "${currentVersion}"
 
@@ -73,19 +70,6 @@ jar {
     }
     baseName = "${qpApiGateway}"
 }
-
-release {
-    //variables limited to $name and $version
-    tagTemplate = '$name-$version'
-    tagCommitMessage = ''
-
-    preCommitText = 'com.qmatic'
-
-    preTagCommitMessage = project.ext.releaseMessage
-    newVersionCommitMessage = project.ext.snapshotMessage
-}
-
-afterReleaseBuild.dependsOn artifactoryPublish
 
 task qpCommonGeoJar(type: Jar) {
     from sourceSets.main.output.classesDir
