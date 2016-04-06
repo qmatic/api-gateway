@@ -1,0 +1,11 @@
+1.1.0.0
+Features
+    Cache for SSO cookies
+
+1.0.1.0
+Bug Fixes
+    Correction of MyVisit filters, where an empty responseBody would crash gateway after several attempts.
+
+1.0.0.0
+This is the first release of Qmatic API Gateway
+
