@@ -14,4 +14,6 @@
 
     <cache name="eventInQueueCache" maxEntriesLocalHeap="200" timeToLiveSeconds="10" statistics="true" />
 
+    <cache name="ssoCookieCache" maxEntriesLocalHeap="200" timeToLiveSeconds="60" statistics="true" />
+
 </ehcache>

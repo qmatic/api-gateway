@@ -12,16 +12,13 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-/**
- * Created by davtol on 2016-01-13.
- */
-public class BasicAuthFilterTest {
+public class BasicAuthPostFilterTest {
 
     @InjectMocks
-    private BasicAuthFilter basicAuthFilter;
+    private BasicAuthPostFilter basicAuthPostFilter;
 
     @Mock
     private OrchestraProperties orchestraProperties;
@@ -30,7 +27,8 @@ public class BasicAuthFilterTest {
     private SSOCookieCacheManager ssoCookieCacheManager;
 
     static String API_TOKEN = "c7a1331a-32d-11e5-bf7f-feff819acdc9f";
-    static String COOKIE = "ssocookie";
+    static String COOKIE = "f01239a9-ee06-453a-9788-814da6f8368a";
+    static String COOKIE_HEADER  = "SSOcookie=f01239a9-ee06-453a-9788-814da6f8368a; authorization: Basic c3VwZXJhZG1pbjp1bGFu";
 
     @BeforeMethod
     public void initMocks(){
@@ -43,10 +41,7 @@ public class BasicAuthFilterTest {
         mockHttpServletRequest.addHeader(GatewayConstants.AUTH_TOKEN, API_TOKEN);
         RequestContext context = new RequestContext();
         context.setRequest(mockHttpServletRequest);
-        //context.setResponse(new MockHttpServletResponse());
-        //context.set("error.status_code", HttpStatus.NOT_FOUND.value());
-        //context.set(GatewayConstants.RESPONSE_STATUS_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        //context.addZuulResponseHeader(eMessage.first(), eMessage.second());
+        context.addZuulResponseHeader("Set-Cookie", COOKIE_HEADER);
         RequestContext.testSetCurrentContext(context);
     }
 
@@ -56,29 +51,27 @@ public class BasicAuthFilterTest {
     }
 
     @Test
-    public void testFilterRunNoSSOCookie() {
+    public void testFilterRun() {
         OrchestraProperties.UserCredentials userCredentials = new OrchestraProperties.UserCredentials();
         userCredentials.setUser("superadmin");
         userCredentials.setPasswd("ulan");
         when(this.orchestraProperties.getCredentials(API_TOKEN)).thenReturn(userCredentials);
-        basicAuthFilter.run();
-        verify(ssoCookieCacheManager).getSSOCookieFromCache(API_TOKEN);
-        Assert.assertFalse(RequestContext.getCurrentContext().getZuulRequestHeaders().containsKey("Authorization"));
-        Assert.assertFalse(RequestContext.getCurrentContext().getZuulRequestHeaders().containsKey("cookie"));
+        RequestContext.getCurrentContext().set(GatewayConstants.RESPONSE_STATUS_CODE, 200);
+        basicAuthPostFilter.run();
+
+        verify(ssoCookieCacheManager).writeSSOCookieToCache(API_TOKEN, COOKIE);
     }
 
     @Test
-    public void testFilterRunSSOCookieExists() {
+    public void testFilterRunForStatus401() {
         OrchestraProperties.UserCredentials userCredentials = new OrchestraProperties.UserCredentials();
         userCredentials.setUser("superadmin");
         userCredentials.setPasswd("ulan");
         when(this.orchestraProperties.getCredentials(API_TOKEN)).thenReturn(userCredentials);
-        when(ssoCookieCacheManager.getSSOCookieFromCache(API_TOKEN)).thenReturn(COOKIE);
-        basicAuthFilter.run();
+        RequestContext.getCurrentContext().set(GatewayConstants.RESPONSE_STATUS_CODE, 401);
 
-        Assert.assertFalse(RequestContext.getCurrentContext().getZuulRequestHeaders().containsKey("Authorization"));
-        Assert.assertTrue(RequestContext.getCurrentContext().getZuulRequestHeaders().containsKey("cookie"));
+        basicAuthPostFilter.run();
 
+        verify(ssoCookieCacheManager).deleteSSOCookieFromCache(API_TOKEN);
     }
-
 }
