@@ -37,7 +37,7 @@ orchestra:
     url: http://localhost:8080
 
   # by default we do not forward requests without a valid authentication token
-  blockUnathorized : true
+  blockUnauthorized : true
 
   # use 'password-encoder' script in 'bin' folder script for encoding new password.
   # use 'api-token-generator' script in 'bin' folder  for generating new token.

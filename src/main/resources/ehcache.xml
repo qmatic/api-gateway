@@ -2,7 +2,7 @@
          xsi:noNamespaceSchemaLocation="ehcache.xsd" name="gateway">
 
     <!-- Disabling statistics in production increases performance -->
-    <cache name="request" maxEntriesLocalHeap="1000" timeToLiveSeconds="600" statistics="true" />
+    <cache name="request" maxEntriesLocalHeap="1000" timeToLiveSeconds="1" statistics="true" />
 
     <cache name="serviceCache" maxEntriesLocalHeap="200" timeToLiveSeconds="600" statistics="true" />
 

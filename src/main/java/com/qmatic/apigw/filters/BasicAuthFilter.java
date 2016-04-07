@@ -25,8 +25,8 @@ public class BasicAuthFilter extends ZuulFilter {
 	@Autowired
 	SSOCookieCacheManager ssoCookieCacheManager;
 
-	@Value("${orchestra.blockUnathorized}")
-	private boolean blockUnathorized;
+	@Value("${orchestra.blockUnauthorized}")
+	private boolean blockUnauthorized;
 
 	private static final Logger log = LoggerFactory.getLogger(BasicAuthFilter.class);
 
@@ -76,7 +76,7 @@ public class BasicAuthFilter extends ZuulFilter {
 	}
 
 	private void unauthorized() {
-		if(!blockUnathorized) {
+		if(!blockUnauthorized) {
 			log.debug("Forwarding unauthorized request");
 			return;
 		}
