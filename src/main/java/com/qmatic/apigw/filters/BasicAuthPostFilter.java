@@ -60,7 +60,6 @@ public class BasicAuthPostFilter extends ZuulFilter {
                     String cookie = split[0].split("=")[1];
                     ssoCookieCacheManager.writeSSOCookieToCache(authToken, cookie);
                     ctx.getZuulResponseHeaders().remove(pair);
-                    return null;
                 }
             }
 
