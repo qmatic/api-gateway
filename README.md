@@ -34,6 +34,10 @@ The API Gateway project is built as a Spring Boot Application (https://spring.io
 * issue ticket - /MobileTicket/services/[serviceId]/branches/[branchId]/ticket/issue
 * get position in queue - /MobileTicket/MyVisit/Position/branches/[branchId]/queues/[queueId]/visits?visitId=[visitId]
 * get last event for visit - /MobileTicket/MyVisit/LastEvent/branches/[branchId]/visits/[visitId]/events?visitId=[visitId]
-* get all branches using a token
+```
+###Curl examples
+
+```
+* Get all branches using a token for authentication
 curl -i -X GET -H "auth-token:846f91fe-b733-4597-97c3-f4fdd9740a14" http://localhost:9090/rest/servicepoint/branches
 ```
