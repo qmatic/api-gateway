@@ -82,6 +82,10 @@ cache:
       match: /branches/[0-9]+/visits/[0-9]+/events
       routes: my_visit_last_queue_event
 
+urlDecodeFilter:
+  enabled: false
+  encryptionKey: ApiGw
+
 # Details logging if routing fails. This is off by default not to flood logs if orchestra is down
 logZuulExceptions : false
 
@@ -145,6 +149,10 @@ zuul:
     my_visit_last_queue_event:
       path: /MobileTicket/MyVisit/LastEvent/**
       url: ${orchestra.central.url}/qsystem/rest/servicepoint
+
+    mobile_decoding:
+      path: /mobileEnc/**
+      url: dummy
 
 # These URLs are used internally for fetching branches and branches for services but these should normally not be changed.
 geoService:
