@@ -67,6 +67,7 @@ public class MyVisitQueuePositionFilter extends ZuulFilter {
 		}
 		JSONObject lastObj = list.getJSONObject(pos-1);
 		lastObj.put("position", pos);
+		lastObj.put("queueSize", list.length());
 		return "{\"visit\":" + lastObj.toString() + "}";
 	}
 }
