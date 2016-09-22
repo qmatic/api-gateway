@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * This filter handles connection refused exceptions
@@ -54,15 +56,16 @@ public class BasicAuthPostFilter extends ZuulFilter {
             ssoCookieCacheManager.deleteSSOCookieFromCache(authToken);
         } else if (authToken != null) {
             List<Pair<String, String>> zuulResponseHeaders = ctx.getZuulResponseHeaders();
-            for (Pair<String, String> pair : zuulResponseHeaders) {
-                if (pair.first().equals("Set-Cookie") && pair.second().contains("SSOcookie")) {
-                    String[] split = pair.second().split(";");
+            ListIterator<Pair<String, String>> iterator = zuulResponseHeaders.listIterator();
+            while(iterator.hasNext()){
+                Pair<String, String> responseHeader = iterator.next();
+                if (responseHeader.first().equals("Set-Cookie") && responseHeader.second().contains("SSOcookie")) {
+                    String[] split = responseHeader.second().split(";");
                     String cookie = split[0].split("=")[1];
                     ssoCookieCacheManager.writeSSOCookieToCache(authToken, cookie);
-                    ctx.getZuulResponseHeaders().remove(pair);
+                    iterator.remove();
                 }
             }
-
         }
         return null;
     }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * This filter handles connection refused exceptions
@@ -50,12 +51,14 @@ public class OrchestraResponseErrorFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         ctx.removeRouteHost();
         List<Pair<String, String>> zuulResponseHeaders = ctx.getZuulResponseHeaders();
-        for (Pair<String, String>header : zuulResponseHeaders) {
-            if (header.first().equals(GatewayConstants.ERROR_MESSAGE)) {
+        ListIterator<Pair<String, String>> iterator = zuulResponseHeaders.listIterator();
+        while(iterator.hasNext()){
+            Pair<String, String> responseHeader = iterator.next();
+            if (responseHeader.first().equals(GatewayConstants.ERROR_MESSAGE)) {
                 if (logZuulExceptions) {
-                    log.warn(getClass().getSimpleName(), "Error message:" + header.second());
+                    log.warn(getClass().getSimpleName(), "Error message:" + responseHeader.second());
                 }
-                header.setSecond("See gateway log files for full error message.");
+                responseHeader.setSecond("See gateway log files for full error message.");
             }
         }
     }
