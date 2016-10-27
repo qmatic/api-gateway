@@ -38,7 +38,7 @@ public class MyVisitQueuePositionFilter extends ZuulFilter {
 		String httpResponseBody = ctx.getResponseBody();
 		if (httpResponseBody != null && !httpResponseBody.isEmpty()) {
 			try {
-				ctx.setResponseBody(getPosition(visitId, httpResponseBody));
+				ctx.setResponseBody(getVisitJsonWithPosition(visitId, httpResponseBody));
 				ctx.set("cacheResponse", true);
 			} catch (Exception e) {
 				log.warn("HTTP Response parsing error : " + e.getMessage());
@@ -48,26 +48,24 @@ public class MyVisitQueuePositionFilter extends ZuulFilter {
 		return null;
 	}
 
-	protected String getPosition(String visitId, String responseBody) throws Exception {
-		boolean visitIdFound = false;
-		int pos = 0;
-		JSONObject obj = new JSONObject("{\"result\":" + responseBody + "}");
-		JSONArray list= obj.getJSONArray("result");
+	protected String getVisitJsonWithPosition(String visitId, String orderedResponseBody) throws Exception {
+		JSONObject obj = new JSONObject("{\"result\":" + orderedResponseBody + "}");
+		JSONArray orderedVisits= obj.getJSONArray("result");
+		int queuePosition = getQueuingPosition(visitId, orderedVisits);
+		JSONObject visit = orderedVisits.getJSONObject(queuePosition-1);
+		visit.put("position", queuePosition);
+		visit.put("queueSize", orderedVisits.length());
+		return "{\"visit\":" + visit.toString() + "}";
+	}
+
+	protected int getQueuingPosition(String visitId, JSONArray list) throws Exception {
+		int aVisitId;
 		for (int i = 0; i < list.length(); i++) {
-			int vId = list.getJSONObject(i).getInt("visitId");
-			if (vId <= Integer.parseInt(visitId)) {
-				pos += 1;
-			}
-			if (vId == Integer.parseInt(visitId)) {
-				visitIdFound = true;
+			aVisitId = list.getJSONObject(i).getInt("visitId");
+			if (aVisitId == Integer.parseInt(visitId)) {
+				return i+1;
 			}
 		}
-		if (!visitIdFound) {
-			throw new Exception("visitId=" + visitId + " not found");
-		}
-		JSONObject lastObj = list.getJSONObject(pos-1);
-		lastObj.put("position", pos);
-		lastObj.put("queueSize", list.length());
-		return "{\"visit\":" + lastObj.toString() + "}";
+		throw new Exception("visitId=" + visitId + " not found");
 	}
 }
