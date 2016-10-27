@@ -75,11 +75,11 @@ cache:
       routes: custom_mobile_services
     visits:
       cacheName: visitInQueueCache
-      match: /branches/[0-9]+/queues/[0-9]+/visits
+      match: /branches/[0-9]+/queues/[0-9]+/visits[/]?
       routes: my_visit_queue_position, servicepoint_api
     events:
       cacheName: eventInQueueCache
-      match: /branches/[0-9]+/visits/[0-9]+/events
+      match: /branches/[0-9]+/visits/[0-9]+/events[/]?
       routes: my_visit_last_queue_event
 
 urlDecodeFilter:
