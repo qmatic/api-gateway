@@ -2,18 +2,24 @@ package com.qmatic.apigw.filters;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import com.qmatic.apigw.GatewayConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Map;
+
+import static com.qmatic.apigw.GatewayConstants.FIRST_REQUEST_PARAM_IF_MANY_WITH_EQUAL_NAME;
+
 @Component
 public class MyVisitQueuePositionFilter extends ZuulFilter {
 
-	private static final Logger log = LoggerFactory.getLogger(MyVisitQueuePositionFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(MyVisitQueuePositionFilter.class);
 
-	@Override
+    @Override
 	public String filterType() {
 		return "post";
 	}
@@ -34,21 +40,65 @@ public class MyVisitQueuePositionFilter extends ZuulFilter {
 	public Object run() {
 		log.debug("Running filter " +  getClass().getSimpleName());
 		RequestContext ctx = RequestContext.getCurrentContext();
-		String visitId = ctx.getRequestQueryParams().get("visitId").get(0);
-		String httpResponseBody = ctx.getResponseBody();
-		if (httpResponseBody != null && !httpResponseBody.isEmpty()) {
-			try {
-				ctx.setResponseBody(getVisitJsonWithPosition(visitId, httpResponseBody));
-				ctx.set("cacheResponse", true);
-			} catch (Exception e) {
-				log.warn("HTTP Response parsing error : " + e.getMessage());
-				ctx.setResponseBody("{}");
-			}
-		}
+
+        String requestedVisitId = getRequestedVisitId(ctx);
+        if(requestedVisitId != null) {
+            getVisitPosition(ctx, requestedVisitId);
+        }
 		return null;
 	}
 
-	protected String getVisitJsonWithPosition(String visitId, String orderedResponseBody) throws Exception {
+    private void getVisitPosition(RequestContext ctx, String requestedVisitId) {
+        String unfilteredResponseBody = ctx.getResponseBody();
+        if (unfilteredResponseBody != null && !unfilteredResponseBody.isEmpty()) {
+            try {
+                String filteredResponseBody = getVisitJsonWithPosition(requestedVisitId, unfilteredResponseBody);
+                setFilteredResponseBody(ctx, filteredResponseBody);
+            } catch (Exception e) {
+                handleException(ctx, "HTTP Response parsing error : " + e.getMessage());
+            }
+        }
+    }
+
+    private void setFilteredResponseBody(RequestContext ctx, String visitJsonWithPosition) {
+        ctx.setResponseBody(visitJsonWithPosition);
+        ctx.set("cacheResponse", true);
+    }
+
+    private String getRequestedVisitId(RequestContext ctx) {
+        String requestedVisitId = null;
+        try {
+            requestedVisitId = getRequestedVisitIdFromRequestContext(ctx);
+        } catch (Exception e) {
+            handleException(ctx, "HTTP Request parsing error : " + e.getMessage());
+        }
+        return requestedVisitId;
+    }
+
+    private void handleException(RequestContext ctx, String msg) {
+        log.warn(msg);
+        ctx.setResponseBody("{}");
+    }
+
+    private String getRequestedVisitIdFromRequestContext(RequestContext ctx) throws Exception {
+        Map<String, List<String>> requestQueryParams = getRequestQueryParams(ctx);
+        return getVisitIdFromRequestQueryParams(requestQueryParams);
+    }
+
+    private Map<String, List<String>> getRequestQueryParams(RequestContext ctx) {
+        Map<String, List<String>> requestQueryParams = ctx.getRequestQueryParams();
+        return requestQueryParams;
+    }
+
+    private String getVisitIdFromRequestQueryParams(Map<String, List<String>> requestQueryParams) throws Exception {
+        if(requestQueryParams != null && requestQueryParams.containsKey(GatewayConstants.VISIT_ID)) {
+            return requestQueryParams.get(GatewayConstants.VISIT_ID).get(FIRST_REQUEST_PARAM_IF_MANY_WITH_EQUAL_NAME);
+        } else {
+            throw new Exception("visitId not found among request parameters");
+        }
+    }
+
+    protected String getVisitJsonWithPosition(String visitId, String orderedResponseBody) throws Exception {
 		JSONObject obj = new JSONObject("{\"result\":" + orderedResponseBody + "}");
 		JSONArray orderedVisits= obj.getJSONArray("result");
 		int queuePosition = getQueuingPosition(visitId, orderedVisits);
