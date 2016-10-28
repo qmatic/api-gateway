@@ -1,10 +1,22 @@
+1.2.0.0
+Features
+    URL obfuscation support
+
+Bug Fixes
+    queueSize now included in response from MobileTicket/MyVisit/Position
+    Concurrent modification error fixed in authentication handling
+    /MobileTicket/MyVisit now returns correct visit order
+    Updated default configuration cache routes to accept trailing slash
+
 1.1.0.0
 Features
     Cache for SSO cookies
 
+
 1.0.1.0
 Bug Fixes
     Correction of MyVisit filters, where an empty responseBody would crash gateway after several attempts.
+
 
 1.0.0.0
 This is the first release of Qmatic API Gateway
