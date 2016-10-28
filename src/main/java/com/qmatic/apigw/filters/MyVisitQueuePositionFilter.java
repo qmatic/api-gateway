@@ -58,10 +58,10 @@ public class MyVisitQueuePositionFilter extends ZuulFilter {
 		return "{\"visit\":" + visit.toString() + "}";
 	}
 
-	protected int getQueuingPosition(String visitId, JSONArray list) throws Exception {
+	protected int getQueuingPosition(String visitId, JSONArray visits) throws Exception {
 		int aVisitId;
-		for (int i = 0; i < list.length(); i++) {
-			aVisitId = list.getJSONObject(i).getInt("visitId");
+		for (int i = 0; i < visits.length(); i++) {
+			aVisitId = visits.getJSONObject(i).getInt("visitId");
 			if (aVisitId == Integer.parseInt(visitId)) {
 				return i+1;
 			}

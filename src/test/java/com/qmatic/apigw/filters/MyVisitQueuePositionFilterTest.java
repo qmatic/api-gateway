@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -14,12 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class MyVisitQueuePositionFilterTest {
 
-    MyVisitQueuePositionFilter myVisitQueuePositionFilter = new MyVisitQueuePositionFilter();
+    private static final String VISIT_ID_1_NOT_FOUND = "visitId=1 not found";
+    private static final String VISIT_ID_NEGATIVE_NOT_FOUND = "visitId=-1 not found";
+    MyVisitQueuePositionFilter testee = new MyVisitQueuePositionFilter();
 
     private final String VISIT_ID_1 = "1";
     private final String VISIT_ID_2 = "2";
@@ -41,8 +45,8 @@ public class MyVisitQueuePositionFilterTest {
                     "{\"ticketId\":\"A005\",\"visitId\":5,\"waitingTime\":5,\"totalWaitingTime\":0,\"appointmentId\":null,\"appointmentTime\":null,\"queueId\":1},"+
                     "{\"ticketId\":\"A004\",\"visitId\":4,\"waitingTime\":4,\"totalWaitingTime\":0,\"appointmentId\":null,\"appointmentTime\":null,\"queueId\":1}]";
 
-    JSONArray sequentialResult;
-    JSONArray nonSequentialResult;
+    private JSONArray sequentialResult;
+    private JSONArray nonSequentialResult;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -107,7 +111,7 @@ public class MyVisitQueuePositionFilterTest {
     private void assertQueuingPositionOriginalOrder(int queueSize, JSONArray result) throws Exception {
         int queuingPosition;
         for(int i = 1; i <= queueSize; ++i) {
-            queuingPosition = myVisitQueuePositionFilter.getQueuingPosition(String.valueOf(i), result);
+            queuingPosition = testee.getQueuingPosition(String.valueOf(i), result);
             assertTrue(queuingPosition == i);
         }
     }
@@ -121,19 +125,58 @@ public class MyVisitQueuePositionFilterTest {
         final int visitFiveQueueingPosition = 4;
 
         int queuingPosition;
-        queuingPosition = myVisitQueuePositionFilter.getQueuingPosition(VISIT_ID_1, nonSequentialResult);
+        queuingPosition = testee.getQueuingPosition(VISIT_ID_1, nonSequentialResult);
         assertTrue(queuingPosition == visitOneQueuingPosition);
 
-        queuingPosition = myVisitQueuePositionFilter.getQueuingPosition(VISIT_ID_2, nonSequentialResult);
+        queuingPosition = testee.getQueuingPosition(VISIT_ID_2, nonSequentialResult);
         assertTrue(queuingPosition == visitTwoQueuingPosition);
 
-        queuingPosition = myVisitQueuePositionFilter.getQueuingPosition(VISIT_ID_3, nonSequentialResult);
+        queuingPosition = testee.getQueuingPosition(VISIT_ID_3, nonSequentialResult);
         assertTrue(queuingPosition == visitThreeQueuingPosition);
 
-        queuingPosition = myVisitQueuePositionFilter.getQueuingPosition(VISIT_ID_4, nonSequentialResult);
+        queuingPosition = testee.getQueuingPosition(VISIT_ID_4, nonSequentialResult);
         assertTrue(queuingPosition == visitFourQueuingPosition);
 
-        queuingPosition = myVisitQueuePositionFilter.getQueuingPosition(VISIT_ID_5, nonSequentialResult);
+        queuingPosition = testee.getQueuingPosition(VISIT_ID_5, nonSequentialResult);
         assertTrue(queuingPosition == visitFiveQueueingPosition);
+    }
+
+    @Test
+    public void getQueueingPositionWithOneVisit() throws Exception {
+        // arrange
+        String queueWithOneVisit =
+                "[{\"ticketId\":\"A001\",\"visitId\":1,\"waitingTime\":1,\"totalWaitingTime\":0,\"appointmentId\":null,\"appointmentTime\":null,\"queueId\":1}]";
+
+        String expectedQueueingPosition = getJsonVisitWithPosition("1", "1");
+
+        // act
+        String actualQueueingPosition = testee.getVisitJsonWithPosition("1", queueWithOneVisit);
+
+        // assert
+        assertEquals(actualQueueingPosition, expectedQueueingPosition);
+    }
+
+    @Test(expectedExceptions = {Exception.class}, expectedExceptionsMessageRegExp = VISIT_ID_1_NOT_FOUND)
+    public void getQueueingPositionWithNoVisits() throws Exception {
+        // arrange
+        String queueWithNoVisits =
+                "[]";
+        // act
+        testee.getVisitJsonWithPosition("1", queueWithNoVisits);
+
+        // assert
+        Assert.fail("Expected exception with message " + VISIT_ID_1_NOT_FOUND);
+    }
+
+    @Test(expectedExceptions = {Exception.class}, expectedExceptionsMessageRegExp = VISIT_ID_NEGATIVE_NOT_FOUND)
+    public void getQueueingPositionIllegalArgument() throws Exception {
+        // arrange
+        String queueWithOneVisit =
+                "[{\"ticketId\":\"A001\",\"visitId\":1,\"waitingTime\":1,\"totalWaitingTime\":0,\"appointmentId\":null,\"appointmentTime\":null,\"queueId\":1}]";
+
+        // act
+        testee.getVisitJsonWithPosition("-1", queueWithOneVisit);
+
+        Assert.fail("Expected exception with message " + VISIT_ID_1_NOT_FOUND);
     }
 }
