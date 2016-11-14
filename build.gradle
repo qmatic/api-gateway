@@ -26,6 +26,7 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'spring-boot'
 
+applicationName = 'api-gateway'
 version = "${currentVersion}"
 
 def passwordProperty= project.hasProperty('password') ? password : "dummy"
