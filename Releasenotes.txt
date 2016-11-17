@@ -1,3 +1,8 @@
+1.2.0.1
+Bug Fixes
+    Renamed api-gateway.bat to make service run
+    Updated gradle wrapper to use gradle version 2.10
+
 1.2.0.0
 Features
     URL obfuscation support
