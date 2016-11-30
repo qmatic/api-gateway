@@ -25,7 +25,7 @@
     <logger name="org.springframework.web" level="INFO"/>
     
     <!-- Turn off INFO logging for lookup of route, this is done for each request -->
-    <logger name="org.springframework.core.netflix.zuul.filters.ProxyRouteLocator" level="WARN"/>
+    <logger name="org.springframework.cloud.netflix.zuul.filters.ProxyRouteLocator" level="WARN"/>
 
     <root level="INFO">
         <appender-ref ref="startupDailyRolloverAppender" />
