@@ -2,6 +2,7 @@ package com.qmatic.apigw.filters;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.exception.ZuulException;
 import com.qmatic.apigw.GatewayConstants;
 import com.qmatic.apigw.caching.SSOCookieCacheManager;
 import com.qmatic.apigw.properties.OrchestraProperties;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 
 @EnableConfigurationProperties(OrchestraProperties.class)
@@ -46,7 +49,7 @@ public class BasicAuthFilter extends ZuulFilter {
 	}
 
 	@Override
-	public Object run() {
+	public Object run(){
 		RequestContext ctx = RequestContext.getCurrentContext();
 		String token = getAuthToken();
 		if (token == null || token.isEmpty()) {
@@ -63,7 +66,8 @@ public class BasicAuthFilter extends ZuulFilter {
 		String userCredentials = getUserCredentials(token);
 		if (userCredentials == null) {
 			log.debug("Missing user credentials for token : " + token);
-
+			unauthorized();
+			return null;
 		} else {
 			ctx.addZuulRequestHeader("Authorization", "Basic " +
 					new String(Base64.encodeBase64((userCredentials).getBytes(GatewayConstants.UTF8_CHARSET)), Charset.forName("US-ASCII")));
