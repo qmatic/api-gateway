@@ -40,7 +40,7 @@ public class BasicAuthFilter extends ZuulFilter {
 
 	@Override
 	public String filterType() {
-		return "pre";
+		return FilterConstants.PRE_FILTER;
 	}
 
 	@Override

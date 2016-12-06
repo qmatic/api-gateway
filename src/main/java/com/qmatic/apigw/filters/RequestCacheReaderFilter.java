@@ -14,7 +14,7 @@ public class RequestCacheReaderFilter extends RequestCacheFilterBase {
 
     @Override
     public String filterType() {
-        return "pre";
+        return FilterConstants.PRE_FILTER;
     }
 
     @Override

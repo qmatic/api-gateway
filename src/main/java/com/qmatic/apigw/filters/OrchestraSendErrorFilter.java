@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 public class OrchestraSendErrorFilter extends ZuulFilter {
 
     private static final Logger log = LoggerFactory.getLogger(OrchestraSendErrorFilter.class);
+    private static final String ERROR_EXCEPTION = "error.exception";
+    private static final String ERROR_STATUS_CODE = "error.status_code";
 
     protected final String ORCHESTRA_SEND_ERROR_FILTER_RAN = "orchestraSendErrorFilter.ran";
 
@@ -23,7 +25,7 @@ public class OrchestraSendErrorFilter extends ZuulFilter {
 
     @Override
     public String filterType() {
-        return "post";
+        return FilterConstants.POST_FILTER;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class OrchestraSendErrorFilter extends ZuulFilter {
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
         // only forward to errorPath if it hasn't been forwarded to already
-        return ctx.containsKey("error.status_code") &&
+        return ctx.containsKey(ERROR_STATUS_CODE) &&
                 !ctx.getBoolean(ORCHESTRA_SEND_ERROR_FILTER_RAN, false);
     }
 
@@ -44,10 +46,10 @@ public class OrchestraSendErrorFilter extends ZuulFilter {
         log.debug("Running filter " +  getClass().getSimpleName());
 
         RequestContext ctx = RequestContext.getCurrentContext();
-        int statusCode = (Integer) ctx.get("error.status_code");
+        int statusCode = (Integer) ctx.get(ERROR_STATUS_CODE);
         String responseBody = "";
-        if(ctx.containsKey("error.exception")) {
-            responseBody = ctx.get("error.exception").toString();
+        if(ctx.containsKey(ERROR_EXCEPTION)) {
+            responseBody = ctx.get(ERROR_EXCEPTION).toString();
         }
         outputError(statusCode, responseBody);
         if(logZuulExceptions) {
@@ -66,7 +68,7 @@ public class OrchestraSendErrorFilter extends ZuulFilter {
 
     protected void logException() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        Object e = ctx.get("error.exception");
+        Object e = ctx.get(ERROR_EXCEPTION);
         log.warn("Error during filtering", Throwable.class.cast(e));
     }
 }

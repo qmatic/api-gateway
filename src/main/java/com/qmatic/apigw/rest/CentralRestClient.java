@@ -6,7 +6,6 @@ import com.qmatic.common.geo.Branch;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -30,12 +29,6 @@ public final class CentralRestClient {
     private String mobileServiceBranchesUrl;
     private CentralHttpErrorHandler centralErrorHandler;
     private RestTemplate restTemplate;
-    private OrchestraProperties orchestraProperties;
-
-    @Autowired
-    public void setOrchestraProperties(OrchestraProperties orchestraProperties) {
-        this.orchestraProperties = orchestraProperties;
-    }
 
     @PostConstruct
     protected void init() {

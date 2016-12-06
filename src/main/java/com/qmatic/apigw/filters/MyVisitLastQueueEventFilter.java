@@ -15,7 +15,7 @@ public class MyVisitLastQueueEventFilter extends ZuulFilter {
 
 	@Override
 	public String filterType() {
-		return "post";
+		return FilterConstants.POST_FILTER;
 	}
 
 	// Must be run AFTER RequestCacheWriterFilter
@@ -27,14 +27,13 @@ public class MyVisitLastQueueEventFilter extends ZuulFilter {
 	@Override
 	public boolean shouldFilter() {
 		RequestContext ctx = RequestContext.getCurrentContext();
-		return "my_visit_last_queue_event".equals(ctx.get("proxy"));
+		return FilterConstants.MY_VISIT_LAST_QUEUE_EVENT.equals(ctx.get(FilterConstants.PROXY));
 	}
 
 	@Override
 	public Object run() {
 		log.debug("Running filter " +  getClass().getSimpleName());
 		RequestContext ctx = RequestContext.getCurrentContext();
-		//String visitId = ctx.getRequestQueryParams().get("visitId").get(0);
 		String httpResponseBody = ctx.getResponseBody();
 		if (httpResponseBody != null && !httpResponseBody.isEmpty()) {
 			try {

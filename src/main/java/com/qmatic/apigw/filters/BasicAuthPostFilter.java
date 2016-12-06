@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Iterator;
+import javax.ws.rs.core.HttpHeaders;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -31,7 +31,7 @@ public class BasicAuthPostFilter extends ZuulFilter {
 
     @Override
     public String filterType() {
-        return "post";
+        return FilterConstants.POST_FILTER;
     }
 
     @Override
@@ -49,9 +49,9 @@ public class BasicAuthPostFilter extends ZuulFilter {
         log.debug("Running filter " +  getClass().getSimpleName());
 
         RequestContext ctx = RequestContext.getCurrentContext();
-        String authToken = ctx.getRequest().getHeader("auth-token");
+        String authToken = ctx.getRequest().getHeader(GatewayConstants.AUTH_TOKEN);
 
-        String responseStatusCode = Integer.toString((Integer) ctx.get(GatewayConstants.RESPONSE_STATUS_CODE));
+        String responseStatusCode = Integer.toString((Integer) ctx.get(FilterConstants.RESPONSE_STATUS_CODE));
         if ("401".equals(responseStatusCode)) {
             ssoCookieCacheManager.deleteSSOCookieFromCache(authToken);
         } else if (authToken != null) {
@@ -59,7 +59,7 @@ public class BasicAuthPostFilter extends ZuulFilter {
             ListIterator<Pair<String, String>> iterator = zuulResponseHeaders.listIterator();
             while(iterator.hasNext()){
                 Pair<String, String> responseHeader = iterator.next();
-                if (responseHeader.first().equals("Set-Cookie") && responseHeader.second().contains("SSOcookie")) {
+                if (responseHeader.first().equals(HttpHeaders.SET_COOKIE) && responseHeader.second().contains("SSOcookie")) {
                     String[] split = responseHeader.second().split(";");
                     String cookie = split[0].split("=")[1];
                     ssoCookieCacheManager.writeSSOCookieToCache(authToken, cookie);

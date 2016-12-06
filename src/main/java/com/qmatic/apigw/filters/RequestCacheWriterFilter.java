@@ -16,7 +16,7 @@ public class RequestCacheWriterFilter extends RequestCacheFilterBase {
 
     @Override
     public String filterType() {
-        return "post";
+        return FilterConstants.POST_FILTER;
     }
 
     @Override

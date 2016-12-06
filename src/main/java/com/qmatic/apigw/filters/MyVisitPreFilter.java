@@ -2,18 +2,16 @@ package com.qmatic.apigw.filters;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
+import java.util.List;
 
 @Component
 public class MyVisitPreFilter extends ZuulFilter {
 
-	private static final Logger log = LoggerFactory.getLogger(MyVisitPreFilter.class);
-
 	@Override
 	public String filterType() {
-		return "pre";
+		return FilterConstants.PRE_FILTER;
 	}
 
 	@Override
@@ -31,7 +29,7 @@ public class MyVisitPreFilter extends ZuulFilter {
 	@Override
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
-		if (!checkVisitId(ctx)) {
+		if (!checkVisitIdIsValid(ctx)) {
 			ctx.removeRouteHost();
 			ctx.setResponseStatusCode(400);
 			ctx.setSendZuulResponse(false);
@@ -39,12 +37,12 @@ public class MyVisitPreFilter extends ZuulFilter {
 		return null;
 	}
 
-	private boolean checkVisitId(RequestContext ctx) {
-		try {
-			return ctx.getRequestQueryParams().get("visitId").get(0) != "";
-		} catch (Exception e) {
-			return false;
+	private boolean checkVisitIdIsValid(RequestContext ctx) {
+		List<String> visitId = ctx.getRequestQueryParams().get(FilterConstants.VISIT_ID);
+		if (visitId != null && visitId.size() == 1) {
+			return StringUtils.isNumeric(visitId.get(0));
 		}
+		return false;
 	}
 
 }

@@ -3,7 +3,6 @@ package com.qmatic.apigw.filters;
 import com.netflix.util.Pair;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import com.qmatic.apigw.GatewayConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +24,7 @@ public class OrchestraResponseErrorFilter extends ZuulFilter {
 
     @Override
     public String filterType() {
-        return "post";
+        return FilterConstants.POST_FILTER;
     }
 
     @Override
@@ -36,7 +35,7 @@ public class OrchestraResponseErrorFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        String responseStatusCode = Integer.toString((Integer) ctx.get(GatewayConstants.RESPONSE_STATUS_CODE));
+        String responseStatusCode = Integer.toString((Integer) ctx.get(FilterConstants.RESPONSE_STATUS_CODE));
         return responseStatusCode.startsWith("5") || responseStatusCode.startsWith("4");
     }
 
@@ -54,7 +53,7 @@ public class OrchestraResponseErrorFilter extends ZuulFilter {
         ListIterator<Pair<String, String>> iterator = zuulResponseHeaders.listIterator();
         while(iterator.hasNext()){
             Pair<String, String> responseHeader = iterator.next();
-            if (responseHeader.first().equals(GatewayConstants.ERROR_MESSAGE)) {
+            if (responseHeader.first().equals(FilterConstants.ERROR_MESSAGE)) {
                 if (logZuulExceptions) {
                     log.warn(getClass().getSimpleName(), "Error message:" + responseHeader.second());
                 }

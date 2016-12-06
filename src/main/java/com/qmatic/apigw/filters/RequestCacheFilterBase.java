@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 abstract public class RequestCacheFilterBase extends ZuulFilter {
 
-    public static final String REQUEST_URI = "requestURI";
     public static final String ROUTE_HOST = "routeHost";
-    public static final String PROXY = "proxy";
     public static final Object RESULT_DOES_NOT_MATTER = null;
 
     private static final Logger log = LoggerFactory.getLogger(RequestCacheFilterBase.class);
@@ -30,10 +28,10 @@ abstract public class RequestCacheFilterBase extends ZuulFilter {
 
     public String getRequestUri() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        if(!ctx.containsKey(REQUEST_URI)) {
+        if(!ctx.containsKey(FilterConstants.REQUEST_URI)) {
             return null;
         }
-        String requestURI = ctx.get(REQUEST_URI).toString();
+        String requestURI = ctx.get(FilterConstants.REQUEST_URI).toString();
         return requestURI;
     }
 
@@ -53,10 +51,10 @@ abstract public class RequestCacheFilterBase extends ZuulFilter {
 
     public String getProxy() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        if(!ctx.containsKey(PROXY)) {
+        if(!ctx.containsKey(FilterConstants.PROXY)) {
             return null;
         }
-        String proxy = ctx.get(PROXY).toString();
+        String proxy = ctx.get(FilterConstants.PROXY).toString();
         return proxy;
     }
 

@@ -36,7 +36,7 @@ public class UrlDecodeFilter extends ZuulFilter {
 
     @Override
     public String filterType() {
-        return "pre";
+        return FilterConstants.PRE_FILTER;
     }
 
     @Override
@@ -85,12 +85,12 @@ public class UrlDecodeFilter extends ZuulFilter {
     private void setNewRequestURI(RequestContext ctx, ProxyRouteSpec matchingRoute) {
         String path = matchingRoute.getPath();
         String newRequestURI = path.substring(1, path.indexOf("?"));
-        ctx.put("requestURI", newRequestURI);
+        ctx.put(FilterConstants.REQUEST_URI, newRequestURI);
     }
 
     private void setNewProxy(RequestContext ctx, ProxyRouteSpec matchingRoute) {
         String id = matchingRoute.getId();
-        ctx.put("proxy", id);
+        ctx.put(FilterConstants.PROXY, id);
     }
 
     private void setRequestParameters(RequestContext ctx, String encodedURL) {

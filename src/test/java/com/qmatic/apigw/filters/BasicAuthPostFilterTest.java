@@ -56,7 +56,7 @@ public class BasicAuthPostFilterTest {
         userCredentials.setUser("superadmin");
         userCredentials.setPasswd("ulan");
         when(this.orchestraProperties.getCredentials(API_TOKEN)).thenReturn(userCredentials);
-        RequestContext.getCurrentContext().set(GatewayConstants.RESPONSE_STATUS_CODE, 200);
+        RequestContext.getCurrentContext().set(FilterConstants.RESPONSE_STATUS_CODE, 200);
         basicAuthPostFilter.run();
 
         verify(ssoCookieCacheManager).writeSSOCookieToCache(API_TOKEN, COOKIE);
@@ -68,7 +68,7 @@ public class BasicAuthPostFilterTest {
         userCredentials.setUser("superadmin");
         userCredentials.setPasswd("ulan");
         when(this.orchestraProperties.getCredentials(API_TOKEN)).thenReturn(userCredentials);
-        RequestContext.getCurrentContext().set(GatewayConstants.RESPONSE_STATUS_CODE, 401);
+        RequestContext.getCurrentContext().set(FilterConstants.RESPONSE_STATUS_CODE, 401);
 
         basicAuthPostFilter.run();
 

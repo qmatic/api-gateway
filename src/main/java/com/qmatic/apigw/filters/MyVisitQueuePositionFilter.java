@@ -2,7 +2,6 @@ package com.qmatic.apigw.filters;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import com.qmatic.apigw.GatewayConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import static com.qmatic.apigw.GatewayConstants.FIRST_REQUEST_PARAM_IF_MANY_WITH_EQUAL_NAME;
-
 @Component
 public class MyVisitQueuePositionFilter extends ZuulFilter {
 
@@ -21,7 +18,7 @@ public class MyVisitQueuePositionFilter extends ZuulFilter {
 
     @Override
 	public String filterType() {
-		return "post";
+		return FilterConstants.POST_FILTER;
 	}
 
 	// Must be run AFTER RequestCacheWriterFilter
@@ -81,18 +78,13 @@ public class MyVisitQueuePositionFilter extends ZuulFilter {
     }
 
     private String getRequestedVisitIdFromRequestContext(RequestContext ctx) throws Exception {
-        Map<String, List<String>> requestQueryParams = getRequestQueryParams(ctx);
+        Map<String, List<String>> requestQueryParams = ctx.getRequestQueryParams();
         return getVisitIdFromRequestQueryParams(requestQueryParams);
     }
 
-    private Map<String, List<String>> getRequestQueryParams(RequestContext ctx) {
-        Map<String, List<String>> requestQueryParams = ctx.getRequestQueryParams();
-        return requestQueryParams;
-    }
-
     private String getVisitIdFromRequestQueryParams(Map<String, List<String>> requestQueryParams) throws Exception {
-        if(requestQueryParams != null && requestQueryParams.containsKey(GatewayConstants.VISIT_ID)) {
-            return requestQueryParams.get(GatewayConstants.VISIT_ID).get(FIRST_REQUEST_PARAM_IF_MANY_WITH_EQUAL_NAME);
+        if(requestQueryParams != null && requestQueryParams.containsKey(FilterConstants.VISIT_ID)) {
+            return requestQueryParams.get(FilterConstants.VISIT_ID).get(0);
         } else {
             throw new Exception("visitId not found among request parameters");
         }
