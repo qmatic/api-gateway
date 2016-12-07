@@ -75,6 +75,14 @@ public class ChecksumValidationFilterTest {
     }
 
     @Test
+    public void filterShouldRunWithInvalidCkecksum() {
+        MockHttpServletRequest mobileUserHttpServletRequest = createMockHttpRequest(MOBILE_API_TOKEN);
+        createRequestContext(mobileUserHttpServletRequest, CHECKSUM_ROUTE, INVALID_CHECKSUM_VALUE);
+
+        Assert.assertTrue(checksumValidationFilter.shouldFilter());
+    }
+
+    @Test
     public void filterShouldNotRunInvalidRoute() {
         MockHttpServletRequest mobileUserHttpServletRequest = createMockHttpRequest(MOBILE_API_TOKEN);
         createRequestContext(mobileUserHttpServletRequest, NON_CHECKSUM_ROUTE, CHECKSUM_VALUE);
@@ -99,7 +107,7 @@ public class ChecksumValidationFilterTest {
     }
 
     @Test
-    public void testFilterRun() {
+    public void runFilterWithInvalidChecksum() {
         MockHttpServletRequest mobileUserHttpServletRequest = createMockHttpRequest(MOBILE_API_TOKEN);
         createRequestContext(mobileUserHttpServletRequest, CHECKSUM_ROUTE, INVALID_CHECKSUM_VALUE);
 
