@@ -55,6 +55,7 @@ public class BasicAuthPostFilterTest {
         OrchestraProperties.UserCredentials userCredentials = new OrchestraProperties.UserCredentials();
         userCredentials.setUser("superadmin");
         userCredentials.setPasswd("ulan");
+
         when(this.orchestraProperties.getCredentials(API_TOKEN)).thenReturn(userCredentials);
         RequestContext.getCurrentContext().set(FilterConstants.RESPONSE_STATUS_CODE, 200);
         basicAuthPostFilter.run();

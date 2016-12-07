@@ -48,6 +48,16 @@ orchestra:
     d0516eee-a32d-11e5-bf7f-feff819cdc9f:
       user: mobile
       passwd: dWxhbg==
+  
+  # use checksum validation for mobile requests
+  enableChecksum: true
+  
+  # define which proxy routes where checksum validation will be applied
+  checksumRoutes:  
+    my_visit_delete:
+      parameter: ticket
+    my_visit_position:
+      parameter: visit
 
 cache:
   # by default the cache metrics connector is only accessable from local machine
@@ -128,14 +138,24 @@ zuul:
       path: /MobileTicket/branches/**
       url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
 
+    
     # Note:
     # get nearest branches - /geo/services/[serviceId]/nearestbranches
-
     # get branches for service - /MobileTicket/services/[serviceId]/branches/
     # issue ticket - /MobileTicket/services/[serviceId]/branches/[branchId]/ticket/issue
     custom_mobile_services:
       path: /MobileTicket/services/**
       url : ${orchestra.central.url}/qsystem/mobile/rest/v2/services
+
+    
+    # Mobile ticket routes protected by checksum
+    my_visit_delete:
+      path: /MobileTicket/MyVisit/branches/*/ticket/**
+      url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
+
+    my_visit_position:
+      path: MobileTicket/MyVisit/Position/branches/*/visit/**
+      url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
 
     # custom MyVisit example
     # (authentication against orchestra)

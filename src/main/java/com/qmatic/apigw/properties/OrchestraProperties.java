@@ -8,8 +8,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by davtol on 2015-12-15.
@@ -20,6 +23,9 @@ import java.util.Map;
 public class OrchestraProperties {
 
     private Map<String, UserCredentials> api_tokens = new LinkedHashMap<>();
+    private Map<String, VisitIdParameter> checksumRoutes = new LinkedHashMap<>();
+
+    //public enum VisitIdParameterType{PATH_PARAMETER,MATRIX_PARAMETER,QUERY_PARAMETER};
 
     @PostConstruct
     public void init() {
@@ -31,6 +37,15 @@ public class OrchestraProperties {
 
     public UserCredentials getCredentials(String apiToken) {
         return api_tokens.get(apiToken) != null ? api_tokens.get(apiToken) : null;
+    }
+
+
+    public Set<String> getRoutes() {
+        return checksumRoutes.keySet();
+    }
+
+    public VisitIdParameter getVisitIdParameter(String route) {
+        return checksumRoutes.get(route) != null ? checksumRoutes.get(route) : null;
     }
 
     @Data
@@ -56,6 +71,21 @@ public class OrchestraProperties {
 
         public void setPasswd(String passwd) {
             this.passwd = passwd;
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class VisitIdParameter {
+        private String parameter;
+
+        public String getParameter() {
+            return parameter;
+        }
+
+        public void setParameter(String parameter) {
+            this.parameter = parameter;
         }
     }
 }
