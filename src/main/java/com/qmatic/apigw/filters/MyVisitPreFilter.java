@@ -25,7 +25,6 @@ public class MyVisitPreFilter extends ZuulFilter {
 	public boolean shouldFilter() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		return "my_visit_queue_position".equals(ctx.get("proxy"));
-		// || "my_visit_last_queue_event".equals(ctx.get("proxy")) ;
 	}
 
 	@Override

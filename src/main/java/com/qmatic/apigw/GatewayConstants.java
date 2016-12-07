@@ -13,5 +13,6 @@ public class GatewayConstants {
     public static final String ERROR_MESSAGE = "ERROR_MESSAGE";
     public static final String VISIT_ID = "visitId";
     public static final int FIRST_REQUEST_PARAM_IF_MANY_WITH_EQUAL_NAME = 0;
+    public static final String VISIT_CHECKSUM = "visitChecksum";
 
 }
