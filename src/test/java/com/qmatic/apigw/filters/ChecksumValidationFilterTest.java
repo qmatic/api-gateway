@@ -60,9 +60,9 @@ public class ChecksumValidationFilterTest {
         checksumRoutes.add(CHECKSUM_ROUTE);
         when(this.orchestraProperties.getRoutes()).thenReturn(checksumRoutes);
 
-        OrchestraProperties.VisitIdParameter mobileTicketParameter = new OrchestraProperties.VisitIdParameter();
+        OrchestraProperties.ChecksumRoute mobileTicketParameter = new OrchestraProperties.ChecksumRoute();
         mobileTicketParameter.setParameter("ticket");
-        when(this.orchestraProperties.getVisitIdParameter(CHECKSUM_ROUTE)).thenReturn(mobileTicketParameter);
+        when(this.orchestraProperties.getChecksumRoute(CHECKSUM_ROUTE)).thenReturn(mobileTicketParameter);
 
     }
 
