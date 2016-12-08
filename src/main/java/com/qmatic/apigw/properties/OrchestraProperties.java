@@ -8,22 +8,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-/**
- * Created by davtol on 2015-12-15.
- */
 
 @Data
 @ConfigurationProperties("orchestra")
 public class OrchestraProperties {
 
     private Map<String, UserCredentials> api_tokens = new LinkedHashMap<>();
-    private Map<String, VisitIdParameter> checksumRoutes = new LinkedHashMap<>();
+    private Map<String, ChecksumRoute> checksumRoutes = new LinkedHashMap<>();
 
     //public enum VisitIdParameterType{PATH_PARAMETER,MATRIX_PARAMETER,QUERY_PARAMETER};
 
@@ -44,7 +38,7 @@ public class OrchestraProperties {
         return checksumRoutes.keySet();
     }
 
-    public VisitIdParameter getVisitIdParameter(String route) {
+    public ChecksumRoute getChecksumRoute(String route) {
         return checksumRoutes.get(route) != null ? checksumRoutes.get(route) : null;
     }
 
@@ -77,7 +71,7 @@ public class OrchestraProperties {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class VisitIdParameter {
+    public static class ChecksumRoute {
         private String parameter;
 
         public String getParameter() {

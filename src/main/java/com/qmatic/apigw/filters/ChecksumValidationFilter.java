@@ -86,8 +86,8 @@ public class ChecksumValidationFilter extends ZuulFilter {
 	}
 
 	private String getVisitIdFromRequest(RequestContext ctx) {
-		OrchestraProperties.VisitIdParameter visitIdParameter = orchestraProperties.getVisitIdParameter((String) ctx.get("proxy"));
-		String visitId = RequestContextUtil.getPathParameter(visitIdParameter.getParameter(), ctx);
+		OrchestraProperties.ChecksumRoute checksumRoute = orchestraProperties.getChecksumRoute((String) ctx.get("proxy"));
+		String visitId = RequestContextUtil.getPathParameter(checksumRoute.getParameter(), ctx);
 		return visitId;
 	}
 
