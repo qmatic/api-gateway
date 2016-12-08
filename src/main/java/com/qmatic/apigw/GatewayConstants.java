@@ -15,4 +15,6 @@ public class GatewayConstants {
     public static final int FIRST_REQUEST_PARAM_IF_MANY_WITH_EQUAL_NAME = 0;
     public static final String VISIT_CHECKSUM = "visitChecksum";
 
+    public static final String MOBILE_USER = "mobile";
+
 }
