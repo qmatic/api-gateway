@@ -57,7 +57,7 @@ orchestra:
     my_visit_delete_deprecated:
       parameter: ticket
     my_visit_delete:
-      parameter: visit
+      parameter: ticket
     my_visit_position:
       parameter: visit
 
