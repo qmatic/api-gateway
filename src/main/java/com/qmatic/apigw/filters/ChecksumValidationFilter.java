@@ -3,6 +3,7 @@ package com.qmatic.apigw.filters;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.qmatic.apigw.GatewayConstants;
+import com.qmatic.apigw.filters.util.RequestContextUtil;
 import com.qmatic.apigw.properties.OrchestraProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,6 @@ public class ChecksumValidationFilter extends ZuulFilter {
 	@Autowired
 	OrchestraProperties orchestraProperties;
 
-	private final String MOBILE_USER = "mobile";
-
 	@Override
 	public String filterType() {
 		return "pre";
@@ -35,17 +34,16 @@ public class ChecksumValidationFilter extends ZuulFilter {
 
 	@Override
 	public boolean shouldFilter() {
-		return isChecksumEnforceEnabled() && isMobileUser() && isChecksumRoute();
+        RequestContext ctx = RequestContext.getCurrentContext();
+		return isChecksumEnforceEnabled() && isMobileUser(ctx) && isChecksumRoute(ctx);
 	}
 
 	private boolean isChecksumEnforceEnabled() {
 		return enableChecksum;
 	}
 
-	private boolean isChecksumRoute() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-
-		for (String route : orchestraProperties.getRoutes()) {
+	private boolean isChecksumRoute(RequestContext ctx) {
+        for (String route : orchestraProperties.getRoutes()) {
 			if (route.equals(ctx.get("proxy"))) {
 				return true;
 			}
@@ -53,35 +51,35 @@ public class ChecksumValidationFilter extends ZuulFilter {
 		return false;
 	}
 
-	private boolean isMobileUser() {
-		String token = getAuthToken();
+	private boolean isMobileUser(RequestContext ctx) {
+		String token = RequestContextUtil.getAuthToken(ctx);
 		String userCredentials = getUserName(token);
 
 		if(userCredentials == null) {
 			return false;
 		}
 
-		return userCredentials.equals(MOBILE_USER);
+		return userCredentials.equals(GatewayConstants.MOBILE_USER);
 	}
 
 	@Override
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
-		if(!correctChecksum(ctx)) {
-			unauthorized();
+		if(!isCorrectChecksum(ctx)) {
+            RequestContextUtil.setResponseUnauthorized(ctx);
 		}
 		return null;
 	}
 
-	private boolean correctChecksum(RequestContext ctx) {
+	private boolean isCorrectChecksum(RequestContext ctx) {
 		String visitId = getVisitIdFromRequest(ctx);
 		String branchId = getBranchIdFromRequest(ctx);
-		String requestChecksum = getVisitChecksum();
+		String requestChecksum = getVisitChecksum(ctx);
 
 		return requestChecksum.equals(getCachedChecksum(branchId, visitId));
 	}
 
-	protected String getCachedChecksum(String branchId, String visitId) {
+	private String getCachedChecksum(String branchId, String visitId) {
 		String cachedChecksum = null;
 
 		return cachedChecksum;
@@ -89,54 +87,17 @@ public class ChecksumValidationFilter extends ZuulFilter {
 
 	private String getVisitIdFromRequest(RequestContext ctx) {
 		OrchestraProperties.VisitIdParameter visitIdParameter = orchestraProperties.getVisitIdParameter((String) ctx.get("proxy"));
-		String visitId = getVisitIdFromPath(visitIdParameter.getParameter(), ctx);
+		String visitId = RequestContextUtil.getPathParameter(visitIdParameter.getParameter(), ctx);
 		return visitId;
 	}
 
-	private String getVisitIdFromPath(String parameter, RequestContext ctx) {
-		String path = String.valueOf(ctx.getRequest().getRequestURL());
+    private String getBranchIdFromRequest(RequestContext ctx) {
+        String branchId = RequestContextUtil.getPathParameter("branches", ctx);
+        return branchId;
+    }
 
-		int parameterIndex = path.indexOf(parameter);
-		if(parameterIndex <0 ) {
-			return null;
-		}
-		String[] parameterSubstring = path.substring(parameterIndex).split("/");
-
-		if(parameterSubstring == null || parameterSubstring.length < 2) {
-			return null;
-		}
-
-		return parameterSubstring[1];
-	}
-
-	private String getBranchIdFromRequest(RequestContext ctx) {
-		String path = String.valueOf(ctx.getRequest().getRequestURL());
-
-		int parameterIndex = path.indexOf("branches");
-		if(parameterIndex < 0 ) {
-			return null;
-		}
-		String[] parameterSubstring = path.substring(parameterIndex).split("/");
-
-		if(parameterSubstring == null || parameterSubstring.length < 2) {
-			return null;
-		}
-
-		return parameterSubstring[1];
-	}
-
-	private String getParameterFromRequest(String parameter, RequestContext ctx) {
-		return ctx.getRequestQueryParams().get(parameter).get(0);
-	}
-
-	protected String getAuthToken() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-		return ctx.getRequest().getHeader(GatewayConstants.AUTH_TOKEN);
-	}
-
-	protected String getVisitChecksum() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-		return ctx.getRequestQueryParams().get(GatewayConstants.VISIT_CHECKSUM).get(0);
+	protected String getVisitChecksum(RequestContext ctx) {
+		return RequestContextUtil.getQueryParameter(GatewayConstants.VISIT_CHECKSUM, ctx);
 	}
 
 	private String getUserName(String apiToken) {
@@ -146,19 +107,4 @@ public class ChecksumValidationFilter extends ZuulFilter {
 		}
 		return null;
 	}
-
-	private void unauthorized() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-		ctx.removeRouteHost();
-		ctx.setResponseStatusCode(401);
-		ctx.setSendZuulResponse(false);
-	}
-
-	private void badrequest() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-		ctx.removeRouteHost();
-		ctx.setResponseStatusCode(400);
-		ctx.setSendZuulResponse(false);
-	}
-
 }

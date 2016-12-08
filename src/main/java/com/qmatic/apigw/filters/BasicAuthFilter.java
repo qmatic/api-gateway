@@ -4,6 +4,7 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.qmatic.apigw.GatewayConstants;
 import com.qmatic.apigw.caching.SSOCookieCacheManager;
+import com.qmatic.apigw.filters.util.RequestContextUtil;
 import com.qmatic.apigw.properties.OrchestraProperties;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -51,7 +52,7 @@ public class BasicAuthFilter extends ZuulFilter {
 		String token = getAuthToken();
 		if (token == null || token.isEmpty()) {
 			log.debug("Token is empty");
-			unauthorized();
+			unauthorized(ctx);
 			return null;
 		}
 
@@ -63,7 +64,7 @@ public class BasicAuthFilter extends ZuulFilter {
 		String userCredentials = getUserCredentials(token);
 		if (userCredentials == null) {
 			log.debug("Missing user credentials for token : " + token);
-			unauthorized();
+			unauthorized(ctx);
 			return null;
 		} else {
 			ctx.addZuulRequestHeader("Authorization", "Basic " +
@@ -76,15 +77,12 @@ public class BasicAuthFilter extends ZuulFilter {
 
 	}
 
-	private void unauthorized() {
+	private void unauthorized(RequestContext ctx) {
 		if(!blockUnauthorized) {
 			log.debug("Forwarding unauthorized request");
-			return;
+		} else {
+			RequestContextUtil.setResponseUnauthorized(ctx);
 		}
-		RequestContext ctx = RequestContext.getCurrentContext();
-		ctx.removeRouteHost();
-		ctx.setResponseStatusCode(401);
-		ctx.setSendZuulResponse(false);
 	}
 
 	private String getUserCredentials(String apiToken) {
