@@ -1,11 +1,10 @@
 package com.qmatic.apigw.filters;
 
 import com.netflix.zuul.context.RequestContext;
+import com.qmatic.apigw.filters.util.Responder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class RequestCacheReaderFilter extends RequestCacheFilterBase {
@@ -28,15 +27,7 @@ public class RequestCacheReaderFilter extends RequestCacheFilterBase {
             log.warn("Response body already set for URI : {}", getRequestUri());
             return RESULT_DOES_NOT_MATTER;
         }
-        writeCachedResponse(cachedResponse);
+        Responder.writeResponse(RequestContext.getCurrentContext(), cachedResponse);
         return RESULT_DOES_NOT_MATTER;
-    }
-
-
-    protected void writeCachedResponse(String response) {
-        RequestContext ctx = RequestContext.getCurrentContext();
-        ctx.setResponseStatusCode(HttpServletResponse.SC_OK);
-        ctx.setResponseBody(response);
-        ctx.setSendZuulResponse(false);
     }
 }

@@ -16,4 +16,6 @@
 
     <cache name="ssoCookieCache" maxEntriesLocalHeap="200" timeToLiveSeconds="60" statistics="true" />
 
+    <cache name="visitsOnBranchCache" maxEntriesLocalHeap="200" timeToLiveSeconds="10" statistics="true" />
+
 </ehcache>

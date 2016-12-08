@@ -76,7 +76,7 @@ cache:
     visits:
       cacheName: visitInQueueCache
       match: /branches/[0-9]+/queues/[0-9]+/visits[/]?
-      routes: my_visit_queue_position, servicepoint_api
+      routes: servicepoint_api
     events:
       cacheName: eventInQueueCache
       match: /branches/[0-9]+/visits/[0-9]+/events[/]?
@@ -154,7 +154,15 @@ zuul:
       path: /mobileEnc/**
       url: dummy
 
+    # get current status of visit - /MobileTicket/MyVisit/CurrentStatus/branches/[branchId]/visits/[visitId]?checksum=[checksum]
+    my_visit_current_status:
+      path: /MobileTicket/MyVisit/CurrentStatus/**
+      url: ${orchestra.central.url}/qsystem/mobile/rest/v2
+
 # These URLs are used internally for fetching branches and branches for services but these should normally not be changed.
 geoService:
   branches_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches?longitude=0&latitude=0&radius=2147483647
   service_branches_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/services/{serviceId}/branches?longitude=0&latitude=0&radius=2147483647
+
+currentStatus:
+  visits_on_branch_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches/{branchId}/visits

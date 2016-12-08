@@ -1,6 +1,5 @@
 package com.qmatic.apigw.filters;
 
-import com.netflix.util.Pair;
 import com.netflix.zuul.context.RequestContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;

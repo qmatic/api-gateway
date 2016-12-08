@@ -1,6 +1,7 @@
 package com.qmatic.apigw.rest;
 
 import com.qmatic.apigw.GatewayConstants;
+import com.qmatic.apigw.filters.FilterConstants;
 import com.qmatic.apigw.properties.OrchestraProperties;
 import com.qmatic.common.geo.Branch;
 import org.apache.commons.codec.binary.Base64;
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 
 @Component
 public final class CentralRestClient {
@@ -27,6 +29,8 @@ public final class CentralRestClient {
     private String mobileBranchesUrl;
     @Value("${geoService.service_branches_url}")
     private String mobileServiceBranchesUrl;
+    @Value("${currentStatus.visits_on_branch_url}")
+    private String visitsOnBranchUrl;
     private CentralHttpErrorHandler centralErrorHandler;
     private RestTemplate restTemplate;
 
@@ -52,10 +56,9 @@ public final class CentralRestClient {
      */
     public Branch[] getBranchesForServiceFromCentral(Long serviceId, OrchestraProperties.UserCredentials userCredentials) {
         log.debug("Retrieving branches for service {} from central", serviceId);
-        String convertedUrl = "";
         try {
-            convertedUrl = mobileServiceBranchesUrl.replace(PATH_SERVICE_ID, Long.toString(serviceId));
-            ResponseEntity<Branch[]> allBranches = restTemplate.exchange(convertedUrl, HttpMethod.GET,
+            String url = mobileServiceBranchesUrl.replace(PATH_SERVICE_ID, Long.toString(serviceId));
+            ResponseEntity<Branch[]> allBranches = restTemplate.exchange(url, HttpMethod.GET,
                 new HttpEntity<>(createAuthorizationHeader(userCredentials)), Branch[].class, new Object[]{});
             return allBranches.getBody();
         } catch (IllegalArgumentException e) {
@@ -75,4 +78,19 @@ public final class CentralRestClient {
             }
         };
     }
+
+    public HashMap<Long, TinyVisit> getAllVisitsOnBranch(Long branchId, OrchestraProperties.UserCredentials userCredentials) {
+        log.debug("Retrieving visits on branch {} from central", branchId);
+        try {
+            String url = visitsOnBranchUrl.replace("{" + FilterConstants.BRANCH_ID + "}", Long.toString(branchId));
+            ResponseEntity<TinyVisitMap> allVisitsOnBranch = restTemplate.exchange(url, HttpMethod.GET,
+                    new HttpEntity<>(createAuthorizationHeader(userCredentials)), TinyVisitMap.class, new Object[]{});
+            return allVisitsOnBranch.getBody();
+        } catch (IllegalArgumentException e) {
+            log.debug("Could not fetch visits for branch {} from central", branchId);
+        }
+        return new HashMap<>();
+    }
+
+    private static class TinyVisitMap extends HashMap<Long, TinyVisit> {}
 }
