@@ -32,8 +32,6 @@ public final class CentralRestClient {
     private String mobileBranchesUrl;
     @Value("${geoService.service_branches_url}")
     private String mobileServiceBranchesUrl;
-    @Value("${checksumService.checksum_url}")
-    private String checksumServiceChecksumUrl;
     private CentralHttpErrorHandler centralErrorHandler;
     private RestTemplate restTemplate;
     private OrchestraProperties orchestraProperties;

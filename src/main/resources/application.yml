@@ -54,8 +54,10 @@ orchestra:
   
   # define which proxy routes where checksum validation will be applied
   checksumRoutes:  
-    my_visit_delete:
+    my_visit_delete_deprecated:
       parameter: ticket
+    my_visit_delete:
+      parameter: visit
     my_visit_position:
       parameter: visit
 
@@ -138,24 +140,28 @@ zuul:
       path: /MobileTicket/branches/**
       url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
 
-    
-    # Note:
-    # get nearest branches - /geo/services/[serviceId]/nearestbranches
-    # get branches for service - /MobileTicket/services/[serviceId]/branches/
-    # issue ticket - /MobileTicket/services/[serviceId]/branches/[branchId]/ticket/issue
     custom_mobile_services:
       path: /MobileTicket/services/**
       url : ${orchestra.central.url}/qsystem/mobile/rest/v2/services
 
-    
-    # Mobile ticket routes protected by checksum
-    my_visit_delete:
+    # Mobile ticket -authentication against mobile - routes protected by checksum
+    my_visit_delete_deprecated:
       path: /MobileTicket/MyVisit/branches/*/ticket/**
       url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
+
+    my_visit_delete:
+      path: /MobileTicket/MyVisit/branches/*/visit/**
+      url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches/*/ticket
 
     my_visit_position:
       path: MobileTicket/MyVisit/Position/branches/*/visit/**
       url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
+    
+
+    # Note:
+    # get nearest branches - /geo/services/[serviceId]/nearestbranches
+    # get branches for service - /MobileTicket/services/[serviceId]/branches/
+    # issue ticket - /MobileTicket/services/[serviceId]/branches/[branchId]/ticket/issue
 
     # custom MyVisit example
     # (authentication against orchestra)
