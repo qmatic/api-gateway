@@ -38,7 +38,7 @@ public class VisitCacheManager {
         visitsOnBranchCache.put(branchId, visitsOnBranch);
     }
 
-    public TinyVisit getVisit(Long visitId, Long branchId) {
+    public TinyVisit getVisit(Long branchId, Long visitId) {
         TinyVisit visit = null;
         Cache visitsOnBranchCache = cacheManager.getCache(VISITS_ON_BRANCH_CACHE);
         if (visitsOnBranchCache != null) {
@@ -64,5 +64,25 @@ public class VisitCacheManager {
 
     private void logCacheError(String cacheName) {
         log.debug("No cache found for {}. Broken or erroneous configuration?", cacheName);
+    }
+
+    public String getChecksum(Long branchId, Long visitId) {
+        String checksum = null;
+        Cache visitsOnBranchCache = cacheManager.getCache(VISITS_ON_BRANCH_CACHE);
+        if (visitsOnBranchCache != null) {
+            HashMap<Long, TinyVisit> visitsOnBranch = visitsOnBranchCache.get(branchId, HashMap.class);
+            if (visitsOnBranch == null) {
+                OrchestraProperties.UserCredentials userCredentials = orchestraProperties.getCredentials(getAuthToken());
+                visitsOnBranch = centralRestClient.getAllVisitsOnBranch(branchId, userCredentials);
+                cacheVisits(branchId, visitsOnBranch);
+            }
+            TinyVisit visit = visitsOnBranch.get(visitId);
+            if (visit != null) {
+                checksum = visit.getChecksum();
+            }
+        } else {
+            logCacheError(VISITS_ON_BRANCH_CACHE);
+        }
+        return checksum;
     }
 }

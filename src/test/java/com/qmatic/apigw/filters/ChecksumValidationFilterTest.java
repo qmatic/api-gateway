@@ -2,6 +2,7 @@ package com.qmatic.apigw.filters;
 
 import com.netflix.zuul.context.RequestContext;
 import com.qmatic.apigw.GatewayConstants;
+import com.qmatic.apigw.caching.VisitCacheManager;
 import com.qmatic.apigw.properties.OrchestraProperties;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -12,6 +13,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class ChecksumValidationFilterTest {
@@ -29,13 +32,16 @@ public class ChecksumValidationFilterTest {
     @Mock
     private OrchestraProperties orchestraProperties;
 
+    @Mock
+    private VisitCacheManager visitCacheManager;
+
     static String MOBILE_API_TOKEN = "d0516eee-a32d-11e5-bf7f-feff819cdc9f";
     static String SUPERADMIN_API_TOKEN = "c7a1331a-32d-11e5-bf7f-feff819acdc9f";
     static String BAD_API_TOKEN = "c7a1331a-32d-11e5-bf7f-feff819acdc9e";
     static String CHECKSUM_ROUTE = "checksum_route";
     static String NON_CHECKSUM_ROUTE = "non_checksum_route";
 
-    static String CHECKSUM_PARAMETER = GatewayConstants.VISIT_CHECKSUM;
+    static String CHECKSUM_PARAMETER = FilterConstants.VISIT_CHECKSUM;
     static String CHECKSUM_VALUE = "1234";
     static String INVALID_CHECKSUM_VALUE = "4321";
 
@@ -63,6 +69,8 @@ public class ChecksumValidationFilterTest {
         OrchestraProperties.ChecksumRoute mobileTicketParameter = new OrchestraProperties.ChecksumRoute();
         mobileTicketParameter.setParameter("ticket");
         when(this.orchestraProperties.getChecksumRoute(CHECKSUM_ROUTE)).thenReturn(mobileTicketParameter);
+
+        when(this.visitCacheManager.getChecksum(anyLong(), anyLong())).thenReturn("1234");
 
     }
 
@@ -113,7 +121,17 @@ public class ChecksumValidationFilterTest {
 
         checksumValidationFilter.run();
 
-        Assert.assertTrue(RequestContext.getCurrentContext().getResponseStatusCode() == 401);
+        Assert.assertTrue(RequestContext.getCurrentContext().getResponseStatusCode() == HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    @Test
+    public void runFilterWithCorrectChecksum() {
+        MockHttpServletRequest mobileUserHttpServletRequest = createMockHttpRequest(MOBILE_API_TOKEN);
+        createRequestContext(mobileUserHttpServletRequest, CHECKSUM_ROUTE, CHECKSUM_VALUE);
+
+        checksumValidationFilter.run();
+
+        Assert.assertFalse(RequestContext.getCurrentContext().getResponseStatusCode() == HttpServletResponse.SC_UNAUTHORIZED);
     }
 
 

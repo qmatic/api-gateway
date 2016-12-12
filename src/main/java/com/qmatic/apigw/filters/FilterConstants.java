@@ -11,6 +11,7 @@ public class FilterConstants {
     public static final String PROXY = "proxy";
     public static final String PRE_FILTER = "pre";
     public static final String POST_FILTER = "post";
+    public static final String VISIT_CHECKSUM = "checksum";
 
     // Routes
     public static final String MY_VISIT_CURRENT_STATUS = "my_visit_current_status";
