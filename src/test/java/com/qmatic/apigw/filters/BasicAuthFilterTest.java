@@ -15,9 +15,6 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
-/**
- * Created by davtol on 2016-01-13.
- */
 public class BasicAuthFilterTest {
 
     @InjectMocks
@@ -43,10 +40,6 @@ public class BasicAuthFilterTest {
         mockHttpServletRequest.addHeader(GatewayConstants.AUTH_TOKEN, API_TOKEN);
         RequestContext context = new RequestContext();
         context.setRequest(mockHttpServletRequest);
-        //context.setResponse(new MockHttpServletResponse());
-        //context.set("error.status_code", HttpStatus.NOT_FOUND.value());
-        //context.set(GatewayConstants.RESPONSE_STATUS_CODE, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        //context.addZuulResponseHeader(eMessage.first(), eMessage.second());
         RequestContext.testSetCurrentContext(context);
     }
 
