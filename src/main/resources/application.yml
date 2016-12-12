@@ -53,9 +53,8 @@ orchestra:
   enableChecksum: true
   
   # define which proxy routes where checksum validation will be applied
+  # name of the path parameter defining the visit_id must be defined as parameter
   checksumRoutes:  
-    my_visit_delete_deprecated:
-      parameter: ticket
     my_visit_delete:
       parameter: ticket
     my_visit_current_status:
@@ -145,13 +144,14 @@ zuul:
       url : ${orchestra.central.url}/qsystem/mobile/rest/v2/services
 
     # Mobile ticket -authentication against mobile - routes protected by checksum
-    my_visit_delete_deprecated:
+    # delete visit - /MobileTicket/MyVisit/CurrentStatus/branches/[branchId]/ticket/[visitId]?checksum=[checksum]
+    my_visit_delete:
       path: /MobileTicket/MyVisit/branches/*/ticket/**
       url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
 
-    my_visit_delete:
-      path: /MobileTicket/MyVisit/branches/*/visit/**
-      url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches/*/ticket
+    # get current status of visit - /MobileTicket/MyVisit/CurrentStatus/branches/[branchId]/visits/[visitId]?checksum=[checksum]
+    my_visit_current_status:
+      path: /MobileTicket/MyVisit/CurrentStatus/branches/*/visits/*
 
     # Note:
     # get nearest branches - /geo/services/[serviceId]/nearestbranches
@@ -174,10 +174,6 @@ zuul:
     mobile_decoding:
       path: /mobileEnc/**
       url: dummy
-
-    # get current status of visit - /MobileTicket/MyVisit/CurrentStatus/branches/[branchId]/visits/[visitId]?checksum=[checksum]
-    my_visit_current_status:
-      path: /MobileTicket/MyVisit/CurrentStatus/branches/*/visits/*
 
 # These URLs are used internally for fetching branches and branches for services but these should normally not be changed.
 geoService:
