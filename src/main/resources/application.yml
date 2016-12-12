@@ -58,8 +58,8 @@ orchestra:
       parameter: ticket
     my_visit_delete:
       parameter: ticket
-    my_visit_position:
-      parameter: visit
+    my_visit_current_status:
+      parameter: visits
 
 cache:
   # by default the cache metrics connector is only accessable from local machine
@@ -153,11 +153,6 @@ zuul:
       path: /MobileTicket/MyVisit/branches/*/visit/**
       url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches/*/ticket
 
-    my_visit_position:
-      path: MobileTicket/MyVisit/Position/branches/*/visit/**
-      url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
-    
-
     # Note:
     # get nearest branches - /geo/services/[serviceId]/nearestbranches
     # get branches for service - /MobileTicket/services/[serviceId]/branches/
@@ -182,8 +177,7 @@ zuul:
 
     # get current status of visit - /MobileTicket/MyVisit/CurrentStatus/branches/[branchId]/visits/[visitId]?checksum=[checksum]
     my_visit_current_status:
-      path: /MobileTicket/MyVisit/CurrentStatus/**
-      url: ${orchestra.central.url}/qsystem/mobile/rest/v2
+      path: /MobileTicket/MyVisit/CurrentStatus/branches/*/visits/*
 
 # These URLs are used internally for fetching branches and branches for services but these should normally not be changed.
 geoService:

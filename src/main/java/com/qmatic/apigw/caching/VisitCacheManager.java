@@ -49,7 +49,6 @@ public class VisitCacheManager {
                 cacheVisits(branchId, visitsOnBranch);
             }
             visit = visitsOnBranch.get(visitId);
-            visit.setVisitId(visitId);
         } else {
             logCacheError(VISITS_ON_BRANCH_CACHE);
         }
