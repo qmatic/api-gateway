@@ -17,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 
 @Component
 public final class CentralRestClient {
@@ -79,18 +78,17 @@ public final class CentralRestClient {
         };
     }
 
-    public HashMap<Long, TinyVisit> getAllVisitsOnBranch(Long branchId, OrchestraProperties.UserCredentials userCredentials) {
+    public VisitStatusMap getAllVisitsOnBranch(Long branchId, OrchestraProperties.UserCredentials userCredentials) {
         log.debug("Retrieving visits on branch {} from central", branchId);
         try {
             String url = visitsOnBranchUrl.replace("{" + FilterConstants.BRANCH_ID + "}", Long.toString(branchId));
-            ResponseEntity<TinyVisitMap> allVisitsOnBranch = restTemplate.exchange(url, HttpMethod.GET,
-                    new HttpEntity<>(createAuthorizationHeader(userCredentials)), TinyVisitMap.class, new Object[]{});
+            ResponseEntity<VisitStatusMap> allVisitsOnBranch = restTemplate.exchange(url, HttpMethod.GET,
+                    new HttpEntity<>(createAuthorizationHeader(userCredentials)), VisitStatusMap.class, new Object[]{});
             return allVisitsOnBranch.getBody();
         } catch (IllegalArgumentException e) {
             log.debug("Could not fetch visits for branch {} from central", branchId);
         }
-        return new HashMap<>();
+        return new VisitStatusMap();
     }
 
-    private static class TinyVisitMap extends HashMap<Long, TinyVisit> {}
 }

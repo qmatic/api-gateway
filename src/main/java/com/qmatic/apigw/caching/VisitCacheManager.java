@@ -4,15 +4,14 @@ import com.netflix.zuul.context.RequestContext;
 import com.qmatic.apigw.GatewayConstants;
 import com.qmatic.apigw.properties.OrchestraProperties;
 import com.qmatic.apigw.rest.CentralRestClient;
-import com.qmatic.apigw.rest.TinyVisit;
+import com.qmatic.apigw.rest.VisitStatus;
+import com.qmatic.apigw.rest.VisitStatusMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
 
 @Component
 public class VisitCacheManager {
@@ -33,16 +32,16 @@ public class VisitCacheManager {
         this.cacheManager = cacheManager;
     }
 
-    public void cacheVisits(Long branchId, HashMap<Long, TinyVisit> visitsOnBranch) {
+    private void cacheVisits(Long branchId, VisitStatusMap visitsOnBranch) {
         Cache visitsOnBranchCache = cacheManager.getCache(VISITS_ON_BRANCH_CACHE);
         visitsOnBranchCache.put(branchId, visitsOnBranch);
     }
 
-    public TinyVisit getVisit(Long branchId, Long visitId) {
-        TinyVisit visit = null;
+    public VisitStatus getVisit(Long branchId, Long visitId) {
+        VisitStatus visit = null;
         Cache visitsOnBranchCache = cacheManager.getCache(VISITS_ON_BRANCH_CACHE);
         if (visitsOnBranchCache != null) {
-            HashMap<Long, TinyVisit> visitsOnBranch = visitsOnBranchCache.get(branchId, HashMap.class);
+            VisitStatusMap visitsOnBranch = visitsOnBranchCache.get(branchId, VisitStatusMap.class);
             if (visitsOnBranch == null) {
                 OrchestraProperties.UserCredentials userCredentials = orchestraProperties.getCredentials(getAuthToken());
                 visitsOnBranch = centralRestClient.getAllVisitsOnBranch(branchId, userCredentials);
@@ -69,13 +68,13 @@ public class VisitCacheManager {
         String checksum = null;
         Cache visitsOnBranchCache = cacheManager.getCache(VISITS_ON_BRANCH_CACHE);
         if (visitsOnBranchCache != null) {
-            HashMap<Long, TinyVisit> visitsOnBranch = visitsOnBranchCache.get(branchId, HashMap.class);
+            VisitStatusMap visitsOnBranch = visitsOnBranchCache.get(branchId, VisitStatusMap.class);
             if (visitsOnBranch == null) {
                 OrchestraProperties.UserCredentials userCredentials = orchestraProperties.getCredentials(getAuthToken());
                 visitsOnBranch = centralRestClient.getAllVisitsOnBranch(branchId, userCredentials);
                 cacheVisits(branchId, visitsOnBranch);
             }
-            TinyVisit visit = visitsOnBranch.get(visitId);
+            VisitStatus visit = visitsOnBranch.get(visitId);
             if (visit != null) {
                 checksum = visit.getChecksum();
             }

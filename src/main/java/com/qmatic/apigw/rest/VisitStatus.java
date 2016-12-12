@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
-public class TinyVisit implements Serializable {
+public class VisitStatus implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -131,7 +131,7 @@ public class TinyVisit implements Serializable {
 
     @Override
     public String toString() {
-        return "TinyVisit{" +
+        return "VisitStatus{" +
                 "positionInQueue=" + positionInQueue +
                 ", queueSize=" + queueSize +
                 ", appointmentTime='" + appointmentTime + '\'' +
