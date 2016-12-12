@@ -59,6 +59,11 @@ dependencies {
     testCompile ("org.springframework.boot:spring-boot-starter-test")
 }
 
+test {
+    // enable TestNG support (default is JUnit)
+    useTestNG()
+}
+
 compileJava.dependsOn(processResources)
 
 task wrapper(type: Wrapper) {
