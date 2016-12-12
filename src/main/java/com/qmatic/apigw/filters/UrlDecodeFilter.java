@@ -7,8 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.netflix.zuul.filters.ProxyRouteLocator;
-import org.springframework.cloud.netflix.zuul.filters.ProxyRouteLocator.ProxyRouteSpec;
+import org.springframework.cloud.netflix.zuul.filters.Route;
 import org.springframework.cloud.netflix.zuul.filters.RouteLocator;
 import org.springframework.stereotype.Component;
 import sun.misc.BASE64Decoder;
@@ -68,7 +67,7 @@ public class UrlDecodeFilter extends ZuulFilter {
             return null;
         }
 
-        ProxyRouteSpec matchingRoute = ((ProxyRouteLocator) routeLocator).getMatchingRoute(decryptedUrl);
+        Route matchingRoute = routeLocator.getMatchingRoute(decryptedUrl);
         if (matchingRoute == null) {
             return null;
         }
@@ -82,13 +81,13 @@ public class UrlDecodeFilter extends ZuulFilter {
     }
 
 
-    private void setNewRequestURI(RequestContext ctx, ProxyRouteSpec matchingRoute) {
+    private void setNewRequestURI(RequestContext ctx, Route matchingRoute) {
         String path = matchingRoute.getPath();
         String newRequestURI = path.substring(1, path.indexOf("?"));
         ctx.put(FilterConstants.REQUEST_URI, newRequestURI);
     }
 
-    private void setNewProxy(RequestContext ctx, ProxyRouteSpec matchingRoute) {
+    private void setNewProxy(RequestContext ctx, Route matchingRoute) {
         String id = matchingRoute.getId();
         ctx.put(FilterConstants.PROXY, id);
     }
@@ -108,7 +107,7 @@ public class UrlDecodeFilter extends ZuulFilter {
         ctx.setRequestQueryParams(requestQueryParams);
     }
 
-    private void setNewRouteHost(RequestContext ctx, ProxyRouteSpec matchingRoute) {
+    private void setNewRouteHost(RequestContext ctx, Route matchingRoute) {
         try {
             ctx.setRouteHost(new URL(matchingRoute.getLocation()));
         } catch (MalformedURLException e) {
