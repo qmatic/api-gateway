@@ -1,4 +1,10 @@
-1.2.0.1
+latest
+Features
+    Added support for visit checksums, replaces URL obfuscation
+    Added cache for visits on branch
+    Added filter to get current visit status
+
+1.2.1.0
 Bug Fixes
     Renamed api-gateway.bat to make service run
     Updated gradle wrapper to use gradle version 2.10

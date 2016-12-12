@@ -157,6 +157,7 @@ zuul:
     # custom MyVisit example
     # (authentication against orchestra)
 
+    # DEPRECATED, use my_visit_current_status instead
     # get position in queue - /MobileTicket/MyVisit/Position/branches/[branchId]/queues/[queueId]/visits?visitId=[visitId]
     my_visit_queue_position:
       path: /MobileTicket/MyVisit/Position/**

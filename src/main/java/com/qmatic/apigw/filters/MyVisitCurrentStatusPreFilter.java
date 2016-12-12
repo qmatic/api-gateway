@@ -6,7 +6,7 @@ import com.netflix.zuul.context.RequestContext;
 import com.qmatic.apigw.caching.VisitCacheManager;
 import com.qmatic.apigw.filters.util.JsonUtil;
 import com.qmatic.apigw.filters.util.RequestContextUtil;
-import com.qmatic.apigw.rest.TinyVisit;
+import com.qmatic.apigw.rest.VisitStatus;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,8 @@ public class MyVisitCurrentStatusPreFilter extends ZuulFilter {
 		RequestContext ctx = RequestContext.getCurrentContext();
         return FilterConstants.MY_VISIT_CURRENT_STATUS.equals(ctx.get(FilterConstants.PROXY))
                 && HttpServletResponse.SC_UNAUTHORIZED != ctx.getResponseStatusCode()
-                && HttpServletResponse.SC_NOT_FOUND != ctx.getResponseStatusCode();
+                && HttpServletResponse.SC_NOT_FOUND != ctx.getResponseStatusCode()
+                && HttpServletResponse.SC_BAD_REQUEST != ctx.getResponseStatusCode();
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class MyVisitCurrentStatusPreFilter extends ZuulFilter {
         } else {
             Long branchId = Long.valueOf(RequestContextUtil.getPathParameter(FilterConstants.BRANCHES, ctx));
             Long visitId = Long.valueOf(RequestContextUtil.getPathParameter(FilterConstants.VISITS, ctx)); // NFE
-            TinyVisit visit = visitCacheManager.getVisit(branchId, visitId);
+            VisitStatus visit = visitCacheManager.getVisit(branchId, visitId);
             if (visit != null) {
                 try {
                     RequestContextUtil.writeResponse(ctx, JsonUtil.convert(visit));
