@@ -1,6 +1,7 @@
 package com.qmatic.apigw.filters;
 
 import com.netflix.zuul.context.RequestContext;
+import org.json.JSONObject;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.testng.Assert;
@@ -46,6 +47,8 @@ public class MyVisitLastQueueEventFilterTest {
     @Test
     public void testFilterRun() {
         new MyVisitLastQueueEventFilter().run();
-        Assert.assertTrue(RequestContext.getCurrentContext().getResponseBody().startsWith("{\"lastEvent\":{\"id\":184"));
+        JSONObject testResult = new JSONObject(RequestContext.getCurrentContext().getResponseBody());
+
+        Assert.assertEquals(testResult.getJSONObject("lastEvent").getInt("id"), 184);
     }
 }

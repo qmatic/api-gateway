@@ -48,8 +48,17 @@ public class MyVisitLastQueueEventFilter extends ZuulFilter {
 	protected String getLastEvent(String responseBody) throws Exception {
 		JSONObject obj = new JSONObject("{\"events\":" + responseBody + "}");
 		JSONArray result = obj.getJSONArray("events");
-		JSONObject jsonObject = result.getJSONObject(result.length() - 1);
-		return "{\"lastEvent\":" + jsonObject.toString() + "}";
+		int maxId = 0;
+		int positionInArray = 0;
+		for (int i = 0; i < result.length(); i++) {
+			int id = result.getJSONObject(i).getInt("id");
+			if (id > maxId) {
+				maxId = id;
+				positionInArray = i;
+			}
+		}
+		JSONObject lastEvent = result.getJSONObject(positionInArray);
+		return "{\"lastEvent\":" + lastEvent.toString() + "}";
 	}
 
 }
