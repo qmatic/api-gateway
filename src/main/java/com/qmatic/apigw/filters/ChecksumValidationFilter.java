@@ -68,7 +68,7 @@ public class ChecksumValidationFilter extends ZuulFilter {
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		if (!isValidRequest(ctx)) {
-			RequestContextUtil.setResponseBadRequest(ctx);
+			RequestContextUtil.setResponseBadRequest(ctx, "One or more parameters are missing or invalid. Check if the path is valid.");
 		} else {
 			String cachedChecksum = getCachedChecksum(ctx);
 			if (cachedChecksum == null) {

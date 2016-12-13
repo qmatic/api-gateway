@@ -45,10 +45,10 @@ public class MyVisitCurrentStatusPreFilter extends ZuulFilter {
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
         if (!isValidRequest(ctx)) {
-            RequestContextUtil.setResponseBadRequest(ctx);
+            RequestContextUtil.setResponseBadRequest(ctx, "One or more parameters are missing or invalid. Check if the path is valid.");
         } else {
             Long branchId = Long.valueOf(RequestContextUtil.getPathParameter(FilterConstants.BRANCHES, ctx));
-            Long visitId = Long.valueOf(RequestContextUtil.getPathParameter(FilterConstants.VISITS, ctx)); // NFE
+            Long visitId = Long.valueOf(RequestContextUtil.getPathParameter(FilterConstants.VISITS, ctx));
             VisitStatus visit = visitCacheManager.getVisit(branchId, visitId);
             if (visit != null) {
                 try {

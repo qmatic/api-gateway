@@ -43,9 +43,10 @@ public class RequestContextUtil {
         ctx.setSendZuulResponse(false);
     }
 
-    public static void setResponseBadRequest(RequestContext ctx ) {
+    public static void setResponseBadRequest(RequestContext ctx, String reason) {
         ctx.removeRouteHost();
         ctx.setResponseStatusCode(HttpServletResponse.SC_BAD_REQUEST);
+        ctx.setResponseBody(HttpServletResponse.SC_BAD_REQUEST + ": " + reason);
         ctx.setSendZuulResponse(false);
     }
 

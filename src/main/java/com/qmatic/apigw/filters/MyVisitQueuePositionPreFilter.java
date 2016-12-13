@@ -47,7 +47,7 @@ public class MyVisitQueuePositionPreFilter extends ZuulFilter {
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		if (!isValidRequest(ctx)) {
-			RequestContextUtil.setResponseBadRequest(ctx);
+			RequestContextUtil.setResponseBadRequest(ctx, "One or more parameters are missing or invalid. Check if the path is valid.");
 		} else {
 			Long branchId = Long.valueOf(RequestContextUtil.getPathParameter(FilterConstants.BRANCHES, ctx));
 			Long visitId = Long.valueOf(ctx.getRequestQueryParams().get(FilterConstants.VISIT_ID).get(0));
