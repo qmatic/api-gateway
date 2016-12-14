@@ -52,8 +52,8 @@ orchestra:
   # use checksum validation for mobile requests
   enableChecksum: true
   
-  # define which proxy routes where checksum validation will be applied
-  # name of the path parameter defining the visit_id must be defined as parameter
+  # define which proxy routes checksum validation will be applied on.
+  # the name of the path parameter holding the visitId must be specified as parameter: [name] below.
   checksumRoutes:  
     my_visit_delete:
       parameter: ticket

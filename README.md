@@ -32,7 +32,7 @@ The API Gateway project is built as a Spring Boot Application (https://spring.io
 * get branches for service - /GEO/services/[serviceId]/branches
 * get nearest branches - /GEO/services/[serviceId]/nearestbranches
 * issue ticket - /MobileTicket/services/[serviceId]/branches/[branchId]/ticket/issue
-* get position in queue - /MobileTicket/MyVisit/Position/branches/[branchId]/queues/[queueId]/visits?visitId=[visitId]
+* get visit information - /MobileTicket/MyVisit/CurrentStatus/branches/[branchId]/visits/[visitId]?checksum=[checksum]
 * get last event for visit - /MobileTicket/MyVisit/LastEvent/branches/[branchId]/visits/[visitId]/events?visitId=[visitId]
 ```
 ###Curl examples
