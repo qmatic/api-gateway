@@ -68,4 +68,11 @@ public class RequestContextUtil {
         ctx.setResponseBody(response);
         ctx.setSendZuulResponse(false);
     }
+
+    public static void setEmptyResponse(RequestContext ctx) {
+        ctx.removeRouteHost();
+        ctx.setResponseStatusCode(HttpServletResponse.SC_OK);
+        ctx.setResponseBody("{}");
+        ctx.setSendZuulResponse(false);
+    }
 }

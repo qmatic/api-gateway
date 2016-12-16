@@ -53,11 +53,16 @@ public class MyVisitQueuePositionPreFilter extends ZuulFilter {
 			Long visitId = Long.valueOf(ctx.getRequestQueryParams().get(FilterConstants.VISIT_ID).get(0));
 			VisitStatus visit = visitCacheManager.getVisit(branchId, visitId);
 			if (visit != null) {
-				try {
-					RequestContextUtil.writeResponse(ctx, "{\"visit\":" + JsonUtil.convert(visit) + "}");
-				} catch (JsonProcessingException e) {
-					log.warn("Could not serialize visit with id {} on branch {}", visitId, branchId, e);
-					RequestContextUtil.setResponseInternalServerError(ctx);
+				if (visit.getQueueId() != null) {
+					try {
+						RequestContextUtil.writeResponse(ctx, "{\"visit\":" + JsonUtil.convert(visit) + "}");
+					} catch (JsonProcessingException e) {
+						log.warn("Could not serialize visit with id {} on branch {}", visitId, branchId, e);
+						RequestContextUtil.setResponseInternalServerError(ctx);
+					}
+				} else {
+					// Myfunwait expects status 200 and an empty response body if the visit is not in a queue
+					RequestContextUtil.setEmptyResponse(ctx);
 				}
 			} else {
 				log.warn("Could not fetch visit with id {} on branch {}", visitId, branchId);

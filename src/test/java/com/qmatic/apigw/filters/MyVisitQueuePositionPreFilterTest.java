@@ -100,9 +100,22 @@ public class MyVisitQueuePositionPreFilterTest {
     }
 
     @Test
-    public void visitFound() {
+    public void visitNotInQueue() {
         httpServletRequest.setRequestURI("http://localhost:9090/MobileTicket/MyVisit/branches/1/queues/1/visits");
         when(visitCacheManager.getVisit(anyLong(), anyLong())).thenReturn(new VisitStatus());
+
+        testee.run();
+
+        assertEquals(ctx.getResponse().getStatus(), 200);
+        assertEquals(ctx.getResponseBody(), "{}");
+    }
+
+    @Test
+    public void visitInQueue() {
+        httpServletRequest.setRequestURI("http://localhost:9090/MobileTicket/MyVisit/branches/1/queues/1/visits");
+        VisitStatus visitStatus = new VisitStatus();
+        visitStatus.setQueueId(1);
+        when(visitCacheManager.getVisit(anyLong(), anyLong())).thenReturn(visitStatus);
 
         testee.run();
 

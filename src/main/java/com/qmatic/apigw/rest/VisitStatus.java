@@ -89,7 +89,8 @@ public class VisitStatus implements Serializable {
         this.queueSize = queueSize;
     }
 
-    public Integer getPositionInQueue() {
+    // Myfunwait expects the positionInQueue field to be named "position"
+    public Integer getPosition() {
         return positionInQueue;
     }
 
