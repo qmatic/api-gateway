@@ -38,26 +38,22 @@ public class RequestContextUtil {
     }
 
     public static void setResponseUnauthorized( RequestContext ctx) {
-        ctx.removeRouteHost();
         ctx.setResponseStatusCode(HttpServletResponse.SC_UNAUTHORIZED);
         ctx.setSendZuulResponse(false);
     }
 
     public static void setResponseBadRequest(RequestContext ctx, String reason) {
-        ctx.removeRouteHost();
         ctx.setResponseStatusCode(HttpServletResponse.SC_BAD_REQUEST);
         ctx.setResponseBody(HttpServletResponse.SC_BAD_REQUEST + ": " + reason);
         ctx.setSendZuulResponse(false);
     }
 
     public static void setResponseNotFound(RequestContext ctx ) {
-        ctx.removeRouteHost();
         ctx.setResponseStatusCode(HttpServletResponse.SC_NOT_FOUND);
         ctx.setSendZuulResponse(false);
     }
 
     public static void setResponseInternalServerError(RequestContext ctx ) {
-        ctx.removeRouteHost();
         ctx.setResponseStatusCode(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         ctx.setSendZuulResponse(false);
     }
@@ -70,9 +66,6 @@ public class RequestContextUtil {
     }
 
     public static void setEmptyResponse(RequestContext ctx) {
-        ctx.removeRouteHost();
-        ctx.setResponseStatusCode(HttpServletResponse.SC_OK);
-        ctx.setResponseBody("{}");
-        ctx.setSendZuulResponse(false);
+        writeResponse(ctx, "{}");
     }
 }
