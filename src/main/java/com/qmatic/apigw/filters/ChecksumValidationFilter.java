@@ -62,12 +62,8 @@ public class ChecksumValidationFilter extends ZuulFilter {
 			RequestContextUtil.setResponseBadRequest(ctx, "One or more parameters are missing or invalid. Check if the path is valid.");
 		} else {
 			String cachedChecksum = getCachedChecksum(ctx);
-			if (cachedChecksum == null) {
-                visitCacheManager.createVisitNotFoundResponse(ctx);
-			} else {
-				if(!isCorrectChecksum(ctx, cachedChecksum)) {
-					RequestContextUtil.setResponseUnauthorized(ctx);
-				}
+			if (cachedChecksum == null || !isCorrectChecksum(ctx, cachedChecksum)) {
+				visitCacheManager.createVisitNotFoundResponse(ctx);
 			}
 		}
 		return null;

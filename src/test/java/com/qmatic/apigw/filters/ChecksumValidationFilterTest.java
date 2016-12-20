@@ -104,7 +104,7 @@ public class ChecksumValidationFilterTest {
 
         checksumValidationFilter.run();
 
-        Assert.assertTrue(RequestContext.getCurrentContext().getResponseStatusCode() == HttpServletResponse.SC_UNAUTHORIZED);
+        Assert.assertTrue(RequestContext.getCurrentContext().getResponseStatusCode() == HttpServletResponse.SC_NOT_FOUND);
     }
 
     @Test
