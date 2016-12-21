@@ -22,6 +22,10 @@ public class VisitStatus implements Serializable {
     private String currentStatus;
     private String queueName;
     private String currentServiceName;
+    private String staffFirstName;
+    private String staffLastName;
+    private Integer servicePointLogicId;
+    private String servicePointName;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String checksum;
 
@@ -122,6 +126,38 @@ public class VisitStatus implements Serializable {
         this.currentStatus = currentStatus;
     }
 
+    public String getStaffFirstName() {
+        return staffFirstName;
+    }
+
+    public void setStaffFirstName(String staffFirstName) {
+        this.staffFirstName = staffFirstName;
+    }
+
+    public String getStaffLastName() {
+        return staffLastName;
+    }
+
+    public void setStaffLastName(String staffLastName) {
+        this.staffLastName = staffLastName;
+    }
+
+    public Integer getServicePointLogicId() {
+        return servicePointLogicId;
+    }
+
+    public void setServicePointLogicId(Integer servicePointLogicId) {
+        this.servicePointLogicId = servicePointLogicId;
+    }
+
+    public String getServicePointName() {
+        return servicePointName;
+    }
+
+    public void setServicePointName(String servicePointName) {
+        this.servicePointName = servicePointName;
+    }
+
     public String getChecksum() {
         return checksum;
     }
@@ -145,6 +181,10 @@ public class VisitStatus implements Serializable {
                 ", currentStatus='" + currentStatus + '\'' +
                 ", queueName='" + queueName + '\'' +
                 ", currentServiceName='" + currentServiceName + '\'' +
+                ", staffFirstName='" + staffFirstName + '\'' +
+                ", staffFirstName='" + staffLastName + '\'' +
+                ", servicePointLogicId='" + servicePointLogicId + '\'' +
+                ", servicePointName='" + servicePointName + '\'' +
                 ", checksum='" + checksum + '\'' +
                 '}';
     }
