@@ -21,6 +21,7 @@ The API Gateway project is built as a Spring Boot Application (https://spring.io
  
 * Clone this repo `git clone https://www.github.com/qmatic/api-gateway.git`
 * Build project using gradle or gradle wrapper, for example: `gradlew clean build`
+* Build package: `gradlew buildDistGatewayPackage`
 
 ###Using
  The API Gateway can be either be installed from the the `./build/distributions/qp-api-gateway.zip` or started by running `gradlew bootRun`
@@ -28,16 +29,16 @@ The API Gateway project is built as a Spring Boot Application (https://spring.io
 ###Example
  The new API MobileTicket, which is optimized for the mobile ticket scenario as listed below:
 
-```
-* get branches for service - /GEO/services/[serviceId]/branches
-* get nearest branches - /GEO/services/[serviceId]/nearestbranches
-* issue ticket - /MobileTicket/services/[serviceId]/branches/[branchId]/ticket/issue
-* get visit information - /MobileTicket/MyVisit/CurrentStatus/branches/[branchId]/visits/[visitId]?checksum=[checksum]
-* get last event for visit - /MobileTicket/MyVisit/LastEvent/branches/[branchId]/visits/[visitId]/events?visitId=[visitId]
-```
+* get branches for service - `/GEO/services/[serviceId]/branches`
+* get nearest branches - `/GEO/services/[serviceId]/nearestbranches`
+* issue ticket - `/MobileTicket/services/[serviceId]/branches/[branchId]/ticket/issue`
+* get visit information - `/MobileTicket/MyVisit/CurrentStatus/branches/[branchId]/visits/[visitId]?checksum=[checksum]`
+* get last event for visit - `/MobileTicket/MyVisit/LastEvent/branches/[branchId]/visits/[visitId]/events?visitId=[visitId]`
+
 ###Curl examples
 
-```
 * Get all branches using a token for authentication
+```
 curl -i -X GET -H "auth-token:846f91fe-b733-4597-97c3-f4fdd9740a14" http://localhost:9090/rest/servicepoint/branches
 ```
+
