@@ -35,7 +35,6 @@ mainClassName = "com.qmatic.apigw.Application"
 
 configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
-
 }
 
 dependencies {
@@ -59,7 +58,6 @@ dependencies {
 }
 
 test {
-    // enable TestNG support (default is JUnit)
     useTestNG()
 }
 
