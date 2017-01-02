@@ -1,4 +1,4 @@
-latest
+1.3.0.0
 Features
     Added support for visit checksums, replaces URL obfuscation
     Added cache for visits on branch
