@@ -16,8 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Domain object representing a Branch.
- *
  * @author Johan Grönvall (johan.gronvall@cybercomgroup.com)
  */
 @XmlRootElement
@@ -44,23 +42,9 @@ public class Branch implements Serializable {
    private int estimatedWaitTime;
    private boolean branchOpen = true;
    private boolean queuePassesClosingTime = false;
-   /**
-    * The city of this branch.
-    */
-   private String city;
 
    public Branch() {
    } // Makes JAX-RS happy.
-
-   /**
-    * Returns the city of this branch.
-    *
-    * @return The city of this branch.
-    */
-   @XmlElement
-   public String getCity() {
-      return city;
-   }
 
    /**
     * The longitude of this branch as micro degree.
@@ -92,21 +76,11 @@ public class Branch implements Serializable {
       return longitude;
    }
 
-   /**
-    * The latitude of this branch.
-    *
-    * @return The latitude of this branch.
-    */
    @XmlElement
    public double getLatitude() {
       return latitude;
    }
 
-   /**
-    * The id of this branch.
-    *
-    * @return The id of this branch.
-    */
    @XmlElement
    public long getId() {
       return id;
@@ -114,8 +88,6 @@ public class Branch implements Serializable {
 
    /**
     * The opening time for this branch in the format HH:mm. Example "10:00".
-    *
-    * @return The opening time for this branch.
     */
    @XmlElement
    public String getOpenTime() {
@@ -124,79 +96,42 @@ public class Branch implements Serializable {
 
    /**
     * The closing time for this branch in the format HH:mm. Example "18:00".
-    *
-    * @return The closing time for this branch.
     */
    @XmlElement
    public String getCloseTime() {
       return closeTime;
    }
 
-   /**
-    * The name of the branch.
-    *
-    * @return The name of the branch.
-    */
    @XmlElement
    public String getName() {
       return name;
    }
 
-   /**
-    * The address line 1 of this branch.
-    *
-    * @return The address line 1 of this branch.
-    */
    @XmlElement
    public String getAddressLine1() {
       return addressLine1;
    }
 
-   /**
-    * The address line 2 of this branch.
-    *
-    * @return The address line 2 of this branch.
-    */
    @XmlElement
    public String getAddressLine2() {
       return addressLine2;
    }
 
-   /**
-    * The address line 3 of this branch.
-    *
-    * @return The address line 3 of this branch.
-    */
    @XmlElement
    public String getAddressLine3() {
       return addressLine3;
    }
 
-   /**
-    * The address line 4 of this branch.
-    *
-    * @return The address line 4 of this branch.
-    */
    @XmlElement
    public String getAddressLine4() {
       return addressLine4;
    }
 
-   /**
-    * The address line 5 of this branch.
-    *
-    * @return The address line 5 of this branch.
-    */
    @XmlElement
    public String getAddressLine5() {
       return addressLine5;
    }
 
-   /**
-    * The postal code of this branch.
-    *
-    * @return The postal code of this branch.
-    */
    @XmlElement
    public String getAddressPostalCode() {
       return addressPostalCode;
@@ -216,11 +151,6 @@ public class Branch implements Serializable {
       this.suggestedTime = (Date) suggestedTime.clone();
    }
 
-   /**
-    * The suggested time for a ticket.
-    *
-    * @return The suggested time for a ticket.
-    */
    @XmlTransient
    public Date getSuggestedTime() {
       return suggestedTime == null ? null : (Date) suggestedTime.clone();
@@ -306,7 +236,6 @@ public class Branch implements Serializable {
       private double latitude;
       private String openTime;
       private String closeTime;
-      private String city;
       private int estimatedWaitTime;
 
       public Builder id(final long id) {
@@ -378,11 +307,6 @@ public class Branch implements Serializable {
          return new Branch(this);
       }
 
-      public Builder city(String city) {
-         this.city = city;
-         return this;
-      }
-
       public Builder estimatedWaitTime(int estimatedWaitTime) {
          this.estimatedWaitTime = estimatedWaitTime;
          return this;
@@ -403,7 +327,6 @@ public class Branch implements Serializable {
       this.closeTime = formatTimeAsHHmm(builder.closeTime);
       this.longitude = builder.longitude;
       this.latitude = builder.latitude;
-      this.city = builder.city;
       this.estimatedWaitTime = builder.estimatedWaitTime;
    }
 
@@ -497,9 +420,6 @@ public class Branch implements Serializable {
          return false;
       }
       if (queuePassesClosingTime != other.queuePassesClosingTime) {
-         return false;
-      }
-      if ((city == null) ? (other.city != null) : !city.equals(other.city)) {
          return false;
       }
       return true;

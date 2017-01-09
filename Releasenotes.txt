@@ -1,3 +1,7 @@
+1.3.1.0
+Bug Fixes
+    Removed unused property in qp-common-geo
+
 1.3.0.0
 Features
     Added support for visit checksums, replaces URL obfuscation
