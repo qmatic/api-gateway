@@ -3,6 +3,7 @@ package com.qmatic.apigw.filters;
 import com.netflix.zuul.context.RequestContext;
 import com.qmatic.apigw.GatewayConstants;
 import com.qmatic.apigw.caching.VisitCacheManager;
+import com.qmatic.apigw.filters.util.RequestContextUtil;
 import com.qmatic.apigw.rest.VisitStatus;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,8 +16,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.servlet.http.HttpServletResponse;
+
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -57,19 +59,19 @@ public class MyVisitCurrentStatusPreFilterTest {
 
     @Test
     public void filterShouldNotRunWhenUnauthorized() {
-        ctx.setResponseStatusCode(401);
+        ctx.setResponseStatusCode(HttpServletResponse.SC_UNAUTHORIZED);
         assertFalse(testee.shouldFilter());
     }
 
     @Test
     public void filterShouldNotRunWhenNotFound() {
-        ctx.setResponseStatusCode(404);
+        ctx.setResponseStatusCode(HttpServletResponse.SC_NOT_FOUND);
         assertFalse(testee.shouldFilter());
     }
 
     @Test
     public void filterShouldNotRunWhenBadRequest() {
-        ctx.setResponseStatusCode(400);
+        ctx.setResponseStatusCode(HttpServletResponse.SC_BAD_REQUEST);
         assertFalse(testee.shouldFilter());
     }
 
@@ -79,7 +81,7 @@ public class MyVisitCurrentStatusPreFilterTest {
 
         testee.run();
 
-        assertEquals(ctx.getResponse().getStatus(), 400);
+        assertEquals(ctx.getResponse().getStatus(), HttpServletResponse.SC_BAD_REQUEST);
     }
 
     @Test
@@ -88,14 +90,14 @@ public class MyVisitCurrentStatusPreFilterTest {
         when(visitCacheManager.getVisit(anyLong(), anyLong())).thenReturn(null);
         Mockito.doAnswer(new Answer<Void>() {
             public Void answer(InvocationOnMock invocation) {
-                ctx.getResponse().setStatus(404);
+                RequestContextUtil.setResponseNotFound(ctx);
                 return null;
             }
         }).when(visitCacheManager).createVisitNotFoundResponse(ctx);
 
         testee.run();
 
-        assertEquals(ctx.getResponse().getStatus(), 404);
+        assertEquals(ctx.getResponse().getStatus(), HttpServletResponse.SC_NOT_FOUND);
     }
 
     @Test
@@ -105,6 +107,6 @@ public class MyVisitCurrentStatusPreFilterTest {
 
         testee.run();
 
-        assertEquals(ctx.getResponse().getStatus(), 200);
+        assertEquals(ctx.getResponse().getStatus(), HttpServletResponse.SC_OK);
     }
 }

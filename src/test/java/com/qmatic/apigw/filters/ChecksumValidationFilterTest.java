@@ -3,10 +3,14 @@ package com.qmatic.apigw.filters;
 import com.netflix.zuul.context.RequestContext;
 import com.qmatic.apigw.GatewayConstants;
 import com.qmatic.apigw.caching.VisitCacheManager;
+import com.qmatic.apigw.filters.util.RequestContextUtil;
 import com.qmatic.apigw.properties.OrchestraProperties;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.testng.Assert;
@@ -101,10 +105,17 @@ public class ChecksumValidationFilterTest {
     public void runFilterWithInvalidChecksum() {
         MockHttpServletRequest mobileUserHttpServletRequest = createMockHttpRequest(MOBILE_API_TOKEN);
         createRequestContext(mobileUserHttpServletRequest, CHECKSUM_ROUTE, INVALID_CHECKSUM_VALUE);
+        RequestContext ctx = RequestContext.getCurrentContext();
+        Mockito.doAnswer(new Answer<Void>() {
+            public Void answer(InvocationOnMock invocation) {
+                RequestContextUtil.setResponseNotFound(ctx);
+                return null;
+            }
+        }).when(visitCacheManager).createVisitNotFoundResponse(ctx);
 
         checksumValidationFilter.run();
 
-        Assert.assertTrue(RequestContext.getCurrentContext().getResponseStatusCode() == HttpServletResponse.SC_NOT_FOUND);
+        Assert.assertTrue(ctx.getResponseStatusCode() == HttpServletResponse.SC_NOT_FOUND);
     }
 
     @Test
