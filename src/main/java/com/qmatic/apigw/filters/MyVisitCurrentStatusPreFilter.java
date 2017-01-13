@@ -59,7 +59,7 @@ public class MyVisitCurrentStatusPreFilter extends ZuulFilter {
                 }
             } else {
                 log.warn("Could not fetch visit with id {} on branch {}", visitId, branchId);
-                RequestContextUtil.setResponseNotFound(ctx);
+                visitCacheManager.createVisitNotFoundResponse(ctx);
             }
         }
 		return null;

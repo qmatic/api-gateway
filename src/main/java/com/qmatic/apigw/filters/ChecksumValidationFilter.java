@@ -39,7 +39,7 @@ public class ChecksumValidationFilter extends ZuulFilter {
 	@Override
 	public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
-		return isChecksumEnforceEnabled() && isMobileUser(ctx) && isChecksumRoute(ctx);
+		return isChecksumEnforceEnabled() && isChecksumRoute(ctx);
 	}
 
 	private boolean isChecksumEnforceEnabled() {
@@ -55,15 +55,6 @@ public class ChecksumValidationFilter extends ZuulFilter {
 		return false;
 	}
 
-	private boolean isMobileUser(RequestContext ctx) {
-		String token = RequestContextUtil.getAuthToken(ctx);
-		String userCredentials = getUserName(token);
-		if(userCredentials == null) {
-			return false;
-		}
-		return userCredentials.equals(GatewayConstants.MOBILE_USER);
-	}
-
 	@Override
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
@@ -72,7 +63,7 @@ public class ChecksumValidationFilter extends ZuulFilter {
 		} else {
 			String cachedChecksum = getCachedChecksum(ctx);
 			if (cachedChecksum == null) {
-				RequestContextUtil.setResponseNotFound(ctx);
+                visitCacheManager.createVisitNotFoundResponse(ctx);
 			} else {
 				if(!isCorrectChecksum(ctx, cachedChecksum)) {
 					RequestContextUtil.setResponseUnauthorized(ctx);
@@ -90,7 +81,7 @@ public class ChecksumValidationFilter extends ZuulFilter {
 
 	private String getCachedChecksum(RequestContext ctx) {
 		Long branchId = getBranchIdFromRequest(ctx);
-		Long visitId = getVisitIdFromRequest(ctx);
+        Long visitId = getVisitIdFromRequest(ctx);
 		if (branchId != null && visitId != null) {
 			return getCachedChecksum(branchId, visitId);
 		}

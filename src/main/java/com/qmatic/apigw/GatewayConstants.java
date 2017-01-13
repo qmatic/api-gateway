@@ -8,5 +8,6 @@ public class GatewayConstants {
 
     public static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
     public static final String AUTH_TOKEN = "auth-token";
-    public static final String MOBILE_USER = "mobile";
+
+    public static final String VISITS_ON_BRANCH_CACHE = "visitsOnBranchCache";
 }

@@ -37,7 +37,6 @@ public class ChecksumValidationFilterTest {
 
     static String MOBILE_API_TOKEN = "d0516eee-a32d-11e5-bf7f-feff819cdc9f";
     static String SUPERADMIN_API_TOKEN = "c7a1331a-32d-11e5-bf7f-feff819acdc9f";
-    static String BAD_API_TOKEN = "c7a1331a-32d-11e5-bf7f-feff819acdc9e";
     static String CHECKSUM_ROUTE = "checksum_route";
     static String NON_CHECKSUM_ROUTE = "non_checksum_route";
 
@@ -94,22 +93,6 @@ public class ChecksumValidationFilterTest {
     public void filterShouldNotRunInvalidRoute() {
         MockHttpServletRequest mobileUserHttpServletRequest = createMockHttpRequest(MOBILE_API_TOKEN);
         createRequestContext(mobileUserHttpServletRequest, NON_CHECKSUM_ROUTE, CHECKSUM_VALUE);
-
-        Assert.assertFalse(checksumValidationFilter.shouldFilter());
-    }
-
-    @Test
-    public void filterShouldNotRunNotMobileUser() {
-        MockHttpServletRequest superadminUserHttpServletRequest = createMockHttpRequest(SUPERADMIN_API_TOKEN);
-        createRequestContext(superadminUserHttpServletRequest, CHECKSUM_ROUTE, CHECKSUM_VALUE);
-
-        Assert.assertFalse(checksumValidationFilter.shouldFilter());
-    }
-
-    @Test
-    public void filterShouldNotRunInvalidAuthToken() {
-        MockHttpServletRequest superadminUserHttpServletRequest = createMockHttpRequest(BAD_API_TOKEN);
-        createRequestContext(superadminUserHttpServletRequest, CHECKSUM_ROUTE, CHECKSUM_VALUE);
 
         Assert.assertFalse(checksumValidationFilter.shouldFilter());
     }

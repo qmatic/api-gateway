@@ -6,13 +6,17 @@ import com.qmatic.apigw.caching.VisitCacheManager;
 import com.qmatic.apigw.rest.VisitStatus;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
@@ -82,6 +86,12 @@ public class MyVisitCurrentStatusPreFilterTest {
     public void visitNotFound() {
         httpServletRequest.setRequestURI("http://localhost:9090/MobileTicket/MyVisit/branches/1/visits/1");
         when(visitCacheManager.getVisit(anyLong(), anyLong())).thenReturn(null);
+        Mockito.doAnswer(new Answer<Void>() {
+            public Void answer(InvocationOnMock invocation) {
+                ctx.getResponse().setStatus(404);
+                return null;
+            }
+        }).when(visitCacheManager).createVisitNotFoundResponse(ctx);
 
         testee.run();
 

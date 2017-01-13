@@ -53,6 +53,12 @@ public class RequestContextUtil {
         ctx.setSendZuulResponse(false);
     }
 
+    public static void setResponseNotFound(RequestContext ctx, String message ) {
+        ctx.setResponseStatusCode(HttpServletResponse.SC_NOT_FOUND);
+        ctx.setResponseBody(HttpServletResponse.SC_NOT_FOUND + " : " + message);
+        ctx.setSendZuulResponse(false);
+    }
+
     public static void setResponseInternalServerError(RequestContext ctx ) {
         ctx.setResponseStatusCode(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         ctx.setSendZuulResponse(false);
