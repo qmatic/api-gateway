@@ -91,7 +91,7 @@ artifacts {
 }
 
 /* configuration for debugging the gateway */
-   applicationDefaultJvmArgs = [ "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005" ]
+   //applicationDefaultJvmArgs = [ "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005" ]
 
 
 /* configuration for publishing artifacts to Qmatic artifactory */
