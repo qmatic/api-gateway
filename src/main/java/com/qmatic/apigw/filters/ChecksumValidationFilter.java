@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Component
 public class ChecksumValidationFilter extends ZuulFilter {
 
@@ -39,7 +41,8 @@ public class ChecksumValidationFilter extends ZuulFilter {
 	@Override
 	public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
-		return isChecksumEnforceEnabled() && isChecksumRoute(ctx);
+		return isChecksumEnforceEnabled() && isChecksumRoute(ctx)
+				&& HttpServletResponse.SC_UNAUTHORIZED != ctx.getResponseStatusCode();
 	}
 
 	private boolean isChecksumEnforceEnabled() {

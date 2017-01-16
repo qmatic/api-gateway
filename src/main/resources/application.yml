@@ -71,6 +71,8 @@ cache:
   defaultCacheUniquePerQueryParameter: false
 
   cacheRoutes:
+  # Note: the cache for MyVisit/CurrentStatus and MyVisit/Position is specified in ehcache.xml as visitsOnBranchCache
+
     services:
       # name of cache in ehcache configuration
       cacheName: serviceCache
