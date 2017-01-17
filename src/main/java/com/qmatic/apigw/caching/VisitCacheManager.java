@@ -8,18 +8,15 @@ import com.qmatic.apigw.properties.OrchestraProperties;
 import com.qmatic.apigw.rest.CentralRestClient;
 import com.qmatic.apigw.rest.VisitStatus;
 import com.qmatic.apigw.rest.VisitStatusMap;
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.management.CacheConfiguration;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.ehcache.EhCacheCache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.ResourceAccessException;
 
 @Component
 public class VisitCacheManager {
@@ -98,18 +95,25 @@ public class VisitCacheManager {
         Long visitId = getVisitIdFromRequest(ctx);
 
         if(isNewVisit(branchId, visitId)) {
-            String newVisitNotFoundMessage = "New visits are not available until " + GatewayConstants.VISITS_ON_BRANCH_CACHE + " is refreshed. ";
-            try {
-                Long cacheTimeToLiveSeconds = getTimeToLive();
-                newVisitNotFoundMessage = newVisitNotFoundMessage +  "Configured interval " + cacheTimeToLiveSeconds + " seconds";
-            } catch(Exception e) {
-                log.error("Could not read cache property timeToLiveSeconds for "+ GatewayConstants.VISITS_ON_BRANCH_CACHE);
-                newVisitNotFoundMessage = newVisitNotFoundMessage +  "Default interval 1 seconds";
-            }
-            RequestContextUtil.setResponseNotFound(ctx, newVisitNotFoundMessage);
+            RequestContextUtil.setResponseNotFoundCacheNotUpdate(ctx, createCacheNotUpdatedMessage());
         } else {
             RequestContextUtil.setResponseNotFound(ctx);
         }
+    }
+
+    private String createCacheNotUpdatedMessage() {
+        Long cacheTimeToLiveSeconds = 1L;
+
+        try {
+            cacheTimeToLiveSeconds = getTimeToLive();
+        } catch(Exception e) {
+            log.error("Could not read cache property timeToLiveSeconds for "+ GatewayConstants.VISITS_ON_BRANCH_CACHE);
+        }
+
+        JSONObject obj = new JSONObject("{\"message\":\"New visits are not available until visitsOnBranchCache is refreshed\"," +
+                "\"refreshRate\":"+cacheTimeToLiveSeconds+"}");
+
+        return obj.toString();
     }
 
     private Boolean isNewVisit(Long branchId, Long visitId) {

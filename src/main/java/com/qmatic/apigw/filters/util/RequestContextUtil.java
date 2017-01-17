@@ -53,9 +53,10 @@ public class RequestContextUtil {
         ctx.setSendZuulResponse(false);
     }
 
-    public static void setResponseNotFound(RequestContext ctx, String message ) {
+    public static void setResponseNotFoundCacheNotUpdate(RequestContext ctx, String jsonMessage ) {
         ctx.setResponseStatusCode(HttpServletResponse.SC_NOT_FOUND);
-        ctx.setResponseBody(HttpServletResponse.SC_NOT_FOUND + " : " + message);
+        ctx.getResponse().setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+        ctx.setResponseBody(jsonMessage);
         ctx.setSendZuulResponse(false);
     }
 
