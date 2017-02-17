@@ -147,7 +147,7 @@ zuul:
       url : ${orchestra.central.url}/qsystem/mobile/rest/v2/services
 
     # Mobile ticket -authentication against mobile - routes protected by checksum
-    # delete visit - /MobileTicket/MyVisit/CurrentStatus/branches/[branchId]/ticket/[visitId]?checksum=[checksum]
+    # delete visit - /MobileTicket/MyVisit/branches/[branchId]/ticket/[visitId]?checksum=[checksum]
     my_visit_delete:
       path: /MobileTicket/MyVisit/branches/*/ticket/**
       url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
