@@ -4,6 +4,8 @@ Features
     Default refresh rate for visitsOnBranchCache is changed from 10s to 1s
 Bug fixes
     Other users than the configured mobile user can no longer use the checksum protected paths
+Known issue
+    APIGW-13: Shutting down API GW fails on version 1.3.2 on windows when running as service.
 
 1.3.1.0
 Bug Fixes
