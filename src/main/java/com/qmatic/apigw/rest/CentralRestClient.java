@@ -44,26 +44,36 @@ public final class CentralRestClient {
      * @throws com.qmatic.apigw.exception.CentralCommunicationException Thrown upon received error from central
      */
     public Branch[] getAllBranchesFromCentral(OrchestraProperties.UserCredentials userCredentials) {
-        log.debug("Retrieving all branches from central");
-        ResponseEntity<Branch[]> allBranches = restTemplate.exchange(mobileBranchesUrl, HttpMethod.GET,
-            new HttpEntity<>(createAuthorizationHeader(userCredentials)), Branch[].class, new Object[]{});
-        return allBranches.getBody();
+        try {
+            log.debug("Retrieving all branches from central");
+            ResponseEntity<Branch[]> allBranches = restTemplate.exchange(mobileBranchesUrl, HttpMethod.GET,
+                new HttpEntity<>(createAuthorizationHeader(userCredentials)), Branch[].class, new Object[]{});
+            return allBranches.getBody();
+        } catch(RuntimeException e) {
+            log.warn("", e);
+            throw e;
+        }
     }
 
     /**
      * @throws com.qmatic.apigw.exception.CentralCommunicationException Thrown upon received error from central
      */
     public Branch[] getBranchesForServiceFromCentral(Long serviceId, OrchestraProperties.UserCredentials userCredentials) {
-        log.debug("Retrieving branches for service {} from central", serviceId);
         try {
-            String url = mobileServiceBranchesUrl.replace(PATH_SERVICE_ID, Long.toString(serviceId));
-            ResponseEntity<Branch[]> allBranches = restTemplate.exchange(url, HttpMethod.GET,
-                new HttpEntity<>(createAuthorizationHeader(userCredentials)), Branch[].class, new Object[]{});
-            return allBranches.getBody();
-        } catch (IllegalArgumentException e) {
-            log.debug("Could not replace " + PATH_SERVICE_ID + " in: " + mobileServiceBranchesUrl);
+            log.debug("Retrieving branches for service {} from central", serviceId);
+            try {
+                String url = mobileServiceBranchesUrl.replace(PATH_SERVICE_ID, Long.toString(serviceId));
+                ResponseEntity<Branch[]> allBranches = restTemplate.exchange(url, HttpMethod.GET,
+                    new HttpEntity<>(createAuthorizationHeader(userCredentials)), Branch[].class, new Object[]{});
+                return allBranches.getBody();
+            } catch (IllegalArgumentException e) {
+                log.debug("Could not replace " + PATH_SERVICE_ID + " in: " + mobileServiceBranchesUrl);
+            }
+            return new Branch[] {};
+        } catch(RuntimeException e) {
+            log.warn("", e);
+            throw e;
         }
-        return new Branch[] {};
     }
 
     private HttpHeaders createAuthorizationHeader(final OrchestraProperties.UserCredentials userCredentials) {
@@ -79,16 +89,21 @@ public final class CentralRestClient {
     }
 
     public VisitStatusMap getAllVisitsOnBranch(Long branchId, OrchestraProperties.UserCredentials userCredentials) {
-        log.debug("Retrieving visits on branch {} from central", branchId);
         try {
-            String url = visitsOnBranchUrl.replace("{" + FilterConstants.BRANCH_ID + "}", Long.toString(branchId));
-            ResponseEntity<VisitStatusMap> allVisitsOnBranch = restTemplate.exchange(url, HttpMethod.GET,
-                    new HttpEntity<>(createAuthorizationHeader(userCredentials)), VisitStatusMap.class, new Object[]{});
-            return allVisitsOnBranch.getBody();
-        } catch (IllegalArgumentException e) {
-            log.debug("Could not fetch visits for branch {} from central", branchId);
+            log.debug("Retrieving visits on branch {} from central", branchId);
+            try {
+                String url = visitsOnBranchUrl.replace("{" + FilterConstants.BRANCH_ID + "}", Long.toString(branchId));
+                ResponseEntity<VisitStatusMap> allVisitsOnBranch = restTemplate.exchange(url, HttpMethod.GET,
+                        new HttpEntity<>(createAuthorizationHeader(userCredentials)), VisitStatusMap.class, new Object[]{});
+                return allVisitsOnBranch.getBody();
+            } catch (IllegalArgumentException e) {
+                log.debug("Could not fetch visits for branch {} from central", branchId);
+            }
+            return new VisitStatusMap();
+        } catch(RuntimeException e) {
+            log.warn("", e);
+            throw e;
         }
-        return new VisitStatusMap();
     }
 
 }
