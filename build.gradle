@@ -199,8 +199,8 @@ startScripts {
     doLast {
         doLastWithScripts(windowsScript, unixScript)
 
-        def defaultJvmOptsLinux = '-Dlogging.config=$APP_HOME/conf/logbackAPIGateway.xml'
-        def defaultJvmOptsWindows = '-Dlogging.config=%~dp0\\..\\conf\\logbackAPIGateway.xml'
+        def defaultJvmOptsLinux = '-Dlogging.config=$APP_HOME/conf/logbackAPIGateway.xml\" \"-Djavax.net.ssl.trustStore=$APP_HOME/conf/truststore.jks'
+        def defaultJvmOptsWindows = '-Dlogging.config=%~dp0\\..\\conf\\logbackAPIGateway.xml\" \"-Djavax.net.ssl.trustStore=%~dp0\\..\\conf\\truststore.jks'
 
         unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS_REPLACE', defaultJvmOptsLinux)
         windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS_REPLACE', defaultJvmOptsWindows)
@@ -246,7 +246,7 @@ distTar.enabled = false
 def dependencyDir = file(projectDir.path + '/deps')
 def unzippedDir = file(buildDir.path + '/unzipped')
 
-task copyGatewayDistributable(type: Copy) {
+task copyGatewayDistributable(type: Copy, dependsOn: build) {
     from zipTree(buildDir.path + '/distributions/' + "${qpApiGateway}"  + "-" + version + ".zip")
     into unzippedDir
 }
@@ -259,6 +259,12 @@ task copyLinux64Java(type: Copy, dependsOn : copyGatewayDistributable) {
 task copyWin64Java(type: Copy, dependsOn : copyGatewayDistributable) {
     from zipTree(dependencyDir.path + "/jre-8u72-windows-x64.zip")
     into unzippedDir.path + '/win'
+}
+
+task copyTrustStore(type: Copy, dependsOn: copyWin64Java) {
+    from unzippedDir.path + '/win/jre1.8.0_72/lib/security/cacerts'
+    into unzippedDir.path + "/${qpApiGateway}"  + "-" + version + "/conf/"
+    rename ('cacerts', 'truststore.jks')
 }
 
 task buildDistGatewayWindows(type: Zip) {
@@ -278,7 +284,7 @@ task buildDistGatewayWindows(type: Zip) {
     }
     baseName 'QP_APIGateway_win64'
 }
-buildDistGatewayWindows.dependsOn(copyWin64Java)
+buildDistGatewayWindows.dependsOn(copyWin64Java, copyTrustStore)
 
 
 task buildDistGatewayLinux(type: Zip) {
@@ -292,7 +298,7 @@ task buildDistGatewayLinux(type: Zip) {
     }
     baseName 'QP_APIGateway_linux64'
 }
-buildDistGatewayLinux.dependsOn(copyLinux64Java)
+buildDistGatewayLinux.dependsOn(copyLinux64Java, copyTrustStore)
 
 task buildDistGatewayPackage << {
 }
