@@ -1,7 +1,6 @@
 package com.qmatic.apigw;
 
 import io.undertow.Undertow.Builder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.undertow.UndertowBuilderCustomizer;
@@ -14,13 +13,6 @@ import org.springframework.context.annotation.Bean;
 @EnableZuulProxy
 @EnableCaching
 public class Application {
-
-	@Value("${orchestra.disableSslCertificateChecks:false}")
-	public void setDisableSslCertificateChecks (boolean disableSslCertificateChecks) {
-		if (disableSslCertificateChecks) {
-			SslCertificateManager.disableSslCertificateChecks();
-		}
-	}
 
 	@Bean
 	UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory() {

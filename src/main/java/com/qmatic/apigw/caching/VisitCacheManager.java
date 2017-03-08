@@ -47,9 +47,7 @@ public class VisitCacheManager {
         if (visitsOnBranchCache != null) {
             VisitStatusMap visitsOnBranch = visitsOnBranchCache.get(branchId, VisitStatusMap.class);
             if (visitsOnBranch == null) {
-                OrchestraProperties.UserCredentials userCredentials = orchestraProperties.getCredentials(getAuthToken());
-                visitsOnBranch = centralRestClient.getAllVisitsOnBranch(branchId, userCredentials);
-                cacheVisits(branchId, visitsOnBranch);
+                visitsOnBranch = cacheAndGetVisitsOnBranch(branchId);
             }
             visit = visitsOnBranch.get(visitId);
         } else {
@@ -57,6 +55,13 @@ public class VisitCacheManager {
         }
         return visit;
 
+    }
+
+    private VisitStatusMap cacheAndGetVisitsOnBranch(Long branchId) {
+        OrchestraProperties.UserCredentials userCredentials = orchestraProperties.getCredentials(getAuthToken());
+        VisitStatusMap visitsOnBranch = centralRestClient.getAllVisitsOnBranch(branchId, userCredentials);
+        cacheVisits(branchId, visitsOnBranch);
+        return visitsOnBranch;
     }
 
     private String getAuthToken() {
@@ -74,9 +79,7 @@ public class VisitCacheManager {
         if (visitsOnBranchCache != null) {
             VisitStatusMap visitsOnBranch = visitsOnBranchCache.get(branchId, VisitStatusMap.class);
             if (visitsOnBranch == null) {
-                OrchestraProperties.UserCredentials userCredentials = orchestraProperties.getCredentials(getAuthToken());
-                visitsOnBranch = centralRestClient.getAllVisitsOnBranch(branchId, userCredentials);
-                cacheVisits(branchId, visitsOnBranch);
+                visitsOnBranch = cacheAndGetVisitsOnBranch(branchId);
             }
             VisitStatus visit = visitsOnBranch.get(visitId);
             if (visit != null) {
@@ -87,8 +90,6 @@ public class VisitCacheManager {
         }
         return checksum;
     }
-
-
 
     public void createVisitNotFoundResponse(RequestContext ctx) {
         Long branchId = getBranchIdFromRequest(ctx);
@@ -125,6 +126,9 @@ public class VisitCacheManager {
         Cache visitsOnBranchCache = cacheManager.getCache(GatewayConstants.VISITS_ON_BRANCH_CACHE);
         if (visitsOnBranchCache != null) {
             VisitStatusMap visitsOnBranch = visitsOnBranchCache.get(branchId, VisitStatusMap.class);
+            if (visitsOnBranch == null) {
+                visitsOnBranch = cacheAndGetVisitsOnBranch(branchId);
+            }
             for(Long visitKey : visitsOnBranch.keySet()) {
                 Long visitId = visitsOnBranch.get(visitKey).getVisitId();
                 highestVisitIdOnBranch =  visitId > highestVisitIdOnBranch ? visitId : highestVisitIdOnBranch;

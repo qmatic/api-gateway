@@ -39,8 +39,12 @@ orchestra:
   # by default we do not forward requests without a valid authentication token
   blockUnauthorized : true
 
+  # SSL trust store for the jvm
+  # trustStore: conf/truststore.jks
+  # trustStorePass: changeit
+
   # disables SSL certificate verification. Warning: do not use in production systems
-  disableSslCertificateChecks: false
+  # disableSslCertificateChecks: false
 
   # use 'password-encoder' script in 'bin' folder script for encoding new password.
   # use 'api-token-generator' script in 'bin' folder  for generating new token.

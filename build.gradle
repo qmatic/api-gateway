@@ -199,8 +199,8 @@ startScripts {
     doLast {
         doLastWithScripts(windowsScript, unixScript)
 
-        def defaultJvmOptsLinux = '-Dlogging.config=$APP_HOME/conf/logbackAPIGateway.xml\" \"-Djavax.net.ssl.trustStore=$APP_HOME/conf/truststore.jks'
-        def defaultJvmOptsWindows = '-Dlogging.config=%~dp0\\..\\conf\\logbackAPIGateway.xml\" \"-Djavax.net.ssl.trustStore=%~dp0\\..\\conf\\truststore.jks'
+        def defaultJvmOptsLinux = '-Dlogging.config=$APP_HOME/conf/logbackAPIGateway.xml\" \"-Dapp.home=$APP_HOME'
+        def defaultJvmOptsWindows = '-Dlogging.config=%~dp0\\..\\conf\\logbackAPIGateway.xml\" \"-Dapp.home=%~dp0\\..'
 
         unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS_REPLACE', defaultJvmOptsLinux)
         windowsScript.text = windowsScript.text.replace('DEFAULT_JVM_OPTS_REPLACE', defaultJvmOptsWindows)

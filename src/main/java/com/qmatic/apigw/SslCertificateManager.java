@@ -2,19 +2,40 @@ package com.qmatic.apigw;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.File;
 import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 
+@Component
 class SslCertificateManager {
+
+    @Value("${orchestra.disableSslCertificateChecks:false}")
+    private void setDisableSslCertificateChecks (boolean disableSslCertificateChecks) {
+        if (disableSslCertificateChecks) {
+            installAllTrustingTrustManager();
+        }
+    }
+
+    @Value("${orchestra.trustStorePass:changeit}")
+    private void setSslTrustStorePassword(String trustStorePassword) {
+        System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
+    }
+
+    @Value("${orchestra.trustStore:conf/truststore.jks}")
+    private void setSslTrustStore (String trustStore) {
+        System.setProperty("javax.net.ssl.trustStore", System.getProperty("app.home") + File.separator + trustStore);
+    }
 
     private static final Logger log = LoggerFactory.getLogger(SslCertificateManager.class);
 
-    static TrustManager[] trustAllCerts = new TrustManager[] {
+    private static TrustManager[] trustAllCerts = new TrustManager[] {
             new X509TrustManager() {
                 public X509Certificate[] getAcceptedIssuers() {
                     return new X509Certificate[0];
@@ -27,10 +48,6 @@ class SslCertificateManager {
                 }
             }
     };
-
-    static void disableSslCertificateChecks() {
-        installAllTrustingTrustManager();
-    }
 
     private static void installAllTrustingTrustManager() {
         try {
