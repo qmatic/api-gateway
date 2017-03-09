@@ -12,6 +12,7 @@ public class FilterConstants {
     public static final String PRE_FILTER = "pre";
     public static final String POST_FILTER = "post";
     public static final String VISIT_CHECKSUM = "checksum";
+    public static final String UTF_8_ENCODING = "UTF-8";
 
     // Routes
     public static final String MY_VISIT_CURRENT_STATUS = "my_visit_current_status";
