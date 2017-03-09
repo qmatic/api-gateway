@@ -1,3 +1,7 @@
+1.3.3.0
+Bug fixes
+    APIGW-13: Shutting down API GW fails on version 1.3.2 on windows when running as service.
+
 1.3.2.0
 Features
     JSON response body added to not found visitto indicate that the visit is new and not yet updated in the cache.
