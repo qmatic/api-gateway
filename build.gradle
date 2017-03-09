@@ -217,7 +217,7 @@ def doLastWithScripts(windowsScript, unixScript) {
         }
     }
 
-    unixScript.text = unixScript.text.replace('APP_HOME="`pwd -P`"', 'APP_HOME="`pwd -P`"\nJRE_HOME="$APP_HOME/jre1.8.0_72"')
+    unixScript.text = unixScript.text.replace('APP_HOME="`pwd -P`"', 'APP_HOME="`pwd -P`"\nJAVA_HOME="$APP_HOME/jre1.8.0_72"\nchmod u+x $JAVA_HOME/bin/java')
     unixScript.text = unixScript.text.replace('CLASSPATH=', 'CLASSPATH=$APP_HOME/conf:')
     unixScript.text = unixScript.text.replace('eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS', 'eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS\nexport APP_HOME');
     unixScript.text = unixScript.text.replace('\\$', '$')
