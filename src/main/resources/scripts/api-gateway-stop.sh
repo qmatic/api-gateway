@@ -16,7 +16,7 @@ fn_waitForAPIGatewayToStop(){
 # Find QP_HOME
 GW_HOME="$(cd "$(dirname "$0")/.." && pwd -P)"
 
-$GW_HOME/bin/curl.ermine -X POST http://localhost:9091/shutdown
+$GW_HOME/bin/curl.ermine -X POST http://localhost:9091/api-gateway/shutdown
 fn_waitForAPIGatewayToStop
 
 # Standard install use the java from its install dir
