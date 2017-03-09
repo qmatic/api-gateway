@@ -5,6 +5,8 @@ management:
     address: 127.0.0.1
     port: 9091
     context-path: /api-gateway
+    ssl:
+        enabled: false
 
 # define if which management endpoints should be available
 endpoints:
