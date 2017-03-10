@@ -14,9 +14,6 @@ public class CharacterEncodingPostFilter extends ZuulFilter {
 
     private static final Logger log = LoggerFactory.getLogger(CharacterEncodingPostFilter.class);
 
-    @Value("${orchestra.encoding}")
-    private String encoding;
-
     @Override
     public String filterType() {
         return FilterConstants.POST_FILTER;
@@ -38,8 +35,9 @@ public class CharacterEncodingPostFilter extends ZuulFilter {
 
         RequestContext ctx = RequestContext.getCurrentContext();
         if(ctx.getResponse() != null) {
-            if(encoding != null && isCharsetSupported(encoding)) {
-                ctx.getResponse().setCharacterEncoding(encoding);
+            String requestEncoding = ctx.getRequest().getCharacterEncoding();
+            if(requestEncoding != null && isCharsetSupported(requestEncoding)) {
+                ctx.getResponse().setCharacterEncoding(requestEncoding);
             } else {
                 ctx.getResponse().setCharacterEncoding(FilterConstants.UTF_8_ENCODING);
             }

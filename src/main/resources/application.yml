@@ -41,10 +41,6 @@ orchestra:
   # by default we do not forward requests without a valid authentication token
   blockUnauthorized : true
 
-
-  # Character encoding for response, default is UTF-8
-  encoding : UTF-8
-
   # SSL trust store for the jvm
   # trustStore: conf/truststore.jks
   # trustStorePass: changeit
