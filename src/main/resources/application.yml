@@ -141,13 +141,11 @@ zuul:
     # custom mobile service example
     # (authentication against mobile)
 
+    # To get a list of branches, use /geo/* if you want to use the gateway branch cache.
     # get services for branch - /MobileTicket/branches/[branchId]/services
     custom_mobile_branches:
       path: /MobileTicket/branches/**
       url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
-
-    # Note:
-    # get nearest branches - /geo/services/[serviceId]/nearestbranches
 
     # get branches for service - /MobileTicket/services/[serviceId]/branches/
     # issue ticket - /MobileTicket/services/[serviceId]/branches/[branchId]/ticket/issue
@@ -178,6 +176,25 @@ zuul:
     my_visit_last_queue_event:
       path: /MobileTicket/MyVisit/LastEvent/**
       url: ${orchestra.central.url}/qsystem/rest/servicepoint
+
+# Note that these paths are here for documentation purposes and can not be changed
+geoServiceConnectors:
+  # get branches - /geo/branches?longitude=[longitude]&latitude=[latitude]&radius=[radius]
+  mobile_branches:
+    path: /geo/branches
+
+  # get nearest branches - /geo/nearestbranches?longitude=[longitude]&latitude=[latitude]&maxNrOfBranches=[maxNrOfBranches]
+  mobile_nearest_branches:
+    path: /geo/nearestbranches
+
+  # get branches for service - /geo/services/[serviceId]/branches?longitude=[longitude]&latitude=[latitude]&radius=[radius]
+  mobile_branches_for_service:
+    path: /geo/services/*/branches
+
+  # get nearest branches for service
+  # - /geo/services/[serviceId]/nearestbranches?longitude=[longitude]&latitude=[latitude]&maxNrOfBranches=[maxNrOfBranches]
+  mobile_nearest_branches_for_service:
+    path: /geo/services/*/nearestbranches
 
 # These URLs are used internally for fetching branches and branches for services but these should normally not be changed.
 geoService:
