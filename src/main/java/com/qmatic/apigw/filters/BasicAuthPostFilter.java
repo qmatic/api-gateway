@@ -1,5 +1,6 @@
 package com.qmatic.apigw.filters;
 
+import com.qmatic.apigw.caching.SSOCookieCacheManager.Cookie;
 import com.netflix.util.Pair;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -13,11 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.HttpHeaders;
 import java.util.List;
-import java.util.ListIterator;
 
-/**
- * This filter handles connection refused exceptions
- */
 @Component
 public class BasicAuthPostFilter extends ZuulFilter {
 
@@ -51,19 +48,16 @@ public class BasicAuthPostFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         String authToken = ctx.getRequest().getHeader(GatewayConstants.AUTH_TOKEN);
 
-        String responseStatusCode = Integer.toString((Integer) ctx.get(FilterConstants.RESPONSE_STATUS_CODE));
-        if ("401".equals(responseStatusCode)) {
-            ssoCookieCacheManager.deleteSSOCookieFromCache(authToken);
-        } else if (authToken != null) {
-            List<Pair<String, String>> zuulResponseHeaders = ctx.getZuulResponseHeaders();
-            ListIterator<Pair<String, String>> iterator = zuulResponseHeaders.listIterator();
-            while(iterator.hasNext()){
-                Pair<String, String> responseHeader = iterator.next();
-                if (responseHeader.first().equals(HttpHeaders.SET_COOKIE) && responseHeader.second().contains("SSOcookie")) {
+        if (authToken != null) {
+            List<Pair<String, String>> originResponseHeaders = ctx.getOriginResponseHeaders();
+            for (Pair<String, String> responseHeader : originResponseHeaders) {
+                if (responseHeader.first().equals(HttpHeaders.SET_COOKIE) &&
+                        (responseHeader.second().contains(GatewayConstants.SSOCOOKIE) || responseHeader.second().contains(GatewayConstants.JSESSIONID))) {
                     String[] split = responseHeader.second().split(";");
-                    String cookie = split[0].split("=")[1];
+                    String cookieName = split[0].split("=")[0];
+                    String cookieValue = split[0].split("=")[1];
+                    Cookie cookie = new Cookie(cookieName, cookieValue);
                     ssoCookieCacheManager.writeSSOCookieToCache(authToken, cookie);
-                    iterator.remove();
                 }
             }
         }

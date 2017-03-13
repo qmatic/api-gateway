@@ -43,27 +43,28 @@ public class BasicAuthFilter extends ZuulFilter {
 
 	@Override
 	public int filterOrder() {
-		return 1;
+		return 6;
 	}
 
 	@Override
 	public Object run(){
 		RequestContext ctx = RequestContext.getCurrentContext();
-		String token = getAuthToken();
-		if (token == null || token.isEmpty()) {
+		String authToken = RequestContextUtil.getAuthToken(ctx);
+		if (authToken == null || authToken.isEmpty()) {
 			log.debug("Token is empty");
 			unauthorized(ctx);
 			return null;
 		}
 
-		String ssoCookieFromCache = ssoCookieCacheManager.getSSOCookieFromCache(token);
+		String cookieName = getCookieName(ctx);
+		SSOCookieCacheManager.Cookie ssoCookieFromCache = ssoCookieCacheManager.getSSOCookieFromCache(authToken, cookieName);
 		if (ssoCookieFromCache != null) {
-			ctx.addZuulRequestHeader("Cookie", "SSOcookie=" + ssoCookieFromCache);
+			ctx.addZuulRequestHeader("Cookie", ssoCookieFromCache.getName() + "=" + ssoCookieFromCache.getValue());
 		}
 
-		String userCredentials = getUserCredentials(token);
+		String userCredentials = getUserCredentials(authToken);
 		if (userCredentials == null) {
-			log.debug("Missing user credentials for token : " + token);
+			log.debug("Missing user credentials for token : " + authToken);
 			unauthorized(ctx);
 			return null;
 		} else {
@@ -74,7 +75,15 @@ public class BasicAuthFilter extends ZuulFilter {
 		//Disable default zuul error Filter
 		ctx.set("sendErrorFilter.ran", true);
 		return null;
+	}
 
+	private String getCookieName(RequestContext ctx) {
+		String routeHostPath = ctx.getRouteHost().getPath();
+		if (routeHostPath.startsWith("/qsystem/mobile")) {
+			return GatewayConstants.JSESSIONID;
+		} else {
+			return GatewayConstants.SSOCOOKIE;
+		}
 	}
 
 	private void unauthorized(RequestContext ctx) {
@@ -93,9 +102,7 @@ public class BasicAuthFilter extends ZuulFilter {
 		return null;
 	}
 
-	protected String getAuthToken() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-		return ctx.getRequest().getHeader(GatewayConstants.AUTH_TOKEN);
+	void setBlockUnauthorized(boolean blockUnauthorized) {
+		this.blockUnauthorized = blockUnauthorized;
 	}
-
 }
