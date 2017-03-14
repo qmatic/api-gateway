@@ -10,7 +10,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -25,9 +24,6 @@ public class BasicAuthFilter extends ZuulFilter {
 
 	@Autowired
 	SSOCookieCacheManager ssoCookieCacheManager;
-
-	@Value("${orchestra.blockUnauthorized}")
-	private boolean blockUnauthorized;
 
 	private static final Logger log = LoggerFactory.getLogger(BasicAuthFilter.class);
 
@@ -52,7 +48,7 @@ public class BasicAuthFilter extends ZuulFilter {
 		String authToken = RequestContextUtil.getAuthToken(ctx);
 		if (authToken == null || authToken.isEmpty()) {
 			log.debug("Token is empty");
-			unauthorized(ctx);
+			RequestContextUtil.setResponseUnauthorized(ctx);
 			return null;
 		}
 
@@ -65,7 +61,7 @@ public class BasicAuthFilter extends ZuulFilter {
 		String userCredentials = getUserCredentials(authToken);
 		if (userCredentials == null) {
 			log.debug("Missing user credentials for token : " + authToken);
-			unauthorized(ctx);
+			RequestContextUtil.setResponseUnauthorized(ctx);
 			return null;
 		} else {
 			ctx.addZuulRequestHeader("Authorization", "Basic " +
@@ -86,23 +82,11 @@ public class BasicAuthFilter extends ZuulFilter {
 		}
 	}
 
-	private void unauthorized(RequestContext ctx) {
-		if(!blockUnauthorized) {
-			log.debug("Forwarding unauthorized request");
-		} else {
-			RequestContextUtil.setResponseUnauthorized(ctx);
-		}
-	}
-
 	private String getUserCredentials(String apiToken) {
 		OrchestraProperties.UserCredentials credentials = orchestraProperties.getCredentials(apiToken);
 		if (credentials != null) {
 			return credentials.getUser() + ":" + credentials.getPasswd();
 		}
 		return null;
-	}
-
-	void setBlockUnauthorized(boolean blockUnauthorized) {
-		this.blockUnauthorized = blockUnauthorized;
 	}
 }

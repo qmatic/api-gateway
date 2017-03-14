@@ -38,9 +38,6 @@ orchestra:
   central:
     url: http://localhost:8080
 
-  # by default we do not forward requests without a valid authentication token
-  blockUnauthorized : true
-
   # SSL trust store for the jvm
   # trustStore: conf/truststore.jks
   # trustStorePass: changeit

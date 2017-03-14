@@ -83,7 +83,6 @@ public class BasicAuthFilterTest {
         MockHttpServletResponse response = new MockHttpServletResponse();
         RequestContext.getCurrentContext().setResponse(response);
         when(this.orchestraProperties.getCredentials(API_TOKEN)).thenReturn(null);
-        basicAuthFilter.setBlockUnauthorized(true);
 
         basicAuthFilter.run();
 
