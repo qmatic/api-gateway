@@ -217,12 +217,18 @@ def doLastWithScripts(windowsScript, unixScript) {
         }
     }
 
-    unixScript.text = unixScript.text.replace('APP_HOME="`pwd -P`"', 'APP_HOME="`pwd -P`"\nJAVA_HOME="$APP_HOME/jre1.8.0_72"\nchmod u+x $JAVA_HOME/bin/java')
+    unixScript.text = unixScript.text.replace('APP_HOME="`pwd -P`"', 'APP_HOME="`pwd -P`"\nJAVA_HOME_PLACEHOLDER')
+    unixScript.text = unixScript.text.replace('JAVA_HOME_PLACEHOLDER',
+            'if [ -d "$APP_HOME/jre1.8.0_72" ]; then\n' +
+            '    JAVA_HOME="$APP_HOME/jre1.8.0_72"\n' +
+            '    chmod u+x $JAVA_HOME/bin/*\n' +
+            'fi')
     unixScript.text = unixScript.text.replace('CLASSPATH=', 'CLASSPATH=$APP_HOME/conf:')
     unixScript.text = unixScript.text.replace('eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS', 'eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS\nexport APP_HOME');
     unixScript.text = unixScript.text.replace('\\$', '$')
     windowsScript.text = windowsScript.text.replace('%%', '%')
-    windowsScript.text = windowsScript.text.replace('set APP_HOME=%DIRNAME%..','set APP_HOME=%DIRNAME%..\nset JAVA_HOME=%APP_HOME%/jre1.8.0_72')
+    windowsScript.text = windowsScript.text.replace('set APP_HOME=%DIRNAME%..','set APP_HOME=%DIRNAME%..\nJAVA_HOME_PLACEHOLDER')
+    windowsScript.text = windowsScript.text.replace('JAVA_HOME_PLACEHOLDER','if exist "%APP_HOME/jre1.8.0_72" set JAVA_HOME=%APP_HOME%/jre1.8.0_72')
     windowsScript.text = windowsScript
             .readLines()
             .collect(configureWindowsClassPath)
