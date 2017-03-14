@@ -1,7 +1,12 @@
 1.3.3.0
+Features
+    Added default truststore
 Bug fixes
     APIGW-13: Shutting down API GW fails on version 1.3.2 on windows when running as service.
     APIGW-14: Non-latin characters are not returned correctly in API gateway
+    Fixed issue where API GW would not cache SSO cookie from orchestra
+    Fixed start-script to use bundled JRE on linux if available
+    Removed blockUnauthorized parameter, this functionality is always enabled
 
 1.3.2.0
 Features
