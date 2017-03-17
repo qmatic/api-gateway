@@ -228,7 +228,7 @@ def doLastWithScripts(windowsScript, unixScript) {
     unixScript.text = unixScript.text.replace('\\$', '$')
     windowsScript.text = windowsScript.text.replace('%%', '%')
     windowsScript.text = windowsScript.text.replace('set APP_HOME=%DIRNAME%..','set APP_HOME=%DIRNAME%..\nJAVA_HOME_PLACEHOLDER')
-    windowsScript.text = windowsScript.text.replace('JAVA_HOME_PLACEHOLDER','if exist "%APP_HOME/jre1.8.0_72" set JAVA_HOME=%APP_HOME%/jre1.8.0_72')
+    windowsScript.text = windowsScript.text.replace('JAVA_HOME_PLACEHOLDER','if exist "%APP_HOME%/jre1.8.0_72" set JAVA_HOME=%APP_HOME%/jre1.8.0_72')
     windowsScript.text = windowsScript
             .readLines()
             .collect(configureWindowsClassPath)
