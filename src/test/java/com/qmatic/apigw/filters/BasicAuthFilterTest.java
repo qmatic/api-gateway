@@ -17,6 +17,8 @@ import org.testng.annotations.Test;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URL;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -96,5 +98,14 @@ public class BasicAuthFilterTest {
         basicAuthFilter.run();
 
         verify(ssoCookieCacheManager).getSSOCookieFromCache(API_TOKEN, GatewayConstants.JSESSIONID);
+    }
+
+    @Test
+    public void noRouteHost() {
+        RequestContext.getCurrentContext().removeRouteHost();
+
+        basicAuthFilter.run();
+
+        verify(ssoCookieCacheManager, never()).getSSOCookieFromCache(anyString(), anyString());
     }
 }

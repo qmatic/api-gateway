@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.net.URL;
 import java.nio.charset.Charset;
 
 @EnableConfigurationProperties(OrchestraProperties.class)
@@ -53,9 +54,11 @@ public class BasicAuthFilter extends ZuulFilter {
 		}
 
 		String cookieName = getCookieName(ctx);
-		SSOCookieCacheManager.Cookie ssoCookieFromCache = ssoCookieCacheManager.getSSOCookieFromCache(authToken, cookieName);
-		if (ssoCookieFromCache != null) {
-			ctx.addZuulRequestHeader("Cookie", ssoCookieFromCache.getName() + "=" + ssoCookieFromCache.getValue());
+		if (cookieName != null) {
+			SSOCookieCacheManager.Cookie ssoCookieFromCache = ssoCookieCacheManager.getSSOCookieFromCache(authToken, cookieName);
+			if (ssoCookieFromCache != null) {
+				ctx.addZuulRequestHeader("Cookie", ssoCookieFromCache.getName() + "=" + ssoCookieFromCache.getValue());
+			}
 		}
 
 		String userCredentials = getUserCredentials(authToken);
@@ -74,12 +77,16 @@ public class BasicAuthFilter extends ZuulFilter {
 	}
 
 	private String getCookieName(RequestContext ctx) {
-		String routeHostPath = ctx.getRouteHost().getPath();
-		if (routeHostPath.startsWith("/qsystem/mobile")) {
-			return GatewayConstants.JSESSIONID;
-		} else {
-			return GatewayConstants.SSOCOOKIE;
+		URL routeHost = ctx.getRouteHost();
+		if (routeHost != null) {
+			String routeHostPath = routeHost.getPath();
+			if (routeHostPath.startsWith("/qsystem/mobile")) {
+				return GatewayConstants.JSESSIONID;
+			} else {
+				return GatewayConstants.SSOCOOKIE;
+			}
 		}
+		return null;
 	}
 
 	private String getUserCredentials(String apiToken) {
