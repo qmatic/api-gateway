@@ -65,7 +65,6 @@ public class BasicAuthFilterTest {
     public void runFilterNoSSOCookie() {
         basicAuthFilter.run();
 
-        verify(ssoCookieCacheManager).getSSOCookieFromCache(API_TOKEN, GatewayConstants.SSOCOOKIE);
         Assert.assertTrue(RequestContext.getCurrentContext().getZuulRequestHeaders().containsKey("authorization"));
         Assert.assertFalse(RequestContext.getCurrentContext().getZuulRequestHeaders().containsKey("cookie"));
     }
@@ -89,6 +88,13 @@ public class BasicAuthFilterTest {
         basicAuthFilter.run();
 
         Assert.assertTrue(RequestContext.getCurrentContext().getResponseStatusCode() == HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    @Test
+    public void runFilterNonMobilePath() {
+        basicAuthFilter.run();
+
+        verify(ssoCookieCacheManager).getSSOCookieFromCache(API_TOKEN, GatewayConstants.SSOCOOKIE);
     }
 
     @Test
