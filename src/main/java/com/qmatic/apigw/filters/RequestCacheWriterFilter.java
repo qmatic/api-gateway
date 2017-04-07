@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 
 @Component
 public class RequestCacheWriterFilter extends RequestCacheFilterBase {
@@ -53,7 +54,7 @@ public class RequestCacheWriterFilter extends RequestCacheFilterBase {
 
     protected String getResponse(InputStream inputStream) {
         try {
-            String result = IOUtils.toString(inputStream);
+            String result = IOUtils.toString(inputStream, Charset.forName(FilterConstants.UTF_8_ENCODING));
             return result;
         } catch (IOException e) {
             log.error(e.getMessage());
