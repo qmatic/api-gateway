@@ -1,5 +1,9 @@
 latest
 
+1.3.5.0
+Bug Fixes
+    APIGW-24: System character encoding was used when reading response from Orchestra, changed to use UTF-8
+
 1.3.4.0
 Bug Fixes
     Fix nullpointer on route my_visit_current_status
