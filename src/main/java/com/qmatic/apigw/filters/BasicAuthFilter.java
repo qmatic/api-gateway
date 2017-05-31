@@ -71,6 +71,8 @@ public class BasicAuthFilter extends ZuulFilter {
 					new String(Base64.encodeBase64((userCredentials).getBytes(GatewayConstants.UTF8_CHARSET)), Charset.forName("US-ASCII")));
 		}
 
+		setRefererHeader(ctx);
+
 		//Disable default zuul error Filter
 		ctx.set("sendErrorFilter.ran", true);
 		return null;
@@ -95,5 +97,9 @@ public class BasicAuthFilter extends ZuulFilter {
 			return credentials.getUser() + ":" + credentials.getPasswd();
 		}
 		return null;
+	}
+
+	private void setRefererHeader(RequestContext ctx) {
+		ctx.addZuulRequestHeader("referer", ctx.getRequest().getRequestURL().toString());
 	}
 }

@@ -43,7 +43,10 @@ public class BasicAuthFilterTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
+        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest(null, "/qsystem/rest/something");
+        mockHttpServletRequest.setProtocol("http");
+        mockHttpServletRequest.setServerName("localhost");
+        mockHttpServletRequest.setServerPort(8080);
         mockHttpServletRequest.addHeader(GatewayConstants.AUTH_TOKEN, API_TOKEN);
         RequestContext context = new RequestContext();
         context.setRequest(mockHttpServletRequest);
@@ -113,5 +116,12 @@ public class BasicAuthFilterTest {
         basicAuthFilter.run();
 
         verify(ssoCookieCacheManager, never()).getSSOCookieFromCache(anyString(), anyString());
+    }
+
+    @Test
+    public void refererHeaderIsSetFromRequestURL() {
+        basicAuthFilter.run();
+
+        Assert.assertEquals(RequestContext.getCurrentContext().getZuulRequestHeaders().get("referer"),"http://localhost:8080/qsystem/rest/something");
     }
 }

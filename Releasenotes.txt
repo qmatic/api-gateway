@@ -1,4 +1,5 @@
 latest
+    Make the API GW set the referer header from the original request url
 
 1.3.5.0
 Bug Fixes
