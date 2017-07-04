@@ -92,6 +92,10 @@ cache:
       cacheName: serviceCache
       match: .*
       routes: custom_mobile_services
+    mobileBranches:
+      cacheName: branches
+      match: /branches/[0-9]+[/]?$
+      routes: mobile_service_v2
     visits:
       cacheName: visitInQueueCache
       match: /branches/[0-9]+/queues/[0-9]+/visits[/]?
