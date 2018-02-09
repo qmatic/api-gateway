@@ -33,7 +33,8 @@ mainClassName = "com.qmatic.apigw.Application"
 
 configurations {
     compile.exclude module: "spring-boot-starter-tomcat"
-
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
 }
 
 dependencies {
@@ -62,6 +63,33 @@ test {
 }
 
 compileJava.dependsOn(processResources)
+
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+idea {
+    idea.module.testSourceDirs += file("src/integration-test/java")
+    idea.module.testSourceDirs += file("src/integration-test/resources")
+}
+
+task integrationTest(type: Test) {
+    dependsOn(test)
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    useTestNG()
+}
+
+tasks.withType(Test) {
+    reports.html.destination = file("${reporting.baseDir}/${name}")
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.10'
@@ -133,8 +161,6 @@ publishing {
         }
     }
 }
-
-
 /* configuration for generating start script and generating token / password */
 
 task apiTokenGeneratorStartScripts(type: CreateStartScripts) {

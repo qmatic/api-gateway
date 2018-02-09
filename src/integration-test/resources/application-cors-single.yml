@@ -1,0 +1,5 @@
+http:
+  cors:
+    paths:
+      path: '/test'
+      allowedOrigins: '*'

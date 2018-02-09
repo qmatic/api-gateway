@@ -1,0 +1,14 @@
+http:
+  cors:
+    paths:
+      - path: /test1
+        allowedOrigins: http://foo.com, http://bar.com
+        allowedHeaders: FOO-HEADER, BAR-HEADER
+        exposedHeaders: FOO-EXPOSED, BAR-EXPOSED
+        allowedMethods: GET, POST, PUT
+        allowCredentials: true
+        maxAge: 10000
+      - path: /test2
+        allowedOrigins: '*'      
+      - path: /test3
+        allowedOrigins: '*'     

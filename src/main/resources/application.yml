@@ -204,3 +204,31 @@ geoService:
 
 currentStatus:
   visits_on_branch_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches/{branchId}/visits
+
+# CORS setup
+# Orchestra CORS configuation can be overriden in API Gateway. By default disabled.
+
+# Single path CORS setup example
+#http.cors.paths:
+#    path: /**
+#    allowedOrigins: '*'
+#    allowedHeaders: '*'
+#    exposedHeaders: '*'
+#    allowedMethods: GET, POST, PUT, OPTIONS, HEAD, DELETE, PATCH
+#    allowCredentials: true
+#    maxAge: 10000
+
+# Multiple paths CORS setup example
+#http.cors.paths:
+#    - path: /test1
+#      allowedOrigins: http://foo.com, http://bar.com
+#      allowedHeaders: header1, header2
+#      exposedHeaders: header3, header4
+#      allowedMethods: GET, POST, PUT
+#      allowCredentials: true
+#      maxAge: 10000
+#    - path: /test2
+#      allowedOrigins: '*'
+ 
+# To avoid duplicate CORS headers in response, disable CORS reponse headers using Zuul config
+#zuul.ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Access-Control-Expose-Headers, Access-Control-Max-Age, Access-Control-Allow-Methods

@@ -8,10 +8,12 @@ import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServle
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @EnableZuulProxy
 @EnableCaching
+@Import(CorsSpringConfig.class)
 public class Application {
 
 	@Bean

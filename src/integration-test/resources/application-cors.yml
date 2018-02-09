@@ -1,0 +1,9 @@
+http:
+  cors:
+    paths:
+      path: /foo
+      allowedOrigins: http://foo.com
+      allowedHeaders: '*'
+      allowedMethods: GET, OPTIONS
+      maxAge: 1234
+      allowedCredentials: true
