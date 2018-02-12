@@ -114,9 +114,6 @@ zuul:
     appointment_api:
        path: /rest/appointment/**
        url: ${orchestra.central.url}/qsystem/rest/appointment
-    digitalsignage_api:
-        path: /rest/digitalsignage/**
-        url: ${orchestra.central.url}/qsystem/rest/digitalsignage
     entrypoint_api:
         path: /rest/entrypoint/**
         url: ${orchestra.central.url}/qsystem/rest/entrypoint

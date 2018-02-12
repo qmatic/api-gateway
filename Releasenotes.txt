@@ -2,6 +2,7 @@ latest
 Features
     Added cache configuration for new request to get a specific branch (/rest/mobile/v2/branches/{branchId})
     Added support for configurable CORS
+    Removed route digitalsignage_api > qsystem/rest/digitalsignage
 
 1.3.6.0
     Make the API GW set the referer header from the original request url
