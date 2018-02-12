@@ -1,4 +1,4 @@
-latest
+1.4.0.0
 Features
     Added cache configuration for new request to get a specific branch (/rest/mobile/v2/branches/{branchId})
     Added support for configurable CORS
