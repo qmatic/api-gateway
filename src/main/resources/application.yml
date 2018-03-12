@@ -110,6 +110,8 @@ logZuulExceptions : false
 
 # define routes exposed via zuul proxy     
 zuul:
+  removeSemicolonContent: false
+
   routes:
     appointment_api:
        path: /rest/appointment/**

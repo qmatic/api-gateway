@@ -1,3 +1,7 @@
+latest
+Bug fixes
+    APIGW-29: Fixed issue where Zuul proxy didn't forward matrix parameters.
+
 1.4.1.0
 Bug fixes
     Faulty version in gradle.properties
