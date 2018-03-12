@@ -1,4 +1,4 @@
-latest
+1.4.2.0
 Bug fixes
     APIGW-29: Fixed issue where Zuul proxy didn't forward matrix parameters.
 
