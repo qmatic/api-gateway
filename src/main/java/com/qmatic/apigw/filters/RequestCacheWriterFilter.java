@@ -5,10 +5,12 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.zip.GZIPInputStream;
 
 @Component
 public class RequestCacheWriterFilter extends RequestCacheFilterBase {
@@ -35,8 +37,7 @@ public class RequestCacheWriterFilter extends RequestCacheFilterBase {
         if (!cacheManager.isHandledByCache(getProxy(), getRequestUri())) {
             return RESULT_DOES_NOT_MATTER;
         }
-        InputStream responseDataStream = ctx.getResponseDataStream();
-        String result = getResponse(responseDataStream);
+        String result = getResponse(ctx);
         cacheManager.writeRequestToCache(getProxy(), getRequestUri(), getRouteHost(), getQueryParameters() , result);
         ctx.setResponseBody(result);
         return RESULT_DOES_NOT_MATTER;
@@ -52,9 +53,17 @@ public class RequestCacheWriterFilter extends RequestCacheFilterBase {
         return false;
     }
 
-    protected String getResponse(InputStream inputStream) {
+    protected String getResponse(RequestContext ctx) {
         try {
-            String result = IOUtils.toString(inputStream, Charset.forName(FilterConstants.UTF_8_ENCODING));
+            InputStream inputStream = ctx.getResponseDataStream();
+            String result;
+            if (ctx.getResponseGZipped()) {
+                 result = StreamUtils.copyToString(new GZIPInputStream(inputStream),
+                         Charset.forName(FilterConstants.UTF_8_ENCODING));
+            }
+            else {
+                result = IOUtils.toString(inputStream, Charset.forName(FilterConstants.UTF_8_ENCODING));
+            }
             return result;
         } catch (IOException e) {
             log.error(e.getMessage());
