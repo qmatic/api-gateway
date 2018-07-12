@@ -20,6 +20,7 @@ Locates closest services and branches from any position.
 The API Gateway project is built as a Spring Boot Application (https://spring.io/guides/gs/spring-boot), using Netflix zuul edge service framework (https://github.com/Netflix/zuul).
  
 * Clone this repo `git clone https://www.github.com/qmatic/api-gateway.git`
+* Build with Java version 8
 * Build project using gradle or gradle wrapper, for example: `gradlew clean build`
 * Build package: `gradlew buildDistGatewayPackage`
 * Run integration tests: `gradlew integrationTest`
