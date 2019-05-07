@@ -206,6 +206,7 @@ distributions {
                     exclude 'logs'
                     exclude 'bin'
                     include '**/application.yml'
+                    include '**/application_MobileTicket.yml'
                     include '**/ehcache.xml'
                     include '**/logbackAPIGateway.xml'
                 }
