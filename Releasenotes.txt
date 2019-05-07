@@ -1,5 +1,6 @@
 1.4.3.0
 Bug fixes
+    Added resources/application_MobileTicket.yml to the project.
     APIGW-31: Added support for GZip compressed responses.
 
 1.4.2.0
