@@ -1,3 +1,7 @@
+1.4.5.0
+Bug fixes
+    APIGW-32: Blocked possibility to remove any visit without authorization from Mobile Ticket.
+
 1.4.4.0
 Bug fixes
     Added resources/application_MobileTicket.yml to the project.

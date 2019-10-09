@@ -62,6 +62,8 @@ orchestra:
       parameter: ticket
     my_visit_current_status:
       parameter: visits
+    custom_mobile_delete_visit:
+      parameter: ticket
 
 cache:
   # by default the cache metrics connector is only accessable from local machine
@@ -131,6 +133,12 @@ zuul:
 
     # custom mobile service example
     # (authentication against mobile)
+
+    # Mobile ticket -authentication against mobile - routes protected by checksum
+    # delete visit - /MobileTicket/branches/[branchId]/ticket/[visitId]?checksum=[checksum]
+    custom_mobile_delete_visit:
+      path: /MobileTicket/branches/*/ticket/**
+      url : ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
 
     # get services for branch - /MobileTicket/branches/[branchId]/services
     custom_mobile_branches:
