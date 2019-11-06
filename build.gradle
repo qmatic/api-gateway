@@ -246,8 +246,8 @@ def doLastWithScripts(windowsScript, unixScript) {
 
     unixScript.text = unixScript.text.replace('APP_HOME="`pwd -P`"', 'APP_HOME="`pwd -P`"\nJAVA_HOME_PLACEHOLDER')
     unixScript.text = unixScript.text.replace('JAVA_HOME_PLACEHOLDER',
-            'if [ -d "$APP_HOME/jre1.8.0_72" ]; then\n' +
-            '    JAVA_HOME="$APP_HOME/jre1.8.0_72"\n' +
+            'if [ -d "$APP_HOME/' + "${jreVersion}"  + '" ]; then\n' +
+            '    JAVA_HOME="$APP_HOME/' + "${jreVersion}"+'"\n' +
             '    chmod u+x $JAVA_HOME/bin/*\n' +
             'fi')
     unixScript.text = unixScript.text.replace('CLASSPATH=', 'CLASSPATH=$APP_HOME/conf:')
@@ -255,7 +255,7 @@ def doLastWithScripts(windowsScript, unixScript) {
     unixScript.text = unixScript.text.replace('\\$', '$')
     windowsScript.text = windowsScript.text.replace('%%', '%')
     windowsScript.text = windowsScript.text.replace('set APP_HOME=%DIRNAME%..','set APP_HOME=%DIRNAME%..\nJAVA_HOME_PLACEHOLDER')
-    windowsScript.text = windowsScript.text.replace('JAVA_HOME_PLACEHOLDER','if exist "%APP_HOME%/jre1.8.0_72" set JAVA_HOME=%APP_HOME%/jre1.8.0_72')
+    windowsScript.text = windowsScript.text.replace('JAVA_HOME_PLACEHOLDER','if exist "%APP_HOME%/'+"${jreVersion}"+'" set JAVA_HOME=%APP_HOME%/'+"${jreVersion}")
     windowsScript.text = windowsScript
             .readLines()
             .collect(configureWindowsClassPath)
@@ -285,17 +285,17 @@ task copyGatewayDistributable(type: Copy, dependsOn: build) {
 }
 
 task copyLinux64Java(type: Copy, dependsOn : copyGatewayDistributable) {
-    from zipTree(dependencyDir.path + "/jre-8u72-linux-x64.zip")
+    from tarTree(resources.gzip(dependencyDir.path + "/${linux_jdk_64_file}"))
     into unzippedDir.path + '/linux'
 }
 
 task copyWin64Java(type: Copy, dependsOn : copyGatewayDistributable) {
-    from zipTree(dependencyDir.path + "/jre-8u72-windows-x64.zip")
+    from zipTree(dependencyDir.path + "/${windows_jdk_64_file}")
     into unzippedDir.path + '/win'
 }
 
 task copyTrustStore(type: Copy, dependsOn: copyWin64Java) {
-    from unzippedDir.path + '/win/jre1.8.0_72/lib/security/cacerts'
+    from unzippedDir.path + "/win/${jreVersion}/lib/security/cacerts"
     into unzippedDir.path + "/${qpApiGateway}"  + "-" + version + "/conf/"
     rename ('cacerts', 'truststore.jks')
 }
@@ -312,8 +312,8 @@ task buildDistGatewayWindows(type: Zip) {
         exclude 'bin/password-encoder'
         into '/'
     }
-    from (unzippedDir.path + '/win/jre1.8.0_72/.') {
-        into '/jre1.8.0_72'
+    from (unzippedDir.path + "/win/${windows_jdk_64_version}/jre/.") {
+        into "/${jreVersion}"
     }
     baseName 'QP_APIGateway_win64'
 }
@@ -326,8 +326,8 @@ task buildDistGatewayLinux(type: Zip) {
         exclude 'bin/*.exe'
         into '/'
     }
-    from (unzippedDir.path + '/linux/jre1.8.0_72/.') {
-        into '/jre1.8.0_72'
+    from (unzippedDir.path + "/linux/${linux_jdk_64_version}/jre/.") {
+        into "/${jreVersion}"
     }
     baseName 'QP_APIGateway_linux64'
 }
