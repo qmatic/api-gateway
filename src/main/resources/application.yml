@@ -27,6 +27,11 @@ endpoints:
 server:
   # define server port for gateway
   port: 9090
+# By default undertow uses 8*<no of available CPUs> as the no of worker threads
+# If the API-GW has many long-running requests this might need to be increased to ensure there are idle workers for new requests.
+# Uncomment the two sections below to set the no of workers
+#  undertow:
+#   worker-threads: 128
 #  ssl:
 #    key-store: classpath:keystore.jks
 #    key-store-password: secret
@@ -37,6 +42,12 @@ orchestra:
   # define URL for orchestra central installation
   central:
     url: http://localhost:8080
+# By default the communication to the backend server has no timeout
+# Uncomment and adjust the values below to set timeout values.
+# NOTE: This only applies to requests starting with /geo and also to requests defined in the checksumRoutes below (normally /MobileTicket/MyVisit... routes)
+# NOTE2: The value is specified in milliseconds
+    connectTimeout: 10000
+    readTimeout: 10000
 
   # SSL trust store for the jvm
   # trustStore: conf/truststore.jks
