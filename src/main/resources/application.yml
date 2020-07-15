@@ -46,8 +46,13 @@ orchestra:
 # Uncomment and adjust the values below to set timeout values.
 # NOTE: This only applies to requests starting with /geo and also to requests defined in the checksumRoutes below (normally /MobileTicket/MyVisit... routes)
 # NOTE2: The value is specified in milliseconds
+<<<<<<< Updated upstream
     connectTimeout: 10000
     readTimeout: 10000
+=======
+#    connectTimeout: 10000
+#    readTimeout: 10000
+>>>>>>> Stashed changes
 
   # SSL trust store for the jvm
   # trustStore: conf/truststore.jks

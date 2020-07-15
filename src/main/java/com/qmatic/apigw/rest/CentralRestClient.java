@@ -53,8 +53,13 @@ public final class CentralRestClient {
                 .setConnectTimeout(getConnectTimeout())
                 .setReadTimeout(getReadTimeout())
                 .build();
+<<<<<<< Updated upstream
         log.info("connectTimeout: {}", connectTimeout);
         log.info("readTimeout: {}", readTimeout);
+=======
+        log.debug("connectTimeout: {}", connectTimeout);
+        log.debug("readTimeout: {}", readTimeout);
+>>>>>>> Stashed changes
     }
 
     private int getConnectTimeout() {
