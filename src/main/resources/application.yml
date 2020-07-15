@@ -129,6 +129,12 @@ zuul:
     appointment_api:
        path: /rest/appointment/**
        url: ${orchestra.central.url}/qsystem/rest/appointment
+    branchgroups_api:
+       path: /rest/config/branchGroups/**
+       url: ${orchestra.central.url}/qsystem/rest/config/branchGroups
+    sms_api:
+       path: /rest/notification/**
+       url: ${orchestra.central.url}/notification/
     entrypoint_api:
         path: /rest/entrypoint/**
         url: ${orchestra.central.url}/qsystem/rest/entrypoint

@@ -1,3 +1,7 @@
+1.4.7.0
+Features
+    APIGW-34 : Added missing routes needed for Qmatic Webbboking: branchgroups_api and sms_api
+
 1.4.6.0
 Bug fixes
     QP-8218 : Mobile ticket slow response : Introduced settings for timeouts to Orchestra back-end and documented how to set undertow worker threads.
