@@ -1,22 +1,29 @@
 package com.qmatic.apigw.rest;
 
 import com.qmatic.apigw.GatewayConstants;
+import com.qmatic.apigw.exception.CentralCommunicationException;
 import com.qmatic.apigw.filters.FilterConstants;
 import com.qmatic.apigw.properties.OrchestraProperties;
 import com.qmatic.common.geo.Branch;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.nio.charset.Charset;
+
+import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
 
 @Component
 public final class CentralRestClient {
@@ -30,14 +37,46 @@ public final class CentralRestClient {
     private String mobileServiceBranchesUrl;
     @Value("${currentStatus.visits_on_branch_url}")
     private String visitsOnBranchUrl;
-    private CentralHttpErrorHandler centralErrorHandler;
+    @Value("${orchestra.central.connectTimeout:0}")
+    String connectTimeout;
+    @Value("${orchestra.central.readTimeout:0}")
+    String readTimeout;
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
     private RestTemplate restTemplate;
 
     @PostConstruct
     protected void init() {
-        centralErrorHandler = new CentralHttpErrorHandler();
-        restTemplate = new RestTemplate();
-        restTemplate.setErrorHandler(centralErrorHandler);
+        CentralHttpErrorHandler centralErrorHandler = new CentralHttpErrorHandler();
+        restTemplate = restTemplateBuilder
+                .errorHandler(centralErrorHandler)
+                .setConnectTimeout(getConnectTimeout())
+                .setReadTimeout(getReadTimeout())
+                .build();
+<<<<<<< Updated upstream
+        log.info("connectTimeout: {}", connectTimeout);
+        log.info("readTimeout: {}", readTimeout);
+=======
+        log.debug("connectTimeout: {}", connectTimeout);
+        log.debug("readTimeout: {}", readTimeout);
+>>>>>>> Stashed changes
+    }
+
+    private int getConnectTimeout() {
+        return parseInteger(connectTimeout, "orchestra.central.connectTimeout");
+    }
+
+    private int parseInteger(String value, String attribute) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException nfe) {
+            log.error("Unable to use value {} from setting {}, it is not a valid integer. Defaulting to 0.", value, attribute);
+        }
+        return 0;
+    }
+
+    private int getReadTimeout() {
+        return parseInteger(readTimeout, "orchestra.central.readTimeout");
     }
 
     /**
@@ -50,7 +89,15 @@ public final class CentralRestClient {
                 new HttpEntity<>(createAuthorizationHeader(userCredentials)), Branch[].class, new Object[]{});
             return allBranches.getBody();
         } catch(RuntimeException e) {
-            log.warn("", e);
+            throw logAndConvertException(e);
+        }
+    }
+
+    private RuntimeException logAndConvertException(RuntimeException e) {
+        log.warn("", e);
+        if (e instanceof ResourceAccessException && e.getCause() instanceof IOException) {
+            return new CentralCommunicationException("1000", e.getMessage(), GATEWAY_TIMEOUT.value(), "");
+        } else {
             throw e;
         }
     }
@@ -71,8 +118,7 @@ public final class CentralRestClient {
             }
             return new Branch[] {};
         } catch(RuntimeException e) {
-            log.warn("", e);
-            throw e;
+            throw logAndConvertException(e);
         }
     }
 
@@ -101,8 +147,7 @@ public final class CentralRestClient {
             }
             return new VisitStatusMap();
         } catch(RuntimeException e) {
-            log.warn("", e);
-            throw e;
+            throw logAndConvertException(e);
         }
     }
 
