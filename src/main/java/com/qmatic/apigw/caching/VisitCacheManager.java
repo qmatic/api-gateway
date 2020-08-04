@@ -12,11 +12,15 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.ehcache.EhCacheCache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
 
 @Component
 public class VisitCacheManager {
@@ -24,6 +28,12 @@ public class VisitCacheManager {
     private static final Logger log = LoggerFactory.getLogger(VisitCacheManager.class);
 
     private CacheManager cacheManager;
+
+    private ConcurrentHashMap<Long, Semaphore> throttleSemaphores = new ConcurrentHashMap();
+    private static final Integer MAX_CALLS_PER_BRANCH = 1;
+
+    @Value("${orchestra.central.throttleVisitOnBranches:false}")
+    Boolean throttleVisitOnBranches;
 
     @Autowired
     OrchestraProperties orchestraProperties;
@@ -45,16 +55,58 @@ public class VisitCacheManager {
         VisitStatus visit = null;
         Cache visitsOnBranchCache = cacheManager.getCache(GatewayConstants.VISITS_ON_BRANCH_CACHE);
         if (visitsOnBranchCache != null) {
-            VisitStatusMap visitsOnBranch = visitsOnBranchCache.get(branchId, VisitStatusMap.class);
-            if (visitsOnBranch == null) {
-                visitsOnBranch = cacheAndGetVisitsOnBranch(branchId);
-            }
+            VisitStatusMap visitsOnBranch = getVisitStatusMap(branchId, visitsOnBranchCache);
             visit = visitsOnBranch.get(visitId);
         } else {
             logCacheError(GatewayConstants.VISITS_ON_BRANCH_CACHE);
         }
         return visit;
 
+    }
+
+    private VisitStatusMap getVisitStatusMap(Long branchId, Cache visitsOnBranchCache) {
+        VisitStatusMap visitsOnBranch = visitsOnBranchCache.get(branchId, VisitStatusMap.class);
+        if (visitsOnBranch == null) {
+            if (throttleVisitOnBranches) {
+                visitsOnBranch = getVisitsOnBranchIfNotInCache(branchId, visitsOnBranchCache);
+            } else {
+                visitsOnBranch = cacheAndGetVisitsOnBranch(branchId);
+            }
+        }
+        return visitsOnBranch;
+    }
+
+    private VisitStatusMap getVisitsOnBranchIfNotInCache(Long branchId, Cache visitsOnBranchCache) {
+        Semaphore branchSemaphore = getSemaphore(branchId);
+        VisitStatusMap visitsOnBranch = null;
+        boolean aquired = false;
+        try {
+            log.debug("Aquiring semaphore for branch {}", branchId);
+            branchSemaphore.acquire();
+            aquired = true;
+            log.debug("Aquired semaphore for branch {}", branchId);
+            visitsOnBranch = visitsOnBranchCache.get(branchId, VisitStatusMap.class);
+            if (visitsOnBranch == null) {
+                log.debug("Visit data not found in cache for branch {}", branchId);
+                visitsOnBranch = cacheAndGetVisitsOnBranch(branchId);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            if (aquired) {
+                branchSemaphore.release();
+            }
+        }
+
+        log.debug("Returning visits on branch {}", branchId);
+        return visitsOnBranch;
+    }
+
+    private Semaphore getSemaphore(Long branchId) {
+        if (!throttleSemaphores.containsKey(branchId)) {
+            throttleSemaphores.putIfAbsent(branchId, new Semaphore(MAX_CALLS_PER_BRANCH));
+        }
+        return throttleSemaphores.get(branchId);
     }
 
     private VisitStatusMap cacheAndGetVisitsOnBranch(Long branchId) {
@@ -77,10 +129,7 @@ public class VisitCacheManager {
         String checksum = null;
         Cache visitsOnBranchCache = cacheManager.getCache(GatewayConstants.VISITS_ON_BRANCH_CACHE);
         if (visitsOnBranchCache != null) {
-            VisitStatusMap visitsOnBranch = visitsOnBranchCache.get(branchId, VisitStatusMap.class);
-            if (visitsOnBranch == null) {
-                visitsOnBranch = cacheAndGetVisitsOnBranch(branchId);
-            }
+            VisitStatusMap visitsOnBranch = getVisitStatusMap(branchId, visitsOnBranchCache);
             VisitStatus visit = visitsOnBranch.get(visitId);
             if (visit != null) {
                 checksum = visit.getChecksum();
@@ -125,10 +174,7 @@ public class VisitCacheManager {
         Long highestVisitIdOnBranch = -1L;
         Cache visitsOnBranchCache = cacheManager.getCache(GatewayConstants.VISITS_ON_BRANCH_CACHE);
         if (visitsOnBranchCache != null) {
-            VisitStatusMap visitsOnBranch = visitsOnBranchCache.get(branchId, VisitStatusMap.class);
-            if (visitsOnBranch == null) {
-                visitsOnBranch = cacheAndGetVisitsOnBranch(branchId);
-            }
+            VisitStatusMap visitsOnBranch = getVisitStatusMap(branchId, visitsOnBranchCache);
             for(Long visitKey : visitsOnBranch.keySet()) {
                 Long visitId = visitsOnBranch.get(visitKey).getVisitId();
                 highestVisitIdOnBranch =  visitId > highestVisitIdOnBranch ? visitId : highestVisitIdOnBranch;
