@@ -1,7 +1,19 @@
-/.idea/
+# Ignore IDEA project structure
+.idea
+*.iml
+*.ipr
+*.ids
+*.iws
+out
+*bin
+*target
+*.settings
+atlassian-ide-plugin.xml
+
 /.gradle/
 /build/
 api-gateway.iml
 api-gateway.ipr
 api-gateway.iws
 out
+*.class
