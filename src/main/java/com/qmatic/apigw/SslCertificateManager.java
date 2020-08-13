@@ -14,7 +14,7 @@ import java.security.GeneralSecurityException;
 import java.security.cert.X509Certificate;
 
 @Component
-class SslCertificateManager {
+public class SslCertificateManager {
 
     @Value("${orchestra.disableSslCertificateChecks:false}")
     private void setDisableSslCertificateChecks (boolean disableSslCertificateChecks) {

@@ -49,6 +49,10 @@ orchestra:
 #    connectTimeout: 10000
 #    readTimeout: 10000
 
+    # Controls whether throttling the call getAllVisitsOnBranch, if this is true (default: false) no more than one call at a time will be sent for each branch.
+    # A check will be done if another thread is running that call for the specific branch, and if to it will wait until that call completes
+    #throttleVisitOnBranches: true
+
   # SSL trust store for the jvm
   # trustStore: conf/truststore.jks
   # trustStorePass: changeit

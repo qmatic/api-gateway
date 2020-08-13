@@ -1,6 +1,7 @@
 package com.qmatic.apigw.rest;
 
 import com.qmatic.apigw.GatewayConstants;
+import com.qmatic.apigw.SslCertificateManager;
 import com.qmatic.apigw.exception.CentralCommunicationException;
 import com.qmatic.apigw.filters.FilterConstants;
 import com.qmatic.apigw.properties.OrchestraProperties;
@@ -44,15 +45,24 @@ public final class CentralRestClient {
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
     private RestTemplate restTemplate;
+    // This needs to be loaded before this class to enable the keystore settings to be applied before this class loads it's components
+    @Autowired
+    private SslCertificateManager sslCertificateManager;
 
     @PostConstruct
     protected void init() {
         CentralHttpErrorHandler centralErrorHandler = new CentralHttpErrorHandler();
-        restTemplate = restTemplateBuilder
-                .errorHandler(centralErrorHandler)
-                .setConnectTimeout(getConnectTimeout())
-                .setReadTimeout(getReadTimeout())
-                .build();
+        if (getConnectTimeout() != 0 || getReadTimeout() != 0) {
+            restTemplate = restTemplateBuilder
+                    .errorHandler(centralErrorHandler)
+                    .setConnectTimeout(getConnectTimeout())
+                    .setReadTimeout(getReadTimeout())
+                    .build();
+        } else {
+            restTemplate = new RestTemplate();
+        }
+        restTemplate.setErrorHandler(centralErrorHandler);
+
         log.info("connectTimeout: {}", connectTimeout);
         log.info("readTimeout: {}", readTimeout);
     }
