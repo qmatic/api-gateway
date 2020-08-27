@@ -1,4 +1,4 @@
-&# define management endpoint, for instance: http://127.0.0.1:9091/api-gateway/health
+# define management endpoint, for instance: http://127.0.0.1:9091/api-gateway/health
 # the management endpoint is ONLY available locally
 # NOTE: set port to -1 for disabling all management endpoints
 management:
