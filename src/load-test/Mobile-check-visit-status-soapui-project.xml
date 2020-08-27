@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="678d9756-6775-464a-a960-e479ba6eb4b1" activeEnvironment="Default" name="Mobile_check_visit_status" resourceRoot="" soapui-version="5.6.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:RestService" id="7480987f-9776-478a-96d7-cc89368991b0" wadlVersion="http://wadl.dev.java.net/2009/02" name="http://172.20.0.2:9090" type="rest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart=""/><con:endpoints><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:endpoint>http://172.20.0.3:9090</con:endpoint><con:endpoint>http://localhost:9090</con:endpoint><con:endpoint>http://robert-HP-EliteBook-840-G5:8089/</con:endpoint></con:endpoints><con:resource name="Branch 1" path="/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/{visit}" id="5d5bf3ee-1804-4124-8b2d-a08b29b7544e"><con:settings/><con:parameters><con:parameter><con:name>visit</con:name><con:value>1</con:value><con:style>TEMPLATE</con:style><con:default>1</con:default></con:parameter></con:parameters><con:method name="4 1" id="34809125-995b-4c7c-9974-2dc5645ab3a3" method="GET"><con:settings/><con:parameters><con:parameter><con:name>checksum</con:name><con:value>1677807528</con:value><con:style>QUERY</con:style><con:default>1677807528</con:default><con:path xsi:nil="true"/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json;charset=UTF-8</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:ns="http://172.20.0.2/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/4">ns:Response</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>404</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>404</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>404</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType>application/json;charset=UTF-8</con:mediaType><con:status>404</con:status><con:params/><con:element xmlns:ns="http://127.0.0.1/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/4">ns:Fault</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="branch 1, visit 4" id="1ac8cf4c-ef68-41ca-9b21-08806ecb5385" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://172.20.0.2/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/4</con:originalUri><con:credentials><con:selectedAuthProfile>mobile</con:selectedAuthProfile><con:authType>OAuth 1.0</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="135439206"/>
+  <con:entry key="visit" value="1"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:request></con:method></con:resource><con:resource name="Branch 6" path="/MobileTicket/MyVisit/CurrentStatus/branches/2/visits/{visit}" id="b750e455-8620-4176-a2f4-2269c50d7df3"><con:settings/><con:parameters><con:parameter><con:name>checksum</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>visit</con:name><con:value>1</con:value><con:style>TEMPLATE</con:style><con:default>1</con:default></con:parameter></con:parameters><con:method name="Method 1" id="399db3a9-16d3-4e9b-9776-74f727da6245" method="GET"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json;charset=UTF-8</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:ns="http://127.0.0.1/MobileTicket/MyVisit/CurrentStatus/branches/6/visits/4">ns:Response</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>404</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>404</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>404</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>404</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>404</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>404</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>404</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>200</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType>application/json;charset=UTF-8</con:mediaType><con:status>404</con:status><con:params/><con:element xmlns:ns="http://127.0.0.1/MobileTicket/MyVisit/CurrentStatus/branches/6/visits/4">ns:Fault</con:element></con:representation><con:request name="Branch 6, visit 4" id="a267ebdb-e867-4ef5-a44f-dc17041cb236" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://172.20.0.3/MobileTicket/MyVisit/CurrentStatus/branches/6/visits/4</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="212597210"/>
+  <con:entry key="visit" value="4"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:request><con:request name="Branch 6, visit 1" id="a267ebdb-e867-4ef5-a44f-dc17041cb236" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://172.20.0.3/MobileTicket/MyVisit/CurrentStatus/branches/6/visits/4</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="400619660"/>
+  <con:entry key="visit" value="1"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:request><con:request name="Branch 6, visit 2" id="a267ebdb-e867-4ef5-a44f-dc17041cb236" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://172.20.0.3/MobileTicket/MyVisit/CurrentStatus/branches/6/visits/4</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="418154050"/>
+  <con:entry key="visit" value="2"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:request><con:request name="Branch 6, visit 3" id="a267ebdb-e867-4ef5-a44f-dc17041cb236" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://172.20.0.3/MobileTicket/MyVisit/CurrentStatus/branches/6/visits/4</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="2114728392"/>
+  <con:entry key="visit" value="3"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:request></con:method></con:resource></con:interface><con:interface xsi:type="con:RestService" id="7f828820-1b27-4f04-8e47-92d7c13b081d" wadlVersion="http://wadl.dev.java.net/2009/02" name="http://127.0.0.1:8080" type="rest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache/><con:endpoints><con:endpoint>http://127.0.0.1:8080</con:endpoint><con:endpoint>http://robert-HP-EliteBook-840-G5:8089/</con:endpoint></con:endpoints><con:resource name="Visits" path="/qsystem/mobile/rest/v2/branches/1/visits" id="2022ec61-65fd-4aad-9323-dfb44861e77d"><con:settings/><con:parameters/><con:method name="Visits 1" id="aa43c24a-c822-4750-9619-2c6986983b1f" method="GET"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:vis="http://127.0.0.1/qsystem/mobile/rest/v2/branches/1/visits">vis:Response</con:element></con:representation><con:request name="Request 1" id="869c2821-272b-47db-9354-5db59ea8f466" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://127.0.0.1:8080</con:endpoint><con:request/><con:originalUri>http://127.0.0.1/qsystem/mobile/rest/v2/branches/1/visits</con:originalUri><con:credentials><con:username>mobile</con:username><con:password>UlanBulan2</con:password><con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:preemptive>false</con:preemptive><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource><con:resource name="visits" path="/qsystem/mobile/rest/v2/branches/2/visits" id="1e471856-48e9-4a4b-a51c-a3b78e8887b1"><con:settings/><con:parameters/><con:method name="Method 1" id="4d6cd4d0-2c0f-4486-89ae-fe9758245737" method="GET"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType>text/html;charset=UTF-8</con:mediaType><con:status>404</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="FAULT"><con:mediaType xsi:nil="true"/><con:status>401</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element>Response</con:element></con:representation><con:representation type="FAULT"><con:mediaType>application/json</con:mediaType><con:status>500</con:status><con:params/><con:element>Fault</con:element></con:representation><con:request name="Request 1" id="662684c0-6716-4da7-8f26-24d4f32e4171" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://127.0.0.1:8080</con:endpoint><con:request/><con:originalUri>http://127.0.0.1/qsystem/mobile/v2/branches/6/visits</con:originalUri><con:credentials><con:username>mobile</con:username><con:password>UlanBulan2</con:password><con:selectedAuthProfile>Basic</con:selectedAuthProfile><con:addedBasicAuthenticationTypes>Basic</con:addedBasicAuthenticationTypes><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource></con:interface><con:testSuite id="d24b3c29-51bb-4f6f-bd24-c4186c7fa77c" name="Breaker_test"><con:description>test to verify circuet breaker handling time outs in api gw</con:description><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="a07814e8-1610-4c3b-b24d-9827967932fe" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Verify branches" searchProperties="true"><con:settings/><con:testStep type="restrequest" name="Branch 1" id="96b812ae-e099-4d5c-85ca-287eb583e7f1"><con:settings/><con:config service="http://172.20.0.2:9090" methodName="4 1" resourcePath="/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/{visit}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Branch 1" id="2c9dba2a-1322-4d47-8f95-8481f28c2bc3" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://127.0.0.1/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/4</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="4a52da49-eb4c-40a5-8b1e-cc7cdabf266e" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:assertion type="JsonPath Count" id="3ff34ee4-e979-493f-b661-d11ace7228e4" name="JsonPath Count"><con:configuration><path>$.[queueId]</path><content>1</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="JsonPath Match" id="0a5ecc5a-cf8c-4ff9-a0c6-da3f5630ea65" name="JsonPath Match"><con:configuration><path>.ticketId</path><content>[A001]</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="135439206"/>
+  <con:entry key="visit" value="1"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="Branch 6" id="51d84a19-eec4-4b56-95af-af36b1f9446d"><con:settings/><con:config service="http://172.20.0.2:9090" methodName="Method 1" resourcePath="/MobileTicket/MyVisit/CurrentStatus/branches/2/visits/{visit}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Branch 6" id="2c9dba2a-1322-4d47-8f95-8481f28c2bc3" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://127.0.0.1/MobileTicket/MyVisit/CurrentStatus/branches/6/visits/4</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="03792a64-121f-4d49-bdc1-b4117ebca93f" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="212597210"/>
+  <con:entry key="visit" value="4"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="Branch 1, wrong checksum" id="db39e2d0-2ece-46c1-8483-bbd017cb4157"><con:settings/><con:config service="http://172.20.0.2:9090" methodName="4 1" resourcePath="/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/{visit}" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Branch 1, wrong checksum" id="2c9dba2a-1322-4d47-8f95-8481f28c2bc3" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://127.0.0.1/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/4</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="c0136961-5dbe-45a2-b899-bf511fbf14cb" name="Valid HTTP Status Codes"><con:configuration><codes>404</codes></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="99999999"/>
+  <con:entry key="visit" value="1"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:properties><con:property><con:name>auth-token</con:name><con:value>d0516eee-a32d-11e5-bf7f-feff819cdc9f</con:value></con:property></con:properties></con:testCase><con:testCase id="a2bb1319-4491-4feb-a1a1-d4077b1298c1" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Check flakie connection, branch 6" searchProperties="true"><con:settings/><con:testStep type="restrequest" name="Branch 1, visit 1" id="728daad7-b0aa-4d91-9c59-0f9743760d1b"><con:settings/><con:config service="http://172.20.0.2:9090" resourcePath="/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/{visit}" methodName="4 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Branch 1, visit 1" id="1ac8cf4c-ef68-41ca-9b21-08806ecb5385" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://172.20.0.2/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/4</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="97325a3d-c228-437f-85c1-ad6a07c14081" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:assertion type="JsonPath Count" id="4d063cf6-0510-4e81-a875-78e7a619769c" name="JsonPath Count"><con:configuration><path>.ticketId</path><content>1</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:selectedAuthProfile>mobile</con:selectedAuthProfile><con:authType>OAuth 1.0</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="691854195"/>
+  <con:entry key="visit" value="1"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="Branch 6, visit 1" id="dae29bfc-1b07-4bd2-8b8a-f737ff0772bf"><con:settings/><con:config service="http://172.20.0.2:9090" resourcePath="/MobileTicket/MyVisit/CurrentStatus/branches/2/visits/{visit}" methodName="Method 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Branch 6, visit 1" id="a267ebdb-e867-4ef5-a44f-dc17041cb236" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://172.20.0.3/MobileTicket/MyVisit/CurrentStatus/branches/6/visits/4</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="8d765ebe-6605-491e-8e02-503a823e36a8" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:assertion type="JsonPath Count" id="b5c08984-5a51-4561-835f-fa16e4fd553d" name="JsonPath Count"><con:configuration><path>.ticketId</path><content>1</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="400619660"/>
+  <con:entry key="visit" value="1"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:loadTest id="b5eb3195-a9ea-4d8a-ac7d-316c677eecd5" name="LoadTest 1"><con:settings/><con:threadCount>7</con:threadCount><con:startDelay>50</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type><con:config><testDelay>1000</testDelay><randomFactor>0.2</randomFactor></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:assertion type="Step Maximum" name="Step Maximum"><con:configuration><name>Step Maximum</name><min-requests>10</min-requests><max-value>1000</max-value><test-step>- Any -</test-step><max-errors>50</max-errors></con:configuration></con:assertion><con:maxAssertionErrors>100</con:maxAssertionErrors><con:statisticsLogFolder/><con:statisticsLogInterval>10</con:statisticsLogInterval><con:logStatisticsOnThreadChange>true</con:logStatisticsOnThreadChange><con:cancelOnReachedLimit>false</con:cancelOnReachedLimit><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:updateStatisticsPerTestStep>true</con:updateStatisticsPerTestStep></con:loadTest><con:properties/></con:testCase><con:testCase id="3a3d96f1-e5e7-43c2-94a2-8312c6bed670" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Check flakie connection, branch 6, with mock  service" searchProperties="true"><con:settings/><con:testStep type="restrequest" name="Branch 1, visit 1" id="de8a9b8d-b62c-4e40-9c67-d06256cdefb0"><con:settings/><con:config service="http://172.20.0.2:9090" resourcePath="/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/{visit}" methodName="4 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Branch 1, visit 1" id="1ac8cf4c-ef68-41ca-9b21-08806ecb5385" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://172.20.0.2/MobileTicket/MyVisit/CurrentStatus/branches/1/visits/4</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="97325a3d-c228-437f-85c1-ad6a07c14081" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:assertion type="JsonPath Count" id="4d063cf6-0510-4e81-a875-78e7a619769c" name="JsonPath Count"><con:configuration><path>.ticketId</path><content>1</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:selectedAuthProfile>mobile</con:selectedAuthProfile><con:authType>OAuth 1.0</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="135439206"/>
+  <con:entry key="visit" value="1"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="Branch 6, visit 1" id="e3ac4e6b-9c2b-4459-aebd-477a1d8301b8"><con:settings/><con:config service="http://172.20.0.2:9090" resourcePath="/MobileTicket/MyVisit/CurrentStatus/branches/2/visits/{visit}" methodName="Method 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Branch 6, visit 1" id="a267ebdb-e867-4ef5-a44f-dc17041cb236" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="auth-token" value="d0516eee-a32d-11e5-bf7f-feff819cdc9f" xmlns="http://eviware.com/soapui/config"/></con:setting></con:settings><con:endpoint>http://127.0.0.1:9090</con:endpoint><con:request/><con:originalUri>http://172.20.0.3/MobileTicket/MyVisit/CurrentStatus/branches/6/visits/4</con:originalUri><con:assertion type="Valid HTTP Status Codes" id="8d765ebe-6605-491e-8e02-503a823e36a8" name="Valid HTTP Status Codes"><con:configuration><codes>200</codes></con:configuration></con:assertion><con:assertion type="JsonPath Count" id="b5c08984-5a51-4561-835f-fa16e4fd553d" name="JsonPath Count"><con:configuration><path>.ticketId</path><content>1</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="checksum" value="135439206"/>
+  <con:entry key="visit" value="1"/>
+</con:parameters><con:parameterOrder><con:entry>checksum</con:entry><con:entry>visit</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:loadTest id="c5ab42a6-d414-4b2b-a14a-9f3185ecf809" name="LoadTest 1"><con:settings/><con:threadCount>10</con:threadCount><con:startDelay>50</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type><con:config><testDelay>500</testDelay><randomFactor>0.2</randomFactor></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:assertion type="Step Maximum" name="Step Maximum"><con:configuration><name>Step Maximum</name><min-requests>10</min-requests><max-value>1000</max-value><test-step>- Any -</test-step><max-errors>50</max-errors></con:configuration></con:assertion><con:maxAssertionErrors>100</con:maxAssertionErrors><con:statisticsLogFolder/><con:statisticsLogInterval>10</con:statisticsLogInterval><con:logStatisticsOnThreadChange>true</con:logStatisticsOnThreadChange><con:cancelOnReachedLimit>false</con:cancelOnReachedLimit><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:updateStatisticsPerTestStep>true</con:updateStatisticsPerTestStep></con:loadTest><con:properties/></con:testCase><con:properties/></con:testSuite><con:restMockService id="c77e9810-198d-4b6e-b06e-0c918419bb53" port="8080" path="/" host="127.0.0.1" name="Orchestra REST MockService" docroot=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.panels.mock.WsdlMockServiceDesktopPanel$LogListModel@maxSize">100</con:setting></con:settings><con:properties/><con:onRequestScript> import com.eviware.soapui.support.types.StringToStringsMap;   
+ // Get the global properties  
+ def globalProperties = com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils.globalProperties;   
+ String httpUsername = "mobile";
+ String httpPassword = "UlanBulan2";   
+ // Get the Request Headers  
+ StringToStringsMap headers = mockRequest.getRequestHeaders();   
+ headers.each  
+ {  
+     if (it.key.equals("Authorization"))  
+     {  
+         // Pull the Auth string out of the request, and tidy it up  
+         String content = it.value;  
+         String [] contentArray = content.split();   
+         if (contentArray.length == 2)  
+         {  
+           // Decode the authorisation String  
+           String base64Enc = contentArray[1].minus("]");  
+             byte [] decoded = base64Enc.decodeBase64();  
+             String s = new String(decoded);   
+             if (httpUsername != null &amp;&amp; httpPassword != null)  
+             {  
+                 def credentials = s.split(":");  
+                 assert credentials[0].equals(httpUsername);  
+                 assert credentials[1].equals(httpPassword);  
+                 log.info("Mock Service authenticated request for credentials: " + s);  
+             }  
+         }  
+     }   
+ }  </con:onRequestScript><con:restMockAction name="/qsystem/mobile/rest/v2/branches/1/visits" method="GET" resourcePath="/qsystem/mobile/rest/v2/branches/1/visits" id="a315ff0e-f388-49a3-852d-837e78578e75"><con:settings/><con:defaultResponse xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:dispatchPath>/*&#13;
+// Script dispatcher is used to select a response based on the incoming request.&#13;
+// Here are few examples showing how to match based on path, query param, header and body&#13;
+&#13;
+// Match based on path&#13;
+def requestPath = mockRequest.getPath()&#13;
+log.info "Path: "+ requestPath&#13;
+&#13;
+if( requestPath.contains("json") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "JSON Response"&#13;
+}&#13;
+&#13;
+&#13;
+// Match based on query parameter&#13;
+def queryString = mockRequest.getRequest().getQueryString()&#13;
+log.info "QueryString: " + queryString&#13;
+&#13;
+if( queryString.contains("stockholm") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "Response Stockholm"&#13;
+}&#13;
+else if( queryString.contains("london") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "Response London"&#13;
+}&#13;
+&#13;
+&#13;
+// Match based on header&#13;
+def acceptEncodingHeaderList = mockRequest.getRequestHeaders().get("Accept-Encoding")&#13;
+log.info "AcceptEncoding Header List: " + acceptEncodingHeaderList&#13;
+&#13;
+if( acceptEncodingHeaderList.contains("gzip,deflate") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "GZiped Response"&#13;
+}&#13;
+&#13;
+&#13;
+// Match based on body&#13;
+def requestBody = mockRequest.getRequestContent()&#13;
+log.info "Request body: " + requestBody&#13;
+&#13;
+if( requestBody.contains("some data") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "Response N"&#13;
+}&#13;
+*/&#13;
+</con:dispatchPath><con:response name="Response 1" id="cfb6b0e2-a2fc-4fb9-8b64-698e18e785b6" httpResponseStatus="200" mediaType="application/json"><con:settings/><con:responseContent>{
+   "1":    {
+      "ticketId": "A001",
+      "visitId": 1,
+      "waitingTime": 39,
+      "totalWaitingTime": null,
+      "appointmentId": null,
+      "appointmentTime": null,
+      "queueId": 1,
+      "currentServiceName": "Service 1",
+      "queueName": "Queue 1",
+      "queueSize": 2,
+      "positionInQueue": 1,
+      "currentStatus": "IN_QUEUE",
+      "checksum": "135439206",
+      "staffFirstName": null,
+      "staffLastName": null,
+      "servicePointLogicId": null,
+      "servicePointName": null
+   },
+   "2":    {
+      "ticketId": "A002",
+      "visitId": 2,
+      "waitingTime": 35,
+      "totalWaitingTime": null,
+      "appointmentId": null,
+      "appointmentTime": null,
+      "queueId": 1,
+      "currentServiceName": "Service 1",
+      "queueName": "Queue 1",
+      "queueSize": 2,
+      "positionInQueue": 2,
+      "currentStatus": "IN_QUEUE",
+      "checksum": "418154050",
+      "staffFirstName": null,
+      "staffLastName": null,
+      "servicePointLogicId": null,
+      "servicePointName": null
+   },
+   "3":    {
+      "ticketId": "A200",
+      "visitId": 3,
+      "waitingTime": 29,
+      "totalWaitingTime": null,
+      "appointmentId": null,
+      "appointmentTime": null,
+      "queueId": 2,
+      "currentServiceName": "Service 2",
+      "queueName": "Queue 2",
+      "queueSize": 1,
+      "positionInQueue": 1,
+      "currentStatus": "IN_QUEUE",
+      "checksum": "2114728392",
+      "staffFirstName": null,
+      "staffLastName": null,
+      "servicePointLogicId": null,
+      "servicePointName": null
+   },
+   "4":    {
+      "ticketId": "A400",
+      "visitId": 4,
+      "waitingTime": 23,
+      "totalWaitingTime": null,
+      "appointmentId": null,
+      "appointmentTime": null,
+      "queueId": 3,
+      "currentServiceName": "Service 3",
+      "queueName": "Queue 3",
+      "queueSize": 1,
+      "positionInQueue": 1,
+      "currentStatus": "IN_QUEUE",
+      "checksum": "212597210",
+      "staffFirstName": null,
+      "staffLastName": null,
+      "servicePointLogicId": null,
+      "servicePointName": null
+   }
+}</con:responseContent></con:response></con:restMockAction><con:restMockAction name="/qsystem/mobile/rest/v2/branches/2/visits" method="GET" resourcePath="/qsystem/mobile/rest/v2/branches/2/visits" id="c13c45ab-3da8-4dc6-bf00-641de2c37ee3"><con:settings/><con:defaultResponse xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Response_OK</con:defaultResponse><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:dispatchPath>
+/*&#13;
+// Script dispatcher is used to select a response based on the incoming request.&#13;
+// Here are few examples showing how to match based on path, query param, header and body&#13;
+&#13;
+// Match based on path&#13;
+def requestPath = mockRequest.getPath()&#13;
+log.info "Path: "+ requestPath&#13;
+&#13;
+if( requestPath.contains("json") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "JSON Response"&#13;
+}&#13;
+&#13;
+&#13;
+// Match based on query parameter&#13;
+def queryString = mockRequest.getRequest().getQueryString()&#13;
+log.info "QueryString: " + queryString&#13;
+&#13;
+if( queryString.contains("stockholm") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "Response Stockholm"&#13;
+}&#13;
+else if( queryString.contains("london") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "Response London"&#13;
+}&#13;
+&#13;
+&#13;
+// Match based on header&#13;
+def acceptEncodingHeaderList = mockRequest.getRequestHeaders().get("Accept-Encoding")&#13;
+log.info "AcceptEncoding Header List: " + acceptEncodingHeaderList&#13;
+&#13;
+if( acceptEncodingHeaderList.contains("gzip,deflate") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "GZiped Response"&#13;
+}&#13;
+&#13;
+&#13;
+// Match based on body&#13;
+def requestBody = mockRequest.getRequestContent()&#13;
+log.info "Request body: " + requestBody&#13;
+&#13;
+if( requestBody.contains("some data") )&#13;
+{&#13;
+    // return the name of the response you want to dispatch&#13;
+    return "Response N"&#13;
+}&#13;
+*/&#13;
+</con:dispatchPath><con:response name="ResponseInternalError" id="6ecec63a-8bf4-42d6-8a04-728fc25b95fa" httpResponseStatus="500" mediaType="application/json"><con:settings/><con:responseContent>{}</con:responseContent></con:response><con:response name="Response_long_wait" id="1cedb20d-dd77-425f-8dbc-1ed4d8888996" httpResponseStatus="200" mediaType="application/json"><con:settings/><con:script>// wait 10s to force timeout
+Thread.sleep(80000)</con:script><con:responseContent/></con:response><con:response name="Response_OK" id="effdd3ee-ee97-47cd-9f38-5b385553302c" httpResponseStatus="200" mediaType="application/json"><con:settings/><con:responseContent>{
+   "1":    {
+      "ticketId": "A001",
+      "visitId": 1,
+      "waitingTime": 39,
+      "totalWaitingTime": null,
+      "appointmentId": null,
+      "appointmentTime": null,
+      "queueId": 1,
+      "currentServiceName": "Service 1",
+      "queueName": "Queue 1",
+      "queueSize": 2,
+      "positionInQueue": 1,
+      "currentStatus": "IN_QUEUE",
+      "checksum": "135439206",
+      "staffFirstName": null,
+      "staffLastName": null,
+      "servicePointLogicId": null,
+      "servicePointName": null
+   },
+   "2":    {
+      "ticketId": "A002",
+      "visitId": 2,
+      "waitingTime": 35,
+      "totalWaitingTime": null,
+      "appointmentId": null,
+      "appointmentTime": null,
+      "queueId": 1,
+      "currentServiceName": "Service 1",
+      "queueName": "Queue 1",
+      "queueSize": 2,
+      "positionInQueue": 2,
+      "currentStatus": "IN_QUEUE",
+      "checksum": "418154050",
+      "staffFirstName": null,
+      "staffLastName": null,
+      "servicePointLogicId": null,
+      "servicePointName": null
+   },
+   "3":    {
+      "ticketId": "A200",
+      "visitId": 3,
+      "waitingTime": 29,
+      "totalWaitingTime": null,
+      "appointmentId": null,
+      "appointmentTime": null,
+      "queueId": 2,
+      "currentServiceName": "Service 2",
+      "queueName": "Queue 2",
+      "queueSize": 1,
+      "positionInQueue": 1,
+      "currentStatus": "IN_QUEUE",
+      "checksum": "2114728392",
+      "staffFirstName": null,
+      "staffLastName": null,
+      "servicePointLogicId": null,
+      "servicePointName": null
+   },
+   "4":    {
+      "ticketId": "A400",
+      "visitId": 4,
+      "waitingTime": 23,
+      "totalWaitingTime": null,
+      "appointmentId": null,
+      "appointmentTime": null,
+      "queueId": 3,
+      "currentServiceName": "Service 3",
+      "queueName": "Queue 3",
+      "queueSize": 1,
+      "positionInQueue": 1,
+      "currentStatus": "IN_QUEUE",
+      "checksum": "212597210",
+      "staffFirstName": null,
+      "staffLastName": null,
+      "servicePointLogicId": null,
+      "servicePointName": null
+   }
+}</con:responseContent></con:response></con:restMockAction></con:restMockService><con:properties><con:property><con:name>httpUsername</con:name><con:value>mobile</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer><con:oAuth1Profile><con:name>mobile</con:name><con:accessToken>d0516eee-a32d-11e5-bf7f-feff819cdc9f</con:accessToken><con:accessTokenPosition>HEADER</con:accessTokenPosition><con:accessTokenStatus>UNKNOWN</con:accessTokenStatus><con:accessTokenStartingStatus>ENTERED_MANUALLY</con:accessTokenStartingStatus></con:oAuth1Profile></con:oAuth1ProfileContainer><con:sensitiveInformation/></con:soapui-project>

@@ -1,7 +1,6 @@
 package com.qmatic.apigw.rest;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.qmatic.apigw.GatewayConstants;
 import com.qmatic.apigw.SslCertificateManager;
 import com.qmatic.apigw.exception.CentralCommunicationException;

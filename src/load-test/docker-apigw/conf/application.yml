@@ -1,0 +1,278 @@
+# define management endpoint, for instance: http://127.0.0.1:9091/api-gateway/health
+# the management endpoint is ONLY available locally
+# NOTE: set port to -1 for disabling all management endpoints
+management:
+    address: 127.0.0.1
+    port: 9091
+    context-path: /api-gateway
+    ssl:
+        enabled: false
+
+# define if which management endpoints should be available
+endpoints:
+    # [POST] shutdown the gateway
+    # NOTE: needs to be enabled, used by service script.
+    shutdown:
+        enabled: true
+    # [POST] restart the gateway
+    restart:
+        enabled: false
+    # [GET] list all gateway configuration
+    configprops:
+        enabled: true
+    # [GET] list the gateqway enviroment
+    env:
+        enabled: false
+
+server:
+  # define server port for gateway
+  port: 9090
+# By default undertow uses 8*<no of available CPUs> as the no of worker threads
+# If the API-GW has many long-running requests this might need to be increased to ensure there are idle workers for new requests.
+# Uncomment the two sections below to set the no of workers
+  undertow:
+    worker-threads: 128
+#  ssl:
+#    key-store: classpath:keystore.jks
+#    key-store-password: secret
+#    key-password: password
+
+# define orchestra parameters
+orchestra:
+  # define URL for orchestra central installation
+  central:
+    url: http://orchestra:8080
+
+# By default the communication to the backend server has no timeout
+# Uncomment and adjust the values below to set timeout values.
+# NOTE: This only applies to requests starting with /geo and also to requests defined in the checksumRoutes below (normally /MobileTicket/MyVisit... routes)
+# NOTE2: The value is specified in milliseconds
+    connectTimeout: 4000
+    readTimeout: 4000
+
+    # Controls whether throttling the call getAllVisitsOnBranch, if this is true (default: false) no more than one call at a time will be sent for each branch.
+    # A check will be done if another thread is running that call for the specific branch, and if to it will wait until that call completes
+    throttleVisitOnBranches: true
+
+  # SSL trust store for the jvm
+  # trustStore: conf/truststore.jks
+  # trustStorePass: changeit
+
+  # disables SSL certificate verification. Warning: do not use in production systems
+  disableSslCertificateChecks: false
+
+  # use 'password-encoder' script in 'bin' folder script for encoding new password.
+  # use 'api-token-generator' script in 'bin' folder  for generating new token.
+  api_tokens:
+    c7a1331a-32d-11e5-bf7f-feff819acdc9f:
+      user: superadmin
+      passwd: dWxhbg==
+    d0516eee-a32d-11e5-bf7f-feff819cdc9f:
+      user: mobile
+      passwd: VWxhbkJ1bGFuMg==
+
+  # use checksum validation for mobile requests
+  enableChecksum: true
+  
+  # define which proxy routes checksum validation will be applied to.
+  # the name of the path parameter holding the visitId must be specified as parameter: [name] below.
+  checksumRoutes:  
+    my_visit_delete:
+      parameter: ticket
+    my_visit_current_status:
+      parameter: visits
+    custom_mobile_delete_visit:
+      parameter: ticket
+
+cache:
+  # by default the cache metrics connector is only accessable from local machine
+  allowCacheMetricsFromAllHosts: false
+  # if true, all requests not matching the rules in cacheRoutes will get cached in the default cache
+  useDefaultCache: true
+  # name of cache in ehcache configuration
+  defaultCacheName: request
+  # define if unique cache is used for URL query parameters.
+  defaultCacheUniquePerQueryParameter: false
+
+  cacheRoutes:
+  # Note: the cache for MyVisit/CurrentStatus and MyVisit/Position is specified in ehcache.xml as visitsOnBranchCache
+
+    services:
+      # name of cache in ehcache configuration
+      cacheName: serviceCache
+      # REST path pattern matching
+      match: /services
+      # defines which zuul routes to apply caching to
+      routes: mobile_service_v1, mobile_service_v2
+      # configure if the cache should store a unique value per query parameter string (default false)
+      uniquePerQueryParameter : false
+    mobileServices:
+      cacheName: serviceCache
+      match: .*
+      routes: custom_mobile_services
+    mobileBranches:
+      cacheName: branches
+      match: /branches/[0-9]+[/]?$
+      routes: mobile_service_v2
+    visits:
+      cacheName: visitInQueueCache
+      match: /branches/[0-9]+/queues/[0-9]+/visits[/]?
+      routes: servicepoint_api
+    events:
+      cacheName: eventInQueueCache
+      match: /branches/[0-9]+/visits/[0-9]+/events[/]?
+      routes: my_visit_last_queue_event
+
+# Details logging if routing fails. This is off by default not to flood logs if orchestra is down
+logZuulExceptions : false
+
+# define routes exposed via zuul proxy     
+zuul:
+  removeSemicolonContent: false
+
+  routes:
+    appointment_api:
+       path: /rest/appointment/**
+       url: ${orchestra.central.url}/qsystem/rest/appointment
+    branchgroups_api:
+       path: /rest/config/branchGroups/**
+       url: ${orchestra.central.url}/qsystem/rest/config/branchGroups
+    sms_api:
+       path: /rest/notification/**
+       url: ${orchestra.central.url}/notification/
+    entrypoint_api:
+        path: /rest/entrypoint/**
+        url: ${orchestra.central.url}/qsystem/rest/entrypoint
+    servicepoint_api:
+        path: /rest/servicepoint/**
+        url: ${orchestra.central.url}/qsystem/rest/servicepoint
+    management_information:
+        path: /rest/managementinformation/**
+        url: ${orchestra.central.url}/qsystem/rest/managementinformation
+    mobile_service_v2:
+        path: /rest/mobile/v2/**
+        url: ${orchestra.central.url}/qsystem/mobile/rest/v2
+    mobile_service_v1:
+        path: /rest/mobile/**
+        url: ${orchestra.central.url}/qsystem/mobile/rest
+    calendar_internal_api:
+        path: /rest/calendar-backend/api/**
+        url: ${orchestra.central.url}/calendar-backend/api
+    calendar_public_api:
+        path: /rest/calendar-backend/public/api/**
+        url: ${orchestra.central.url}/calendar-backend/public/api
+
+    # custom mobile service example
+    # (authentication against mobile)
+
+    # Mobile ticket -authentication against mobile - routes protected by checksum
+    # delete visit - /MobileTicket/branches/[branchId]/ticket/[visitId]?checksum=[checksum]
+    custom_mobile_delete_visit:
+      path: /MobileTicket/branches/*/ticket/**
+      url : ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
+
+    # To get a list of branches, use /geo/* if you want to use the gateway branch cache.
+    # get services for branch - /MobileTicket/branches/[branchId]/services
+    custom_mobile_branches:
+      path: /MobileTicket/branches/**
+      url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
+
+    # get branches for service - /MobileTicket/services/[serviceId]/branches/
+    # issue ticket - /MobileTicket/services/[serviceId]/branches/[branchId]/ticket/issue
+    custom_mobile_services:
+      path: /MobileTicket/services/**
+      url : ${orchestra.central.url}/qsystem/mobile/rest/v2/services
+
+    # Mobile ticket -authentication against mobile - routes protected by checksum
+    # delete visit - /MobileTicket/MyVisit/branches/[branchId]/ticket/[visitId]?checksum=[checksum]
+    my_visit_delete:
+      path: /MobileTicket/MyVisit/branches/*/ticket/**
+      url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches
+
+    # get current status of visit - /MobileTicket/MyVisit/CurrentStatus/branches/[branchId]/visits/[visitId]?checksum=[checksum]
+    my_visit_current_status:
+      path: /MobileTicket/MyVisit/CurrentStatus/branches/*/visits/*
+
+    # custom MyVisit example
+    # (authentication against orchestra)
+
+    # DEPRECATED, use my_visit_current_status instead
+    # get position in queue - /MobileTicket/MyVisit/Position/branches/[branchId]/queues/[queueId]/visits?visitId=[visitId]
+    my_visit_queue_position:
+      path: /MobileTicket/MyVisit/Position/**
+      url: ${orchestra.central.url}/qsystem/rest/servicepoint
+
+    # get last event for visit - /MobileTicket/MyVisit/LastEvent/branches/[branchId]/visits/[visitId]/events?visitId=[visitId]
+    my_visit_last_queue_event:
+      path: /MobileTicket/MyVisit/LastEvent/**
+      url: ${orchestra.central.url}/qsystem/rest/servicepoint
+
+# Note that these paths are here for documentation purposes and can not be changed
+geoServiceConnectors:
+  # get branches - /geo/branches?longitude=[longitude]&latitude=[latitude]&radius=[radius]
+  mobile_branches:
+    path: /geo/branches
+
+  # get nearest branches - /geo/nearestbranches?longitude=[longitude]&latitude=[latitude]&maxNrOfBranches=[maxNrOfBranches]
+  mobile_nearest_branches:
+    path: /geo/nearestbranches
+
+  # get branches for service - /geo/services/[serviceId]/branches?longitude=[longitude]&latitude=[latitude]&radius=[radius]
+  mobile_branches_for_service:
+    path: /geo/services/*/branches
+
+  # get nearest branches for service
+  # - /geo/services/[serviceId]/nearestbranches?longitude=[longitude]&latitude=[latitude]&maxNrOfBranches=[maxNrOfBranches]
+  mobile_nearest_branches_for_service:
+    path: /geo/services/*/nearestbranches
+
+# These URLs are used internally for fetching branches and branches for services but these should normally not be changed.
+geoService:
+  branches_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches?longitude=0&latitude=0&radius=2147483647
+  service_branches_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/services/{serviceId}/branches?longitude=0&latitude=0&radius=2147483647
+
+currentStatus:
+  visits_on_branch_url: ${orchestra.central.url}/qsystem/mobile/rest/v2/branches/{branchId}/visits
+
+# CORS setup
+# Orchestra CORS configuation can be overriden in API Gateway. By default disabled.
+
+# Single path CORS setup example
+#http.cors.paths:
+#    path: /**
+#    allowedOrigins: '*'
+#    allowedHeaders: '*'
+#    exposedHeaders: '*'
+#    allowedMethods: GET, POST, PUT, OPTIONS, HEAD, DELETE, PATCH
+#    allowCredentials: true
+#    maxAge: 10000
+
+# Multiple paths CORS setup example
+#http.cors.paths:
+#    - path: /test1
+#      allowedOrigins: http://foo.com, http://bar.com
+#      allowedHeaders: header1, header2
+#      exposedHeaders: header3, header4
+#      allowedMethods: GET, POST, PUT
+#      allowCredentials: true
+#      maxAge: 10000
+#    - path: /test2
+#      allowedOrigins: '*'
+ 
+# To avoid duplicate CORS headers in response, disable CORS reponse headers using Zuul config
+#zuul.ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Access-Control-Expose-Headers, Access-Control-Max-Age, Access-Control-Allow-Methods
+
+##Hystrix
+  hystrix.command.allVisitsOnBranch.circuitBreaker.enabled : true
+  hystrix.command.allVisitsOnBranch.circuitBreaker.requestVolumeThreshold : 20
+  hystrix.command.allVisitsOnBranch.circuitBreaker.errorThresholdPercentage : 20
+  hystrix.command.allVisitsOnBranch.circuitBreaker.sleepWindowInMilliseconds : 6000
+  ## hystrix.command.doSomethingKey.metrics.rollingStats.timeInMilliseconds : 
+  ## hystrix.command.default.metrics.rollingStats.numBuckets :
+  
+  ## No falback defined at the moment, default error handling when centralt don't respond is to respond with an empty message (at least for mobile)
+  ## hystrix.command.default.fallback.enabled : false
+  ## hystrix.command.default.circuitBreaker.requestVolumeThreshold : 5 
+  # hystrix.command.default.circuitBreaker.errorThresholdPercentage : 25
+  # hystrix.command.default.circuitBreaker.sleepWindowInMilliseconds : 6000
+  # hystrix.command.default.metrics.rollingStats.timeInMilliseconds : 
