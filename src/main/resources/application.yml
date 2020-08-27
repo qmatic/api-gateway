@@ -1,4 +1,4 @@
-&# define management endpoint, for instance: http://127.0.0.1:9091/api-gateway/health
+# define management endpoint, for instance: http://127.0.0.1:9091/api-gateway/health
 # the management endpoint is ONLY available locally
 # NOTE: set port to -1 for disabling all management endpoints
 management:
@@ -260,9 +260,3 @@ currentStatus:
  
 # To avoid duplicate CORS headers in response, disable CORS reponse headers using Zuul config
 #zuul.ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Access-Control-Expose-Headers, Access-Control-Max-Age, Access-Control-Allow-Methods
-
-##Hystrix - circuet breaker settings for
-hystrix.command.allVisitsOnBranch.circuitBreaker.enabled : true
-hystrix.command.allVisitsOnBranch.circuitBreaker.requestVolumeThreshold : 20
-hystrix.command.allVisitsOnBranch.circuitBreaker.errorThresholdPercentage : 20
-hystrix.command.allVisitsOnBranch.circuitBreaker.sleepWindowInMilliseconds : 6000

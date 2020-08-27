@@ -1,6 +1,5 @@
 package com.qmatic.apigw.rest;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.qmatic.apigw.GatewayConstants;
 import com.qmatic.apigw.SslCertificateManager;
 import com.qmatic.apigw.exception.CentralCommunicationException;
@@ -28,7 +27,7 @@ import java.nio.charset.Charset;
 import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
 
 @Component
-public class CentralRestClient {
+public final class CentralRestClient {
 
     private static final Logger log = LoggerFactory.getLogger(CentralRestClient.class);
     private static final String PATH_SERVICE_ID = "{serviceId}";
@@ -140,7 +139,6 @@ public class CentralRestClient {
         };
     }
 
-    @HystrixCommand(commandKey = "allVisitsOnBranch", fallbackMethod = "branchNotAccesible")
     public VisitStatusMap getAllVisitsOnBranch(Long branchId, OrchestraProperties.UserCredentials userCredentials) {
         try {
             log.debug("Retrieving visits on branch {} from central", branchId);
@@ -157,12 +155,5 @@ public class CentralRestClient {
             throw logAndConvertException(e);
         }
     }
-
-
-    public VisitStatusMap branchNotAccesible(Long branchId, OrchestraProperties.UserCredentials userCredentials) {
-        log.warn("Hystrix. Branch not accessible !! ");
-        return new VisitStatusMap();
-    }
-
 
 }
