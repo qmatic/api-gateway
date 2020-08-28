@@ -1,8 +1,11 @@
 package com.qmatic.apigw;
 
+import com.qmatic.apigw.rest.CentralRestClient;
 import io.undertow.Undertow.Builder;
 import io.undertow.UndertowOptions;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,6 +27,8 @@ public class Application {
 
 	@Value("${server.undertow.accesslog.pattern:}")
 	String accessLogPattern;
+
+	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	@Bean
 	UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory() {
@@ -54,6 +59,9 @@ public class Application {
 	}
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(Application.class, args);
+		String version = Package.getPackage("com.qmatic.apigw").getImplementationVersion();
+		log.info("Api-gateway version : " + version);
 	}
 }

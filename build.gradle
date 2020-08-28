@@ -94,7 +94,8 @@ tasks.withType(Test) {
 
 jar {
     manifest {
-        attributes 'Build-Version': version
+        attributes 'Implementation-Title': 'com.qmatic.apigw'
+        attributes 'Implementation-Version': version
     }
     baseName = "${qpApiGateway}"
 }
@@ -104,7 +105,8 @@ task qpCommonGeoJar(type: Jar) {
     exclude '**/apigw/**'
     exclude '**/*.json'
     manifest {
-        attributes 'Build-Version': version
+        attributes 'Implementation-Title': 'com.qmatic.apigw'
+        attributes 'Implementation-Version': version
     }
     baseName = "${qpCommonGeo}"
     bootRepackage.enabled = false
