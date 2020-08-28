@@ -19,7 +19,7 @@ endpoints:
         enabled: false
     # [GET] list all gateway configuration
     configprops:
-        enabled: false
+        enabled: true
     # [GET] list the gateqway enviroment
     env:
         enabled: false
@@ -30,8 +30,8 @@ server:
 # By default undertow uses 8*<no of available CPUs> as the no of worker threads
 # If the API-GW has many long-running requests this might need to be increased to ensure there are idle workers for new requests.
 # Uncomment the two sections below to set the no of workers
-#  undertow:
-#   worker-threads: 128
+  undertow:
+    worker-threads: 128
 #  ssl:
 #    key-store: classpath:keystore.jks
 #    key-store-password: secret
@@ -41,24 +41,25 @@ server:
 orchestra:
   # define URL for orchestra central installation
   central:
-    url: http://localhost:8080
+    url: http://orchestra:8080
+
 # By default the communication to the backend server has no timeout
 # Uncomment and adjust the values below to set timeout values.
 # NOTE: This only applies to requests starting with /geo and also to requests defined in the checksumRoutes below (normally /MobileTicket/MyVisit... routes)
 # NOTE2: The value is specified in milliseconds
-#    connectTimeout: 10000
-#    readTimeout: 10000
+    connectTimeout: 4000
+    readTimeout: 4000
 
     # Controls whether throttling the call getAllVisitsOnBranch, if this is true (default: false) no more than one call at a time will be sent for each branch.
     # A check will be done if another thread is running that call for the specific branch, and if to it will wait until that call completes
-    #throttleVisitOnBranches: true
+    throttleVisitOnBranches: true
 
   # SSL trust store for the jvm
   # trustStore: conf/truststore.jks
   # trustStorePass: changeit
 
   # disables SSL certificate verification. Warning: do not use in production systems
-  # disableSslCertificateChecks: false
+  disableSslCertificateChecks: false
 
   # use 'password-encoder' script in 'bin' folder script for encoding new password.
   # use 'api-token-generator' script in 'bin' folder  for generating new token.
@@ -68,8 +69,8 @@ orchestra:
       passwd: dWxhbg==
     d0516eee-a32d-11e5-bf7f-feff819cdc9f:
       user: mobile
-      passwd: dWxhbg==
-  
+      passwd: VWxhbkJ1bGFuMg==
+
   # use checksum validation for mobile requests
   enableChecksum: true
   
@@ -261,8 +262,17 @@ currentStatus:
 # To avoid duplicate CORS headers in response, disable CORS reponse headers using Zuul config
 #zuul.ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Access-Control-Expose-Headers, Access-Control-Max-Age, Access-Control-Allow-Methods
 
-##Hystrix - circuet breaker settings for
-hystrix.command.allVisitsOnBranch.circuitBreaker.enabled : true
-hystrix.command.allVisitsOnBranch.circuitBreaker.requestVolumeThreshold : 20
-hystrix.command.allVisitsOnBranch.circuitBreaker.errorThresholdPercentage : 20
-hystrix.command.allVisitsOnBranch.circuitBreaker.sleepWindowInMilliseconds : 6000
+##Hystrix
+  hystrix.command.allVisitsOnBranch.circuitBreaker.enabled : true
+  hystrix.command.allVisitsOnBranch.circuitBreaker.requestVolumeThreshold : 20
+  hystrix.command.allVisitsOnBranch.circuitBreaker.errorThresholdPercentage : 20
+  hystrix.command.allVisitsOnBranch.circuitBreaker.sleepWindowInMilliseconds : 6000
+  ## hystrix.command.doSomethingKey.metrics.rollingStats.timeInMilliseconds : 
+  ## hystrix.command.default.metrics.rollingStats.numBuckets :
+  
+  ## No falback defined at the moment, default error handling when centralt don't respond is to respond with an empty message (at least for mobile)
+  ## hystrix.command.default.fallback.enabled : false
+  ## hystrix.command.default.circuitBreaker.requestVolumeThreshold : 5 
+  # hystrix.command.default.circuitBreaker.errorThresholdPercentage : 25
+  # hystrix.command.default.circuitBreaker.sleepWindowInMilliseconds : 6000
+  # hystrix.command.default.metrics.rollingStats.timeInMilliseconds : 
