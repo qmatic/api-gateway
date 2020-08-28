@@ -1,3 +1,10 @@
+1.4.8.0
+Features
+    APIGW-40 : Implement Circuit breaker mechanism in API Gateway
+Bug fixes
+    APIGW-35 : Remove application_MobileTicket.yml from the package
+    APIGW-17 : Gateway version missing in log file : Version info written into api_gateway.log at start
+
 1.4.7.0
 Features
     APIGW-34 : Added missing routes needed for Qmatic Webbboking: branchgroups_api and sms_api
