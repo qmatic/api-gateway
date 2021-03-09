@@ -1,5 +1,6 @@
 package com.qmatic.apigw.filters;
 
+import com.netflix.util.Pair;
 import com.netflix.zuul.context.RequestContext;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.util.StreamUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 @Component
@@ -40,7 +42,13 @@ public class RequestCacheWriterFilter extends RequestCacheFilterBase {
         String result = getResponse(ctx);
         cacheManager.writeRequestToCache(getProxy(), getRequestUri(), getRouteHost(), getQueryParameters() , result);
         ctx.setResponseBody(result);
+        removeContentEncodingHeader(ctx);
         return RESULT_DOES_NOT_MATTER;
+    }
+
+    private void removeContentEncodingHeader(RequestContext ctx) {
+        List<Pair<String, String>> zuulResponseHeaders = ctx.getZuulResponseHeaders();
+        zuulResponseHeaders.removeIf(header -> header != null && header.first() != null && header.first().equals("Content-Encoding"));
     }
 
     protected boolean isValidResponse() {

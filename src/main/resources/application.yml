@@ -2,27 +2,34 @@
 # the management endpoint is ONLY available locally
 # NOTE: set port to -1 for disabling all management endpoints
 management:
+  server:
     address: 127.0.0.1
     port: 9091
-    context-path: /api-gateway
+    base-path: /api-gateway
     ssl:
-        enabled: false
+      enabled: false
 
-# define if which management endpoints should be available
-endpoints:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics, shutdown
+      base-path: /
+
+  # define if which management endpoints should be available
+  endpoint:
     # [POST] shutdown the gateway
     # NOTE: needs to be enabled, used by service script.
     shutdown:
-        enabled: true
+      enabled: true
     # [POST] restart the gateway
     restart:
-        enabled: false
+      enabled: false
     # [GET] list all gateway configuration
     configprops:
-        enabled: false
+      enabled: false
     # [GET] list the gateqway enviroment
     env:
-        enabled: false
+      enabled: false
 
 server:
   # define server port for gateway
@@ -62,13 +69,13 @@ orchestra:
 
   # use 'password-encoder' script in 'bin' folder script for encoding new password.
   # use 'api-token-generator' script in 'bin' folder  for generating new token.
-  api_tokens:
-    c7a1331a-32d-11e5-bf7f-feff819acdc9f:
-      user: superadmin
-      passwd: dWxhbg==
-    d0516eee-a32d-11e5-bf7f-feff819cdc9f:
-      user: mobile
-      passwd: dWxhbg==
+#  api_tokens:
+#    c7a1331a-32d-11e5-bf7f-feff819acdc9f:
+#      user: superadmin
+#      passwd: dWxhbg==
+#    d0516eee-a32d-11e5-bf7f-feff819cdc9f:
+#      user: mobile
+#      passwd: dWxhbg==
   
   # use checksum validation for mobile requests
   enableChecksum: true
@@ -128,6 +135,8 @@ logZuulExceptions : false
 # define routes exposed via zuul proxy     
 zuul:
   removeSemicolonContent: false
+  # this contains authorization header by default, making it impossible for us to add that header based on the token
+  sensitiveHeaders: Cookie,Set-Cookie
 
   routes:
     appointment_api:

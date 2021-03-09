@@ -35,7 +35,7 @@ public class OrchestraResponseErrorFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
-        String responseStatusCode = Integer.toString((Integer) ctx.get(FilterConstants.RESPONSE_STATUS_CODE));
+        String responseStatusCode = Integer.toString((Integer) ctx.getResponseStatusCode());
         return responseStatusCode.startsWith("5") || responseStatusCode.startsWith("4");
     }
 
