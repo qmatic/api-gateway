@@ -36,7 +36,7 @@ stdErrLog=$gwLogs/stderr_api_gateway_service.log
 
 case $1 in
 start)
-	su - $gwUser -c "nohup $gw 2>$stdErrLog 1>/dev/null &"
+	su - $gwUser -c "nohup $gw 2>$stdErrLog 1>/dev/null & echo \$! > $gwHome.pid "
 	;;
 stop)
 	su - $gwUser -c "nohup $gwStop 2>$stdErrLog 1>/dev/null &"
