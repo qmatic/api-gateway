@@ -249,21 +249,21 @@ def doLastWithScripts(windowsScript, unixScript) {
 
     unixScript.text = unixScript.text.replace('APP_HOME="`pwd -P`"', 'APP_HOME="`pwd -P`"\nJAVA_HOME_PLACEHOLDER')
     unixScript.text = unixScript.text.replace('JAVA_HOME_PLACEHOLDER',
-            'if [ -d "$APP_HOME/' + "${jreVersion}"  + '" ]; then\n' +
-            '    JAVA_HOME="$APP_HOME/' + "${jreVersion}"+'"\n' +
+            'if [ -d "$APP_HOME/jre" ]; then\n' +
+            '    JAVA_HOME="$APP_HOME/jre" \n' +
             '    chmod u+x $JAVA_HOME/bin/*\n' +
             'fi')
     unixScript.text = unixScript.text.replace('CLASSPATH=', 'CLASSPATH=$APP_HOME/conf:')
     unixScript.text = unixScript.text.replace('eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS', 'eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS\nexport APP_HOME');
     unixScript.text = unixScript.text.replace('\\$', '$')
+
     windowsScript.text = windowsScript.text.replace('%%', '%')
     windowsScript.text = windowsScript.text.replace('set APP_HOME=%DIRNAME%..','set APP_HOME=%DIRNAME%..\nJAVA_HOME_PLACEHOLDER')
-    windowsScript.text = windowsScript.text.replace('JAVA_HOME_PLACEHOLDER','if exist "%APP_HOME%/'+"${jreVersion}"+'" set JAVA_HOME=%APP_HOME%/'+"${jreVersion}")
+    windowsScript.text = windowsScript.text.replace('JAVA_HOME_PLACEHOLDER','if exist "%APP_HOME%/jre" set JAVA_HOME=%APP_HOME%/jre')
     windowsScript.text = windowsScript
             .readLines()
             .collect(configureWindowsClassPath)
             .join('\r\n')
-
 }
 
 def windowsScripts = ['**/*.bat', '**/*.exe']
@@ -288,12 +288,12 @@ task copyGatewayDistributable(type: Copy, dependsOn: build) {
 }
 
 task copyLinux64Java(type: Copy, dependsOn : copyGatewayDistributable) {
-    from tarTree(resources.gzip(dependencyDir.path + "/${linux_jdk_64_file}"))
+    from zipTree(dependencyDir.path + "/${linux_jre_64_file}")
     into unzippedDir.path + '/linux'
 }
 
 task copyWin64Java(type: Copy, dependsOn : copyGatewayDistributable) {
-    from zipTree(dependencyDir.path + "/${windows_jdk_64_file}")
+    from zipTree(dependencyDir.path + "/${windows_jre_64_file}")
     into unzippedDir.path + '/win'
 }
 
@@ -315,8 +315,8 @@ task buildDistGatewayWindows(type: Zip) {
         exclude 'bin/password-encoder'
         into '/'
     }
-    from (unzippedDir.path + "/win/${windows_jdk_64_version}/jre/.") {
-        into "/${jreVersion}"
+    from (unzippedDir.path + "/win/${windows_jre_64_version}/.") {
+        into "/jre"
     }
     baseName 'QP_APIGateway_win64'
 }
@@ -329,8 +329,8 @@ task buildDistGatewayLinux(type: Zip) {
         exclude 'bin/*.exe'
         into '/'
     }
-    from (unzippedDir.path + "/linux/${linux_jdk_64_version}/jre/.") {
-        into "/${jreVersion}"
+    from (unzippedDir.path + "/linux/${linux_jre_64_version}/.") {
+        into "/jre"
     }
     baseName 'QP_APIGateway_linux64'
 }

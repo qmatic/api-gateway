@@ -3,7 +3,7 @@
 fn_waitForAPIGatewayToStop(){
     echo "Waiting for APIGateway to stop"
     noOfStopLoops=1
-    while  ps ax | grep java | grep qp-api-gw | grep -v grep > /dev/null
+    while  ps -p $PID > /dev/null 
     do
         sleep 10
         # Loop max 5 minutes
@@ -16,27 +16,25 @@ fn_waitForAPIGatewayToStop(){
 # Find QP_HOME
 GW_HOME="$(cd "$(dirname "$0")/.." && pwd -P)"
 
-$GW_HOME/bin/curl.ermine -X POST http://localhost:9091/api-gateway/shutdown
-fn_waitForAPIGatewayToStop
+PORT=$(awk '/management:/,/port:/' $GW_HOME/conf/application.yml | awk '/port:/' | awk '{ print $2 }')
 
-# Standard install use the java from its install dir
-if [ "Linux" == `uname` ]
-then
-    export JAVA_HOME=$GW_HOME/jre1.8.0_72
-    export PATH=$JAVA_HOME/bin:$PATH
-
-    JPS=$JAVA_HOME/bin/jps
+if [ -f $GW_HOME/.pid ]; then
+  PID=$( cat $GW_HOME/.pid )
 else
-    JPS=`which jps`
+  PID=$(ps -ef | grep 'qp-api-gateway' | awk '{print $1}' )
 fi
 
+$GW_HOME/bin/curl.ermine -X POST http://localhost:$PORT/api-gateway/shutdown
+fn_waitForAPIGatewayToStop
+
 if [ $? = 1 ]; then
-    #If the shutdown fails, kill the jboss process.
-    ps=`$JPS -vl | grep 'qp-api-gw'`
+    #If the shutdown fails, kill the api-gateway process.
+
     if [ $? = 0 ]; then
-        echo "Doing forced shutdown of $ps"
-        echo $ps | awk '{print $1}' | xargs kill -9
-        echo "Forced shutdown of $ps complete"
+        echo "Doing forced shutdown of $PID"
+        kill -9 $PID
+        echo "Forced shutdown of $PID complete"
     fi
 fi
 
+rm $GW_HOME/.pid
