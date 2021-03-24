@@ -39,6 +39,10 @@ server:
 # Uncomment the two sections below to set the no of workers
 #  undertow:
 #   worker-threads: 128
+#    accesslog:
+#      enabled: true
+#      dir: ${APP_HOME:../}/logs
+#      pattern: "%h %l %u %t \"%r\" %s %b \"%{i,Referer}\" \"%{i,User-Agent}\" %D"
 #  ssl:
 #    key-store: classpath:keystore.jks
 #    key-store-password: secret
