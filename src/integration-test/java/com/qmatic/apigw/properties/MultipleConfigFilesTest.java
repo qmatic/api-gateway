@@ -24,11 +24,10 @@ public class MultipleConfigFilesTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void defaultValuesArePresent() {
-
-        String enableChecksum = env.getProperty("orchestra.enableChecksum");
+        String enableChecksum = env.getProperty("cache.allowCacheMetricsFromAllHosts");
 
         assertNotNull(enableChecksum);
-        assertEquals(enableChecksum, "true");
+        assertEquals(enableChecksum, "false");
     }
 
     @Test
@@ -39,7 +38,7 @@ public class MultipleConfigFilesTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void valuePresentInLaterFileHasHighestPrecedence() {
+    public void valueInApplicationPropertyHasPrecedence() {
 
         String hystrixThreshold = env.getProperty("hystrix.command.allVisitsOnBranch.circuitBreaker.requestVolumeThreshold");
 
@@ -50,7 +49,5 @@ public class MultipleConfigFilesTest extends AbstractTestNGSpringContextTests {
     public void apiKeysAreOverridden() {
         assertNotNull(orchestraProperties.getCredentials("aaaaaa-bbbb-dddd-eeee-fffffffffffff"));
         assertNotNull(orchestraProperties.getCredentials("gggggg-hhhh-iiii-jjjj-kkkkkkkkkkkkk"));
-        assertNull(orchestraProperties.getCredentials("c7a1331a-32d-11e5-bf7f-feff819acdc9f"));
-        assertNull(orchestraProperties.getCredentials("d0516eee-a32d-11e5-bf7f-feff819cdc9f"));
     }
 }

@@ -50,7 +50,15 @@ public class AdditionalApplicationConfigFilesPostProcessor implements Environmen
 
     private List<String> getAdditionalConfigurationFiles(ConfigurationFileLocator configurationFileLocator) {
         List<String> additionalConfigurationFiles = new ArrayList<>();
-        File configDirectory = configurationFileLocator.getAdditionalConfigurationFileDirectory();
+        File systemConfigDirectory = configurationFileLocator.getSystemConfigurationFileDirectory();
+        additionalConfigurationFiles.addAll(addFilesFromDirectory(systemConfigDirectory));
+        File applicationConfigDirectory = configurationFileLocator.getApplicationConfigurationFileDirectory();
+        additionalConfigurationFiles.addAll(addFilesFromDirectory(applicationConfigDirectory));
+        return additionalConfigurationFiles;
+    }
+
+    private List<String> addFilesFromDirectory(File configDirectory) {
+        List<String> additionalConfigurationFiles = new ArrayList<>();
         if (configDirectory != null && configDirectory.exists() && configDirectory.isDirectory()) {
             log.info("Searching directory [" + configDirectory.getAbsolutePath() + "] to find suitable application configuration files.");
             additionalConfigurationFiles.addAll(findMatchingFiles(configDirectory));
