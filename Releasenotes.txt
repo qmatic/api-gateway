@@ -1,3 +1,7 @@
+1.4.9.0
+Features
+    APIGW-51 : Retain API Gateway configurations after an upgrade
+
 1.4.8.0
 Features
     APIGW-40 : Implement Circuit breaker mechanism in API Gateway
