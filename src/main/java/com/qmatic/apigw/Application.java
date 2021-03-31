@@ -1,6 +1,5 @@
 package com.qmatic.apigw;
 
-import com.qmatic.apigw.rest.CentralRestClient;
 import io.undertow.Undertow.Builder;
 import io.undertow.UndertowOptions;
 import org.apache.commons.lang3.StringUtils;
@@ -9,14 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.embedded.undertow.UndertowBuilderCustomizer;
-import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
+import org.springframework.boot.web.embedded.undertow.UndertowBuilderCustomizer;
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @SpringBootApplication
 @EnableZuulProxy
@@ -31,8 +29,8 @@ public class Application {
 	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	@Bean
-	UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory() {
-		UndertowEmbeddedServletContainerFactory factory = new UndertowEmbeddedServletContainerFactory();
+	UndertowServletWebServerFactory embeddedServletContainerFactory() {
+		UndertowServletWebServerFactory factory = new UndertowServletWebServerFactory();
 		
 		factory.addBuilderCustomizers(new UndertowBuilderCustomizer() {
 			

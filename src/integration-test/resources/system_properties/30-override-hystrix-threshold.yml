@@ -1,0 +1,5 @@
+hystrix:
+  command:
+    allVisitsOnBranch:
+      circuitBreaker:
+        requestVolumeThreshold: 19

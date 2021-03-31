@@ -21,7 +21,7 @@ PORT=$(awk '/management:/,/port:/' $GW_HOME/conf/application.yml | awk '/port:/'
 if [ -f $GW_HOME/.pid ]; then
   PID=$( cat $GW_HOME/.pid )
 else
-  PID=$(ps -ef | grep 'qp-api-gateway' | awk '{print $1}' )
+  PID=$(ps -ef | grep 'qp-api-gateway' | grep -v grep | awk '{print $2}' )
 fi
 
 $GW_HOME/bin/curl.ermine -X POST http://localhost:$PORT/api-gateway/shutdown

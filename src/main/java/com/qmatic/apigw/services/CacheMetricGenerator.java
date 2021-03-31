@@ -2,8 +2,7 @@ package com.qmatic.apigw.services;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Statistics;
-import net.sf.ehcache.statistics.LiveCacheStatistics;
+import net.sf.ehcache.statistics.StatisticsGateway;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,34 +29,32 @@ public class CacheMetricGenerator {
     }
 
     private Map<String, Long> buildCacheResult(Cache cache) {
-        Statistics cacheStatistics = cache.getStatistics();
-        LiveCacheStatistics liveCacheStatistics = cache.getLiveCacheStatistics();
+        StatisticsGateway cacheStatistics = cache.getStatistics();
 
         Map<String, Long> cacheData = new LinkedHashMap<>();
 
-        cacheData.put("size", liveCacheStatistics.getSize());
-        cacheData.put("cacheHits", cacheStatistics.getCacheHits());
-        cacheData.put("cacheMisses", cacheStatistics.getCacheMisses());
-        cacheData.put("putCount", liveCacheStatistics.getPutCount());
-        cacheData.put("evictionCount", cacheStatistics.getEvictionCount());
+        cacheData.put("size", cacheStatistics.getSize());
+        cacheData.put("cacheHits", cacheStatistics.cacheHitCount());
+        cacheData.put("cacheMisses", cacheStatistics.cacheMissCount());
+        cacheData.put("putCount", cacheStatistics.cachePutCount());
+        cacheData.put("evictionCount", cacheStatistics.cacheEvictedCount());
 
-        cacheData.put("averageSearchTime", cacheStatistics.getAverageSearchTime());
-        cacheData.put("inMemoryHits", cacheStatistics.getInMemoryHits());
-        cacheData.put("inMemoryMisses", cacheStatistics.getInMemoryMisses());
-        cacheData.put("objectCount", cacheStatistics.getObjectCount());
-        cacheData.put("offHeapHits", cacheStatistics.getOffHeapHits());
-        cacheData.put("offHeapMisses", cacheStatistics.getOffHeapMisses());
-        cacheData.put("onDiskHits", cacheStatistics.getOnDiskHits());
-        cacheData.put("onDiskMisses", cacheStatistics.getOnDiskMisses());
-        cacheData.put("searchesPerSecond", cacheStatistics.getSearchesPerSecond());
+        cacheData.put("averageSearchTime", cacheStatistics.cacheSearchOperation().latency().average().value().longValue());
+        cacheData.put("inMemoryHits", cacheStatistics.localHeapHitCount());
+        cacheData.put("inMemoryMisses", cacheStatistics.localHeapMissCount());
+        cacheData.put("offHeapHits", cacheStatistics.localOffHeapHitCount());
+        cacheData.put("offHeapMisses", cacheStatistics.localOffHeapMissCount());
+        cacheData.put("onDiskHits", cacheStatistics.localDiskHitCount());
+        cacheData.put("onDiskMisses", cacheStatistics.localDiskMissCount());
+        cacheData.put("searchesPerSecond", cacheStatistics.cacheSearchOperation().rate().value().longValue());
 
-        cacheData.put("expiredCount", liveCacheStatistics.getExpiredCount());
-        cacheData.put("localHeapSize", liveCacheStatistics.getLocalHeapSize());
-        cacheData.put("localOffHeapSize", liveCacheStatistics.getLocalOffHeapSize());
-        cacheData.put("removedCount", liveCacheStatistics.getRemovedCount());
-        cacheData.put("updateCount", liveCacheStatistics.getUpdateCount());
+        cacheData.put("expiredCount", cacheStatistics.cacheExpiredCount());
+        cacheData.put("localHeapSize", cacheStatistics.getLocalHeapSize());
+        cacheData.put("localOffHeapSize", cacheStatistics.getLocalOffHeapSize());
+        cacheData.put("removedCount", cacheStatistics.cacheRemoveCount());
+        cacheData.put("updateCount", cacheStatistics.cachePutUpdatedCount());
 
-        cacheData.put("maxGetTimeMillis", liveCacheStatistics.getMaxGetTimeNanos() / 1000000L);
+        cacheData.put("maxGetTimeMillis", cacheStatistics.cacheSearchOperation().latency().maximum().value() / 1000000L);
         return cacheData;
     }
 }

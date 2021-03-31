@@ -1,0 +1,8 @@
+orchestra:
+  api_tokens:
+    aaaaaa-bbbb-dddd-eeee-fffffffffffff:
+      user: superadmin
+      passwd: encodedSuperAdminPassword
+    gggggg-hhhh-iiii-jjjj-kkkkkkkkkkkkk:
+      user: mobile
+      passwd: encodedMobilePassword

@@ -24,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.Duration;
 
 import static org.springframework.http.HttpStatus.GATEWAY_TIMEOUT;
 
@@ -53,7 +54,7 @@ public class CentralRestClient {
     @PostConstruct
     protected void init() {
         CentralHttpErrorHandler centralErrorHandler = new CentralHttpErrorHandler();
-        if (getConnectTimeout() != 0 || getReadTimeout() != 0) {
+        if (hasTimeoutSettings()) {
             restTemplate = restTemplateBuilder
                     .errorHandler(centralErrorHandler)
                     .setConnectTimeout(getConnectTimeout())
@@ -68,8 +69,13 @@ public class CentralRestClient {
         log.info("readTimeout: {}", readTimeout);
     }
 
-    private int getConnectTimeout() {
-        return parseInteger(connectTimeout, "orchestra.central.connectTimeout");
+    private boolean hasTimeoutSettings() {
+        return parseInteger(connectTimeout, "orchestra.central.connectTimeout") != 0 ||
+                parseInteger(readTimeout, "orchestra.central.readTimeout") != 0;
+    }
+
+    private Duration getConnectTimeout() {
+        return Duration.ofMillis(parseInteger(connectTimeout, "orchestra.central.connectTimeout"));
     }
 
     private int parseInteger(String value, String attribute) {
@@ -81,8 +87,8 @@ public class CentralRestClient {
         return 0;
     }
 
-    private int getReadTimeout() {
-        return parseInteger(readTimeout, "orchestra.central.readTimeout");
+    private Duration getReadTimeout() {
+        return Duration.ofMillis(parseInteger(readTimeout, "orchestra.central.readTimeout"));
     }
 
     /**
