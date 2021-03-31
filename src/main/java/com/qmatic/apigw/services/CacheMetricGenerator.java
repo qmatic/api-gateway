@@ -42,7 +42,6 @@ public class CacheMetricGenerator {
         cacheData.put("averageSearchTime", cacheStatistics.cacheSearchOperation().latency().average().value().longValue());
         cacheData.put("inMemoryHits", cacheStatistics.localHeapHitCount());
         cacheData.put("inMemoryMisses", cacheStatistics.localHeapMissCount());
-//        cacheData.put("objectCount", cacheStatistics.
         cacheData.put("offHeapHits", cacheStatistics.localOffHeapHitCount());
         cacheData.put("offHeapMisses", cacheStatistics.localOffHeapMissCount());
         cacheData.put("onDiskHits", cacheStatistics.localDiskHitCount());
