@@ -266,10 +266,9 @@ def doLastWithScripts(windowsScript, unixScript) {
             '    chmod u+x $JAVA_HOME/bin/*\n' +
             'fi')
     unixScript.text = unixScript.text.replace('CLASSPATH=', 'CLASSPATH=$APP_HOME/conf:')
-    unixScript.text = unixScript.text.replace('eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS', 'eval splitJvmOpts $DEFAULT_JVM_OPTS $JAVA_OPTS $API_GATEWAY_OPTS\nexport APP_HOME');
+    unixScript.text = unixScript.text.replace('eval set -- ', 'export APP_HOME\neval set -- ');
     unixScript.text = unixScript.text.replace('\\$', '$')
 
-    windowsScript.text = windowsScript.text.replace('%%', '%')
     windowsScript.text = windowsScript.text.replace('set APP_HOME=%DIRNAME%..','set APP_HOME=%DIRNAME%..\nJAVA_HOME_PLACEHOLDER')
     windowsScript.text = windowsScript.text.replace('JAVA_HOME_PLACEHOLDER','if exist "%APP_HOME%/jre" set JAVA_HOME=%APP_HOME%/jre')
     windowsScript.text = windowsScript
