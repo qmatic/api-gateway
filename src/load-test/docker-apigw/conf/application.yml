@@ -92,7 +92,7 @@ cache:
   # name of cache in ehcache configuration
   defaultCacheName: request
   # define if unique cache is used for URL query parameters.
-  defaultCacheUniquePerQueryParameter: false
+  defaultCacheUniquePerQueryParameter: true
 
   cacheRoutes:
   # Note: the cache for MyVisit/CurrentStatus and MyVisit/Position is specified in ehcache.xml as visitsOnBranchCache
