@@ -1,3 +1,5 @@
+DEPRECATED
+
 # api-gateway
 
 ## Description
